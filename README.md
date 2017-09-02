@@ -1,27 +1,17 @@
-# GNOME Shell extension - Bing Wallpaper Changer
+# GNOME Shell extension - Google Earth Wallpaper
 
-Lightweight GNOME shell extension to change your wallpaper every day to
-Microsoft Bing's wallpaper (the image you see when you visit Bing.com). It will
+Lightweight GNOME shell extension to set your wallpaper to a random curated Google Earth photo. It will
 also show a notification containing the title and the explanation of the image.
 
-*Disclaimer*: this extension is unofficial and not affiliated with Bing or
-Microsoft in any way. Images are protected by copyright, and are licensed only
+*Disclaimer*: this extension is unofficial and not affiliated with Google in any way. Images are protected by copyright, and are licensed only
 for use as wallpapers.
 
-This extension is based extensively on the NASA APOD extension by [Elinvention](https://github.com/Elinvention)
-and inspired by Bing Desktop WallpaperChanger by [Utkarsh Gupta](https://github.com/UtkarshGpta).
-
-This is my first attempt at a GNOME extension, so it may have some issues.
+This extension is derived from my [Bing Wallpaper](https://github.com/neffo/bing-wallpaper-gnome-extension) GNOME extension, which was based extensively on the NASA APOD extension by [Elinvention](https://github.com/Elinvention).
 
 ## Features
 
-* Fetches the Bing wallpaper of the day and sets as both lock screen and desktop wallpaper (these are both user selectable)
-* Optionally force a specific region (i.e. locale)
-* Automatically selects the highest resolution (and most appropriate wallpaper) in multiple monitor setups
-* Optionally clean up Wallpaper directory after between 1 and 7 days (delete oldest first)
-* Only attempts to download wallpapers when they have been updated
-* Doesn't poll continuously - only once per day and on startup (a refresh is scheduled when Bing is due to update)
-* NEW: locale support and German language translation thanks to [Jonnius](https://github.com/jonnius)
+* Fetches a random Google Earth wallpaper and sets as both lock screen and desktop wallpaper
+* User selectable refresh intervals
 
 ## Requirements
 
@@ -33,17 +23,9 @@ Gnome 3.18+ (Ubuntu Gnome 16.04+, Fedora 23+)
 
 or install directly to your GNOME extensions directory (useful if you want to hack on it)
 
-`git clone https://github.com/neffo/bing-wallpaper-gnome-extension.git $HOME/.local/share/gnome-shell/extensions/BingWallpaper@ineffable-gmail.com`
+`git clone https://github.com/neffo/earth-view-wallpaper-gnome-extension.git $HOME/.local/share/gnome-shell/extensions/GoogleEarthWallpaper@ineffable-gmail.com`
 
-or create a zip file by doing this
-
-`git clone https://github.com/neffo/bing-wallpaper-gnome-extension.git`
-`cd bing-wallpaper-gnome-extension`
-`sh buildzip.sh`
-
-You can then install this file using the Gnome Tweak Tool. Please note to install an extension correctly the zip must have the metadata.json file in the base directory (not in a sub-directory), so you can't use the Git zip file to do this.
-
-Heres a suitable [zip file](https://neffo.github.io/BingWallpaper@ineffable-gmail.com.zip) I prepared earlier.
+Or, here is a suitable [zip file] I prepared earlier.
 
 ## Screenshots
 
