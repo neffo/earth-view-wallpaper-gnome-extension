@@ -322,7 +322,10 @@ const GEWallpaperIndicator = new Lang.Class({
                     location += " ";
                location += imagejson['geocode'][i];
             }
-            this.explanation = _("Location:")+' '+location; //['country'];
+            //let metersperpixel = 156543.03 * Math.cos(imagejson['lat']) / Math.pow(2,imagejson['zoom']);
+            let coordinates = Math.abs(imagejson['lat']).toFixed(4)+(imagejson['lat']>0 ? 'N': 'S')+', '+Math.abs(imagejson['lng']).toFixed(4)+(imagejson['lng']>0 ? 'W': 'E');
+            this.explanation = location.trim() + '\n' + coordinates;
+            // + '\nScale: '+metersperpixel.toFixed(2)+' meters/pixel'; //['country'];
             this.copyright = imagejson['attribution'];
             this.longstartdate = '';
             this.link = 'https://g.co/ev/' + imagejson['id'];
@@ -341,7 +344,7 @@ const GEWallpaperIndicator = new Lang.Class({
             else if (!GEWallpaperDir.endsWith('/'))
                 GEWallpaperDir += '/';
             
-            let prevfile = this.filename;
+            let prevfile = this._settings.get_string('image-filepath');
             this.filename = GEWallpaperDir+imagejson['id']+'-'+imagejson['geocode']['country']+'.jpg';
             let file = Gio.file_new_for_path(this.filename);
             let file_exists = file.query_exists(null);
@@ -353,7 +356,8 @@ const GEWallpaperIndicator = new Lang.Class({
                     dir.make_directory_with_parents(null);
                 }
                 this._export_image(imagejson,file);
-                //this._delete_previous(prevfile);
+                this._settings.set_string('image-filepath', this.filename);
+                this._delete_previous(prevfile);
             } else {
                 log("Image already downloaded");
                 this._setBackground();

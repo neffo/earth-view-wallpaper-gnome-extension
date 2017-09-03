@@ -1,23 +1,24 @@
 # GNOME Shell extension - Google Earth Wallpaper
 
-Lightweight GNOME shell extension to set your wallpaper to a random Google Earth photo from a selection of curated locations. It will
+Lightweight GNOME shell extension to set your wallpaper to a random Google Earth photo from a selection of curated locations (around 1000). It will
 also show a notification containing the location of the image.
 
 *Disclaimer*: this extension is unofficial and not affiliated with Google in any way. Images are protected by copyright, and are licensed only
 for use as wallpapers.
 
-This extension is derived from my [Bing Wallpaper](https://github.com/neffo/bing-wallpaper-gnome-extension) GNOME extension, which was based extensively on the NASA APOD extension by [Elinvention](https://github.com/Elinvention).
+This extension is derived from my [Bing Wallpaper](https://github.com/neffo/bing-wallpaper-gnome-extension) GNOME extension, which was based extensively on the NASA APOD extension by [Elinvention](https://github.com/Elinvention). Curated locations and images come from Google's [Earth View](https://earthview.withgoogle.com/) website and Chrome extension.
 
 ## Features
 
 * Fetches a random Google Earth wallpaper and sets as both lock screen and desktop wallpaper
-* User selectable refresh intervals
+* User selectable refresh intervals (default is once per day)
 
 ## TODO
 
 * View location on Google Maps, Gnome Maps, OpenStreetMaps
 * Location relative to user - could be fun, yeah?
 * Place pin on a map/globe in settings menu
+* Pixel scale
 
 ## Requirements
 

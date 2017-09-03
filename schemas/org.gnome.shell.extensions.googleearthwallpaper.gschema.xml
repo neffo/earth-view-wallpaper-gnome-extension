@@ -51,6 +51,12 @@
         <description>Save disk space</description>
     </key>
 
+    <key name="image-filepath" type="s">
+      <default>""</default>
+        <summary>Current filepath</summary>
+        <description></description>
+    </key>
+
     <key name="refresh-interval" type="i">
       <default>86400</default>
       <summary>Number of seconds to between refreshes</summary>
