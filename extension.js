@@ -23,7 +23,7 @@ const GEjsonURL = "https://www.gstatic.com/prettyearth/";
 const GEURL = "https://earth.google.com";
 const IndicatorName = "GEWallpaperIndicator";
 const TIMEOUT_SECONDS = 24 * 3600; // FIXME: this should use the end data from the json data
-const TIMEOUT_SECONDS_ON_HTTP_ERROR = 1 * 3600; // retry in one hour if there is a http error
+const TIMEOUT_SECONDS_ON_HTTP_ERROR = 4 * 3600; // retry in one hour if there is a http error
 const ICON = "pin"
 
 const imageids = [
@@ -237,6 +237,7 @@ const GEWallpaperIndicator = new Lang.Class({
         log('next check in '+seconds+' seconds @ local time '+localTime);
     },
 
+    /*
     _restartTimeoutFromLongDate: function (longdate) {
         // longdate is UTC, in the following format
         // 201708041400 YYYYMMDDHHMM
@@ -260,7 +261,7 @@ const GEWallpaperIndicator = new Lang.Class({
 
         difference=difference+300; // 5 minute fudge offset in case of inaccurate local clock
         this._restartTimeout(difference);
-    },
+    },*/
 
     _showDescription: function() {
         if (this.title == "" && this.explanation == "") {
@@ -278,8 +279,10 @@ const GEWallpaperIndicator = new Lang.Class({
             return;
         this._updatePending = true;
 
-        this._restartTimeout();
+        //this._restartTimeout();
+        this.refreshDueItem.label.set_text(_('Fetching...'));
 
+        log('locations count: '+imageids.length);
         // create an http message
         let imgindex = GLib.random_int_range(0,imageids.length);
         let url = GEjsonURL+imageids[imgindex]+'.json';
@@ -313,8 +316,10 @@ const GEWallpaperIndicator = new Lang.Class({
             this.title = _("Google Earth Wallpaper");
             let location = "";
             for (var i in imagejson['geocode']) {
-                if (location != "")
+                if (location != "" && isNaN(location))
                     location += ", ";
+                else
+                    location += " ";
                location += imagejson['geocode'][i];
             }
             this.explanation = _("Location:")+' '+location; //['country'];
@@ -336,6 +341,7 @@ const GEWallpaperIndicator = new Lang.Class({
             else if (!GEWallpaperDir.endsWith('/'))
                 GEWallpaperDir += '/';
             
+            let prevfile = this.filename;
             this.filename = GEWallpaperDir+imagejson['id']+'-'+imagejson['geocode']['country']+'.jpg';
             let file = Gio.file_new_for_path(this.filename);
             let file_exists = file.query_exists(null);
@@ -347,6 +353,7 @@ const GEWallpaperIndicator = new Lang.Class({
                     dir.make_directory_with_parents(null);
                 }
                 this._export_image(imagejson,file);
+                //this._delete_previous(prevfile);
             } else {
                 log("Image already downloaded");
                 this._setBackground();
@@ -360,46 +367,19 @@ const GEWallpaperIndicator = new Lang.Class({
             if (this._settings.get_boolean('notify'))
                 this._showDescription();
         }
-        this._restartTimeoutFromLongDate(this.longstartdate);
+        this._restartTimeout(this._settings.get_int('refresh-interval'));
     },
 
-    /*
-    _download_image: function(url, file) {
-        log("Downloading " + url + " to " + file.get_uri())
-
-        // open the Gfile
-        let fstream = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
-
-        // create an http message
-        let request = Soup.Message.new('GET', url);
-
-        // got_headers event
-        request.connect('got_headers', Lang.bind(this, function(message){
-            log("got_headers");
-        }));
-
-        // got_chunk event
-        request.connect('got_chunk', Lang.bind(this, function(message, chunk){
-            fstream.write(chunk.get_data(), null, chunk.length);
-        }));
-
-        // queue the http request
-        httpSession.queue_message(request, Lang.bind(this, function(httpSession, message) {
-            // request completed
-            fstream.close(null);
-            this._updatePending = false;
-            if (message.status_code == 200) {
-                log('Download successful');
-                this._setBackground();
-                this._add_to_previous_queue(this.filename);
-                if (this._settings.get_boolean('notify'))
-                    this._showDescription();
-            } else {
-                log("Couldn't fetch image from " + url);
-                file.delete(null);
+    _delete_previous: function (to_delete) {
+        let deletepictures = this._settings.get_boolean('delete-previous');
+        if (deletepictures) {
+            let oldfile = Gio.file_new_for_path(to_delete);
+            if (oldfile.query_exists(null)) {
+                oldfile.delete(null);
+                log("deleted previous file: "+ to_delete);
             }
-        }));
-    },*/
+        }
+    },
 
     _export_image: function(json, file) {
         log("Exporting to " + file.get_uri())
@@ -415,38 +395,7 @@ const GEWallpaperIndicator = new Lang.Class({
         //this._add_to_previous_queue(this.filename);
         if (this._settings.get_boolean('notify'))
             this._showDescription();
-
     },
-
-    /*
-    _add_to_previous_queue: function (filename) {
-        let rawimagelist = this._settings.get_string('previous');
-        let imagelist = rawimagelist.split(',');
-        let maxpictures = this._settings.get_int('previous-days');
-        let deletepictures = this._settings.get_boolean('delete-previous');
-
-        log("Raw: "+ rawimagelist+" count: "+imagelist.length);
-        log("Settings: delete:"+(deletepictures?"yes":"no")+" max: "+maxpictures);
-
-        imagelist.push(filename); // add current to end of list
-
-        while(imagelist.length > maxpictures+1) {
-            var to_delete = imagelist.shift(); // get the first (oldest item from the list)
-            log("image: "+to_delete);
-            if (deletepictures) {
-                var file = Gio.file_new_for_path(to_delete);
-                if (file.query_exists(null)) {
-                    file.delete(null);
-                    log("deleted file: "+ to_delete);
-                }
-            }
-        }
-
-        // put it back together and send back to settings
-        rawimagelist = imagelist.join();
-        this._settings.set_string('previous', rawimagelist);
-        log("wrote back this: "+rawimagelist);
-    }, */
 
     stop: function () {
         if (this._timeout)
@@ -465,30 +414,6 @@ function init(extensionMeta) {
 function enable() {
     googleearthWallpaperIndicator = new GEWallpaperIndicator();
     Main.panel.addToStatusArea(IndicatorName, googleearthWallpaperIndicator);
-    
-    /*monitors = Main.layoutManager.monitors; // get list of connected monitors (and sizes)
-    let largest = 0;
-    for (let monitorIdx in monitors) {
-        let monitor = monitors[monitorIdx];
-        log("monitor "+monitorIdx+" -> "+monitor.width+" x "+monitor.height);
-        if ((monitor.width * monitor.height) > largest) {
-            monitorW = monitor.width;
-            monitorH = monitor.height;
-            largest = monitorW * monitorH;
-        }
-    }
-
-    log("highest res: "+monitorW+" x "+monitorH);
-
-    autores = monitorW+"x"+monitorH
-
-    if (validresolutions.indexOf(autores) == -1) {
-        autores = "1920x1080"; // default to this, as people don't like the GE logo
-        log("unknown resolution, defaulted to "+autores);
-    }
-    else {
-        log("detected best resolution "+autores);
-    }*/
 }
 
 function disable() {

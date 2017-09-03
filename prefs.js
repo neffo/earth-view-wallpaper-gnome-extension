@@ -11,9 +11,6 @@ const _ = Gettext.gettext;
 
 let settings;
 
-let intervals = [300, 3600, 86400];
-let intervals_text = [_("5 minutes"), _("hourly"), _("daily")];
-
 function init() {
     settings = Utils.getSettings(Me);
     Convenience.initTranslations("GEWallpaper");
@@ -36,7 +33,6 @@ function buildPrefsWidget(){
     let lsSwitch = buildable.get_object('lock_screen');
     let fileChooser = buildable.get_object('download_folder');
     let deleteSwitch = buildable.get_object('delete_previous');
-    //let daysSpin = buildable.get_object('days_after_spinbutton');
     let refreshSpin = buildable.get_object('refresh_combo');
 
     // Indicator
@@ -54,10 +50,6 @@ function buildPrefsWidget(){
     settings.bind('set-background', bgSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('set-lock-screen', lsSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
 
-    intervals.forEach(function (text) { // add res to dropdown list (aka a GtkComboText)
-        refreshSpin.append(text, text);
-    })
-
     //download folder
     fileChooser.set_filename(settings.get_string('download-folder'));
     fileChooser.add_shortcut_folder_uri("file://" + GLib.get_user_cache_dir() + "/GoogleEarthWallpaper");
@@ -66,9 +58,8 @@ function buildPrefsWidget(){
     });
 
     settings.bind('delete-previous', deleteSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-    //settings.bind('previous-days', daysSpin, 'value', Gio.SettingsBindFlags.DEFAULT);
 
-    settings.bind('refresh-interval', refreshSpin, 'value', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('refresh-interval', refreshSpin, 'active_id', Gio.SettingsBindFlags.DEFAULT);
 
     box.show_all();
 

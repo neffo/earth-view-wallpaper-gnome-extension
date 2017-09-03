@@ -374,6 +374,7 @@ Modified by: Michael Carroll
           <object class="GtkFrame" id="refresh_frame">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_bottom">16</property>
             <property name="label_xalign">0</property>
             <property name="shadow_type">in</property>
             <child>
@@ -413,7 +414,7 @@ Modified by: Michael Carroll
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="halign">start</property>
-                            <property name="label" translatable="yes">Seconds between wallpaper updates</property>
+                            <property name="label" translatable="yes">Change effective from next refresh</property>
                             <property name="wrap">True</property>
                             <style>
                               <class name="dim-label"/>
@@ -428,6 +429,13 @@ Modified by: Michael Carroll
                           <object class="GtkComboBoxText" id="refresh_combo">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="active">1</property>
+                            <items>
+                              <item id="300" translatable="yes">5 minutes</item>
+                              <item id="3600" translatable="yes">1 hour</item>
+                              <item id="86400" translatable="yes">daily</item>
+                              <item id="-1" translatable="yes">only on startup</item>
+                            </items>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -477,15 +485,20 @@ Modified by: Michael Carroll
         <property name="orientation">vertical</property>
         <property name="spacing">5</property>
         <child>
-          <object class="GtkImage" id="logo">
+          <object class="GtkImage">
+            <property name="name">logo</property>
+            <property name="width_request">240</property>
+            <property name="height_request">240</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="pixbuf">icons/bing-yellow.svg</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="pixbuf">icons/globe-pin.svg</property>
+            <property name="margin_bottom">12</property>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="padding">10</property>
+            <property name="fill">False</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -493,7 +506,7 @@ Modified by: Michael Carroll
           <object class="GtkLabel" id="extension_name">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label">&lt;b&gt;Bing Wallpaper Changer&lt;/b&gt;</property>
+            <property name="label">&lt;b&gt;Google Earth Wallpaper&lt;/b&gt;</property>
             <property name="use_markup">True</property>
           </object>
           <packing>
@@ -543,7 +556,7 @@ Modified by: Michael Carroll
           <object class="GtkLabel" id="extension_description">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Set your wallpaper to a curated Google Earth photo from a random location on Earth.</property>
+            <property name="label" translatable="yes">Set your wallpaper to a random Google Earth photo from a selection of curated locations.</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
           </object>
@@ -591,14 +604,14 @@ Modified by: Michael Carroll
         </child>
         <child>
           <object class="GtkLinkButton" id="homepage_link">
-            <property name="label" translatable="yes">https://github.com/neffo/bing-wallpaper-gnome-extension</property>
+            <property name="label" translatable="yes">https://github.com/neffo/earth-view-wallpaper-gnome-extension</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="receives_default">True</property>
             <property name="events"/>
             <property name="halign">center</property>
             <property name="relief">none</property>
-            <property name="uri">https://github.com/neffo/bing-wallpaper-gnome-extension</property>
+            <property name="uri">https://github.com/neffo/earth-view-wallpaper-gnome-extension</property>
           </object>
           <packing>
             <property name="expand">False</property>

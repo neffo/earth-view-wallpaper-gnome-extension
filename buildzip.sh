@@ -2,7 +2,7 @@
 
 glib-compile-schemas schemas/
 
-zip -r BingWallpaper@ineffable-gmail.com.zip *
+zip -r GoogleEarthWallpaper@neffo.github.com.zip *
 
-zip -d BingWallpaper@ineffable-gmail.com.zip screenshot/* screenshot buildzip.sh
+zip -d GoogleEarthWallpaper@neffo.github.com.zip screenshot/* screenshot buildzip.sh
 
