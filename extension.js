@@ -2,7 +2,7 @@
 const St = imports.gi.St;
 const Main = imports.ui.main;
 const MessageTray = imports.ui.messageTray;
-const Soup = imports.gi.Soup
+const Soup = imports.gi.Soup;
 const Lang = imports.lang;
 const Mainloop = imports.mainloop;
 const Gio = imports.gi.Gio;
@@ -211,7 +211,25 @@ const GEWallpaperIndicator = new Lang.Class({
             this.showItem.setSensitive(!this._updatePending && this.title != "" && this.explanation != "");
             this.wallpaperItem.setSensitive(!this._updatePending && this.filename != "");
         }));
-        this._restartTimeout(60); // wait 60 seconds before performing refresh
+
+        if (this._settings.get_int('next-refresh') > 0 ) {
+            log("restoring previous state...");
+            this.title = _("Google Earth Wallpaper");
+            let imagedata = this._settings.get_string('image-details').split('|');
+            this.explanation = imagedata[0];
+            this.copyright = imagedata[1];
+            this.filename = this._settings.get_string('image-filepath');
+            let timezone = GLib.TimeZone.new_local();
+            let unixtime = GLib.DateTime.new_now(timezone).to_unix();
+            let seconds = this._settings.get_int('next-refresh') - unixtime;
+            log(" image: "+this.filename+" explanation: "+this.explanation+"\n next refresh in: "+seconds+" seconds");
+            this._setBackground();
+            this._restartTimeout(seconds < 60 ? 60 : seconds); // never refresh early than 60 seconds after startup
+        }
+        else {
+            log("no previous state to restore... (first run?)");
+            this._restartTimeout(60); // wait 60 seconds before performing refresh
+        }
     },
 
     _setBackground: function() {
@@ -226,15 +244,17 @@ const GEWallpaperIndicator = new Lang.Class({
     },
 
     _restartTimeout: function(seconds = null) {
+        //log('refresh called in '+seconds+' seconds');
         if (this._timeout)
             Mainloop.source_remove(this._timeout);
-        if (seconds == null)
+        if (seconds == null || seconds < 60)
             seconds = TIMEOUT_SECONDS;
         this._timeout = Mainloop.timeout_add_seconds(seconds, Lang.bind(this, this._refresh));
         let timezone = GLib.TimeZone.new_local();
-        let localTime = GLib.DateTime.new_now(timezone).add_seconds(seconds).format('%F %X');
-        this.refreshDueItem.label.set_text(_('Next refresh')+': '+localTime);
-        log('next check in '+seconds+' seconds @ local time '+localTime);
+        let localTime = GLib.DateTime.new_now(timezone).add_seconds(seconds);
+        this.refreshDueItem.label.set_text(_('Next refresh')+': '+localTime.format('%F %X'));
+        this._settings.set_int('next-refresh',localTime.to_unix());
+        log('next check in '+seconds+' seconds @ local time '+localTime.format('%F %X'));
     },
 
     /*
@@ -279,7 +299,7 @@ const GEWallpaperIndicator = new Lang.Class({
             return;
         this._updatePending = true;
 
-        //this._restartTimeout();
+        this._restartTimeout(300); // in case of a timeout
         this.refreshDueItem.label.set_text(_('Fetching...'));
 
         log('locations count: '+imageids.length);
@@ -309,7 +329,6 @@ const GEWallpaperIndicator = new Lang.Class({
     },
 
     _parseData: function(data) {
-        //let parsed = JSON.parse(data);
         let imagejson = JSON.parse(data);
 
         if (imagejson['id'] != '') {
@@ -329,9 +348,6 @@ const GEWallpaperIndicator = new Lang.Class({
             this.copyright = imagejson['attribution'];
             this.longstartdate = '';
             this.link = 'https://g.co/ev/' + imagejson['id'];
-            //let resolution = this._settings.get_string('resolution');
-           
-            //let url = GEURL+imagejson['url'].replace('1920x1080',resolution); // mangle url to user's resolution
 
             let GEWallpaperDir = this._settings.get_string('download-folder');
             let userHomeDir = GLib.get_home_dir();
@@ -339,13 +355,16 @@ const GEWallpaperIndicator = new Lang.Class({
                 userHomeDir = '/tmp';
                 log("Unable to get user home directory, defaulting to "+userHomeDir);
             }
-            if (GEWallpaperDir == '')
+            if (GEWallpaperDir == '') {
                 GEWallpaperDir = userHomeDir + "/Pictures/GoogleEarthWallpaper/";
-            else if (!GEWallpaperDir.endsWith('/'))
+                this._settings.set_string('download-folder',GEWallpaperDir);
+            }
+            else if (!GEWallpaperDir.endsWith('/')) {
                 GEWallpaperDir += '/';
+            }
             
             let prevfile = this._settings.get_string('image-filepath');
-            this.filename = GEWallpaperDir+imagejson['id']+'-'+imagejson['geocode']['country']+'.jpg';
+            this.filename = GEWallpaperDir+imagejson['id']+'-'+location.trim().replace(',','').replace(/[^a-z0-9]/gi, '_').toLowerCase()+'.jpg';
             let file = Gio.file_new_for_path(this.filename);
             let file_exists = file.query_exists(null);
             let file_info = file_exists ? file.query_info ('*',Gio.FileQueryInfoFlags.NONE,null): 0;
@@ -363,6 +382,8 @@ const GEWallpaperIndicator = new Lang.Class({
                 this._setBackground();
                 this._updatePending = false;
             }
+            this._settings.set_string('image-details',[this.explanation, this.copyright].join('|'));
+            this._settings.set_int('image-id',imagejson['id']);
         } else {
             this.title = _("No wallpaper available");
             this.explanation = _("Something went wrong...");
@@ -375,6 +396,8 @@ const GEWallpaperIndicator = new Lang.Class({
     },
 
     _delete_previous: function (to_delete) {
+        if (to_delete == '')
+            return;
         let deletepictures = this._settings.get_boolean('delete-previous');
         if (deletepictures) {
             let oldfile = Gio.file_new_for_path(to_delete);
@@ -390,13 +413,12 @@ const GEWallpaperIndicator = new Lang.Class({
 
         // open the Gfile
         let fstream = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
-        let decodeddata = GLib.base64_decode(json.dataUri.replace('data:image/jpeg;base64,','')); // i guess...?
+        let decodeddata = GLib.base64_decode(json.dataUri.replace('data:image/jpeg;base64,','')); //fixme: how do we handle failures?
         fstream.write(decodeddata, null, decodeddata.length);
         fstream.close(null);
         this._updatePending = false;
 
         this._setBackground();
-        //this._add_to_previous_queue(this.filename);
         if (this._settings.get_boolean('notify'))
             this._showDescription();
     },

@@ -6,7 +6,7 @@ also show a notification containing the location of the image.
 *Disclaimer*: this extension is unofficial and not affiliated with Google in any way. Images are protected by copyright, and are licensed only
 for use as wallpapers.
 
-This extension is derived from my [Bing Wallpaper](https://github.com/neffo/bing-wallpaper-gnome-extension) GNOME extension, which was based extensively on the NASA APOD extension by [Elinvention](https://github.com/Elinvention). Curated locations and images come from Google's [Earth View](https://earthview.withgoogle.com/) website and Chrome extension.
+This extension is derived from my [Bing Wallpaper](https://github.com/neffo/bing-wallpaper-gnome-extension) GNOME extension, which was based extensively on the NASA APOD extension by [Elinvention](https://github.com/Elinvention). Curated locations and images come from Google's [Earth View](https://earthview.withgoogle.com/) website and the [associated Chrome extension](https://chrome.google.com/webstore/detail/earth-view-from-google-ea/bhloflhklmhfpedakmangadcdofhnnoh?hl=en).
 
 ## Features
 

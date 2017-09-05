@@ -429,13 +429,10 @@ Modified by: Michael Carroll
                           <object class="GtkComboBoxText" id="refresh_combo">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="active">1</property>
-                            <items>
-                              <item id="300" translatable="yes">5 minutes</item>
-                              <item id="3600" translatable="yes">1 hour</item>
+                            <!-- <items>
+                              <item id="3600" translatable="yes">hourly</item>
                               <item id="86400" translatable="yes">daily</item>
-                              <item id="-1" translatable="yes">only on startup</item>
-                            </items>
+                            </items> -->
                           </object>
                           <packing>
                             <property name="left_attach">1</property>

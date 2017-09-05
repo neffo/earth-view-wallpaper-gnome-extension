@@ -11,6 +11,9 @@ const _ = Gettext.gettext;
 
 let settings;
 
+const intervals = [ 300, 3600, 86400 ];
+const interval_names = [ '5 minutes', 'hourly', 'daily'];
+
 function init() {
     settings = Utils.getSettings(Me);
     Convenience.initTranslations("GEWallpaper");
@@ -59,9 +62,30 @@ function buildPrefsWidget(){
 
     settings.bind('delete-previous', deleteSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
 
-    settings.bind('refresh-interval', refreshSpin, 'active_id', Gio.SettingsBindFlags.DEFAULT);
+    intervals.forEach(function (interval, index) { // add markets to dropdown list (aka a GtkComboText)
+        refreshSpin.append(interval.toString(), interval_names[index]);
+    });
+
+    //settings.bind('refresh-interval', refreshSpin, 'active_id', Gio.SettingsBindFlags.DEFAULT);
+    refreshSpin.set_active_id(settings.get_int('refresh-interval').toString()); // set to current
+    refreshSpin.connect('changed', function() {
+        settings.set_int('refresh-interval',parseInt(refreshSpin.get_active_id(),10));
+        log('Refresh interval currently set to '+refreshSpin['active_id']);
+    });
+    //log('Refresh interval currently set to '+refreshSpin['active_id']);
+    
+    settings.connect('changed::refresh-interval', function() {
+        refreshSpin.set_active_id(settings.get_int('refresh-interval').toString());
+        log('Refresh interval set to '+refreshSpin['active_id']);
+    });
 
     box.show_all();
 
     return box;
-};
+}
+
+function validate_interval() {
+    let interval = settings.get_string('refresh-interval');
+    if (interval == "" || interval.indexOf(intervals) == -1) // if not a valid interval
+        settings.reset('refresh-interval');
+}

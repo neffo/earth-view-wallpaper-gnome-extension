@@ -63,5 +63,23 @@
       <description></description>
     </key>
 
+    <key name="image-id" type="i">
+      <default>0</default>
+      <summary>Current image id</summary>
+      <description></description>
+    </key>
+
+    <key name="image-details" type="s">
+      <default>""</default>
+      <summary>Description|Attribution</summary>
+      <description></description>
+    </key>
+
+    <key name="next-refresh" type="i">
+      <default>0</default>
+      <summary>Next refresh due, seconds since Epoch</summary>
+      <description></description>
+    </key>
+
   </schema>
 </schemalist>
