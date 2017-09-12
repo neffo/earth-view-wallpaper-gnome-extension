@@ -1,0 +1,151 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-09-12 18:37+1000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: Settings.ui.h:1
+msgid "Hide the indicator"
+msgstr ""
+
+#: Settings.ui.h:2
+msgid "Send a notification with explanation when a new image is downloaded."
+msgstr ""
+
+#: Settings.ui.h:3
+msgid "Notifications"
+msgstr ""
+
+#: Settings.ui.h:4
+msgid "Use transient notifications (auto dismiss)"
+msgstr ""
+
+#: Settings.ui.h:5
+msgid "Set background image"
+msgstr ""
+
+#: Settings.ui.h:6
+msgid "Set lock screen image"
+msgstr ""
+
+#: Settings.ui.h:7
+msgid "Download folder:"
+msgstr ""
+
+#: Settings.ui.h:8
+msgid "Bing Wallpaper pictures folder"
+msgstr ""
+
+#: Settings.ui.h:9
+msgid "Delete previously downloaded wallpapers:"
+msgstr ""
+
+#: Settings.ui.h:10
+msgid "Refresh interval"
+msgstr ""
+
+#: Settings.ui.h:11
+msgid "Change effective from next refresh"
+msgstr ""
+
+#: Settings.ui.h:12 prefs.js:15
+msgid "hourly"
+msgstr ""
+
+#: Settings.ui.h:13 prefs.js:15
+msgid "daily"
+msgstr ""
+
+#: Settings.ui.h:14 extension.js:194
+msgid "Settings"
+msgstr ""
+
+#: Settings.ui.h:15
+msgid "Gnome shell extension version: "
+msgstr ""
+
+#: Settings.ui.h:16
+msgid ""
+"Set your wallpaper to a random Google Earth photo from a selection of "
+"curated locations."
+msgstr ""
+
+#: Settings.ui.h:17
+msgid "Maintained by Michael Carroll"
+msgstr ""
+
+#: Settings.ui.h:18
+msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
+msgstr ""
+
+#: Settings.ui.h:19
+msgid "Based on NASA APOD Gnome shell extension by Elia Argentieri"
+msgstr ""
+
+#: Settings.ui.h:20
+msgid ""
+"<span size=\"small\">This program comes with ABSOLUTELY NO WARRANTY.\n"
+"See the <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
+"\">GNU General Public License, version 3 or later</a> for details.</span>"
+msgstr ""
+
+#: Settings.ui.h:22
+msgid "About"
+msgstr ""
+
+#: extension.js:142
+msgid "View on Google Earth"
+msgstr ""
+
+#: extension.js:190
+msgid "<No refresh scheduled>"
+msgstr ""
+
+#: extension.js:191
+msgid "Show description"
+msgstr ""
+
+#: extension.js:192
+msgid "Set wallpaper"
+msgstr ""
+
+#: extension.js:193
+msgid "Refresh Now"
+msgstr ""
+
+#: extension.js:217 extension.js:335
+msgid "Google Earth Wallpaper"
+msgstr ""
+
+#: extension.js:255
+msgid "Next refresh"
+msgstr ""
+
+#: extension.js:303
+msgid "Fetching..."
+msgstr ""
+
+#: extension.js:388
+msgid "No wallpaper available"
+msgstr ""
+
+#: extension.js:389
+msgid "Something went wrong..."
+msgstr ""
+
+#: prefs.js:15
+msgid "5 minutes"
+msgstr ""

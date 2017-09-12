@@ -12,7 +12,7 @@ const _ = Gettext.gettext;
 let settings;
 
 const intervals = [ 300, 3600, 86400 ];
-const interval_names = [ '5 minutes', 'hourly', 'daily'];
+const interval_names = [ _("5 minutes"), _("hourly"), _("daily")];
 
 function init() {
     settings = Utils.getSettings(Me);
