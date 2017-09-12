@@ -307,7 +307,7 @@ Modified by: Michael Carroll
                             <property name="halign">end</property>
                             <property name="hexpand">True</property>
                             <property name="action">select-folder</property>
-                            <property name="title" translatable="yes">Bing Wallpaper pictures folder</property>
+                            <property name="title" translatable="yes">Wallpaper pictures folder</property>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
