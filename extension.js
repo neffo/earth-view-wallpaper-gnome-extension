@@ -124,7 +124,7 @@ const LongNotification = new Lang.Class({
     }
 });
 
-function notify(msg, details, transient) {
+function notify(msg, details, transient, link) {
     // set notifications icon
     let source = new MessageTray.Source("GEWallpaper", ICON);
     // force expanded notification
@@ -139,9 +139,9 @@ function notify(msg, details, transient) {
     let notification = new LongNotification(source, msg, details);
     notification.setTransient(transient);
     // Add action to open GE website with default browser
-    log("Google Earth link: "+googleearthWallpaperIndicator.link);
+    log("Google Earth link: "+link);
     notification.addAction(_("View on Google Earth"), Lang.bind(this, function() {
-        Util.spawn(["xdg-open", googleearthWallpaperIndicator.link]); // fixme: this should be the link from the json
+        Util.spawn(["xdg-open", link]);
     }));
     source.notify(notification);
 }
@@ -258,32 +258,6 @@ const GEWallpaperIndicator = new Lang.Class({
         log('next check in '+seconds+' seconds @ local time '+localTime.format('%F %X'));
     },
 
-    /*
-    _restartTimeoutFromLongDate: function (longdate) {
-        // longdate is UTC, in the following format
-        // 201708041400 YYYYMMDDHHMM
-        // 012345678901
-        let timezone = GLib.TimeZone.new_utc();
-        let refreshDue = GLib.DateTime.new(timezone, 
-            parseInt(longdate.substr(0,4)), // year
-            parseInt(longdate.substr(4,2)), // month
-            parseInt(longdate.substr(6,2)), // day
-            parseInt(longdate.substr(8,2)), // hour
-            parseInt(longdate.substr(10,2)), // mins
-            0 ).add_seconds(86400); // seconds 
-
-        let now = GLib.DateTime.new_now(timezone);
-        let difference = refreshDue.difference(now)/1000000;
-
-        log("Next refresh due @ "+refreshDue.format('%F %R %z')+" = "+difference+" seconds from now ("+now.format('%F %R %z')+")");
-
-        if (difference < 60 || difference > 86400) // something wierd happened
-            difference = 3600;
-
-        difference=difference+300; // 5 minute fudge offset in case of inaccurate local clock
-        this._restartTimeout(difference);
-    },*/
-
     _showDescription: function() {
         if (this.title == "" && this.explanation == "") {
             this._refresh();
@@ -291,7 +265,7 @@ const GEWallpaperIndicator = new Lang.Class({
             let message = this.explanation;
             if (this.copyright != "")
                 message += "\n" + this.copyright + ""
-            notify(this.title, message, this._settings.get_boolean('transient'));
+            notify(this.title, message, this._settings.get_boolean('transient'), this.link);
         }
     },
 
