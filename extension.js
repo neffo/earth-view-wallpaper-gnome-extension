@@ -139,8 +139,9 @@ function notify(msg, details, transient) {
     let notification = new LongNotification(source, msg, details);
     notification.setTransient(transient);
     // Add action to open GE website with default browser
+    log("Google Earth link: "+googleearthWallpaperIndicator.link);
     notification.addAction(_("View on Google Earth"), Lang.bind(this, function() {
-        Util.spawn(["xdg-open", this.link]); // fixme: this should be the link from the json
+        Util.spawn(["xdg-open", googleearthWallpaperIndicator.link]); // fixme: this should be the link from the json
     }));
     source.notify(notification);
 }
