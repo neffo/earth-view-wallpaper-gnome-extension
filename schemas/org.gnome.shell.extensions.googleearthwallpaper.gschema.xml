@@ -1,5 +1,13 @@
 <schemalist gettext-domain="gnome-shell-extensions">
 
+  <enum id="org.gnome.shell.extensions.googleearthwallpaper.LinkProviderEnum">
+    <value value="0" nick="google-earth"/>
+    <value value="1" nick="google-maps"/>
+    <value value="2" nick="bing-maps"/>
+    <value value="3" nick="openstreetmap"/>
+    <value value="4" nick="gnome-maps"/>
+  </enum>
+
   <schema id="org.gnome.shell.extensions.googleearthwallpaper"
       path="/org/gnome/shell/extensions/googleearthwallpaper/">
 
@@ -44,7 +52,7 @@
         <summary>Log messages to systemd journal</summary>
         <description>Unlikely to be useful for ordinary users, but helpful for debugging</description>
     </key>
-    
+
     <key name="delete-previous" type="b">
       <default>true</default>
         <summary>Delete previous wallpapers</summary>
@@ -78,6 +86,12 @@
     <key name="next-refresh" type="i">
       <default>0</default>
       <summary>Next refresh due, seconds since Epoch</summary>
+      <description></description>
+    </key>
+
+    <key name="map-link-provider" enum="org.gnome.shell.extensions.googleearthwallpaper.LinkProviderEnum">
+      <default>'google-earth'</default>
+      <summary>Provider used to view wallpaper location and context</summary>
       <description></description>
     </key>
 

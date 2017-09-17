@@ -305,6 +305,7 @@ Modified by: Michael Carroll
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="halign">end</property>
+                            <property name="margin_right">8</property>
                             <property name="hexpand">True</property>
                             <property name="action">select-folder</property>
                             <property name="title" translatable="yes">Wallpaper pictures folder</property>
@@ -374,7 +375,6 @@ Modified by: Michael Carroll
           <object class="GtkFrame" id="refresh_frame">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_bottom">16</property>
             <property name="label_xalign">0</property>
             <property name="shadow_type">in</property>
             <child>
@@ -429,10 +429,7 @@ Modified by: Michael Carroll
                           <object class="GtkComboBoxText" id="refresh_combo">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <!-- <items>
-                              <item id="3600" translatable="yes">hourly</item>
-                              <item id="86400" translatable="yes">daily</item>
-                            </items> -->
+                            <property name="margin_right">12</property>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
@@ -457,7 +454,86 @@ Modified by: Michael Carroll
           </packing>
         </child>
         <child>
-          <placeholder/>
+          <object class="GtkFrame" id="map_provider_frame">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_bottom">16</property>
+            <property name="label_xalign">0</property>
+            <property name="shadow_type">in</property>
+            <child>
+              <object class="GtkListBox" id="map_provider_listbox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkListBoxRow" id="map_provider_listboxrow">
+                    <property name="width_request">100</property>
+                    <property name="height_request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <child>
+                      <object class="GtkGrid" id="map_provider_grid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_top">12</property>
+                        <property name="margin_bottom">12</property>
+                        <property name="column_spacing">32</property>
+                        <child>
+                          <object class="GtkLabel" id="map_provider_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="hexpand">True</property>
+                            <property name="label" translatable="yes">Map Provider for external links</property>
+                            <property name="wrap">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="map_provider_description">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Provider used to view wallpaper location and context</property>
+                            <property name="wrap">True</property>
+                            <style>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkComboBoxText" id="map_provider_combo">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="margin_right">12</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                            <property name="height">2</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child type="label_item">
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
         </child>
       </object>
     </child>
@@ -490,8 +566,8 @@ Modified by: Michael Carroll
             <property name="can_focus">False</property>
             <property name="halign">center</property>
             <property name="valign">center</property>
-            <property name="pixbuf">icons/globe-pin.svg</property>
             <property name="margin_bottom">12</property>
+            <property name="pixbuf">icons/globe-pin.svg</property>
           </object>
           <packing>
             <property name="expand">False</property>

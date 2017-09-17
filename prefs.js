@@ -14,6 +14,8 @@ let settings;
 const intervals = [ 300, 3600, 86400 ];
 const interval_names = [ _("5 minutes"), _("hourly"), _("daily")];
 
+const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' /*, 'GNOME Maps'*/];
+
 function init() {
     settings = Utils.getSettings(Me);
     Convenience.initTranslations("GEWallpaper");
@@ -37,6 +39,7 @@ function buildPrefsWidget(){
     let fileChooser = buildable.get_object('download_folder');
     let deleteSwitch = buildable.get_object('delete_previous');
     let refreshSpin = buildable.get_object('refresh_combo');
+    let providerSpin = buildable.get_object('map_provider_combo');
 
     // Indicator
     settings.bind('hide', hideSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -62,7 +65,7 @@ function buildPrefsWidget(){
 
     settings.bind('delete-previous', deleteSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
 
-    intervals.forEach(function (interval, index) { // add markets to dropdown list (aka a GtkComboText)
+    intervals.forEach(function (interval, index) { // add intervals to dropdown list (aka a GtkComboText)
         refreshSpin.append(interval.toString(), interval_names[index]);
     });
 
@@ -72,11 +75,26 @@ function buildPrefsWidget(){
         settings.set_int('refresh-interval',parseInt(refreshSpin.get_active_id(),10));
         log('Refresh interval currently set to '+refreshSpin['active_id']);
     });
+
     //log('Refresh interval currently set to '+refreshSpin['active_id']);
-    
     settings.connect('changed::refresh-interval', function() {
         refreshSpin.set_active_id(settings.get_int('refresh-interval').toString());
         log('Refresh interval set to '+refreshSpin['active_id']);
+    });
+
+    providerNames.forEach(function (provider, index) { // add map providers to dropdown list (aka a GtkComboText)
+        providerSpin.append(index.toString(), provider);
+    });
+
+    providerSpin.set_active_id(settings.get_enum('map-link-provider').toString()); // set to current
+    providerSpin.connect('changed', function() {
+        settings.set_enum('map-link-provider',parseInt(providerSpin.get_active_id(),10));
+        //log('Map-link-provider currently set to '+providerSpin['active_id']);
+    });
+
+    settings.connect('changed::map-link-provider', function() {
+        providerSpin.set_active_id(settings.get_enum('map-link-provider').toString());
+        //log('map-link-provider set to '+refreshSpin['active_id']);
     });
 
     box.show_all();
