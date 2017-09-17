@@ -6,7 +6,7 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 
 const Convenience = Me.imports.convenience;
-const Gettext = imports.gettext.domain('GEWallpaper');
+const Gettext = imports.gettext.domain('GoogleEarthWallpaper');
 const _ = Gettext.gettext;
 
 let settings;
@@ -18,7 +18,7 @@ const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMa
 
 function init() {
     settings = Utils.getSettings(Me);
-    Convenience.initTranslations("GEWallpaper");
+    Convenience.initTranslations("GoogleEarthWallpaper");
 }
 
 function buildPrefsWidget(){
