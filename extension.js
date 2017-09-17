@@ -16,7 +16,7 @@ const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 
 const Convenience = Me.imports.convenience;
-const Gettext = imports.gettext.domain('GEWallpaper');
+const Gettext = imports.gettext.domain('GoogleEarthWallpaper');
 const _ = Gettext.gettext;
 
 const GEjsonURL = "https://www.gstatic.com/prettyearth/";
@@ -484,7 +484,7 @@ const GEWallpaperIndicator = new Lang.Class({
 function init(extensionMeta) {
     let theme = imports.gi.Gtk.IconTheme.get_default();
     theme.append_search_path(extensionMeta.path + "/icons");
-    Convenience.initTranslations("GEWallpaper");
+    Convenience.initTranslations("GoogleEarthWallpaper");
 }
 
 function enable() {

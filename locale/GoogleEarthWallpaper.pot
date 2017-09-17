@@ -3,97 +3,89 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-17 18:43+1000\n"
-"PO-Revision-Date: 2017-09-17 18:48+1000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: de\n"
+"POT-Creation-Date: 2017-09-17 11:37+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: Settings.ui.h:1
 msgid "Hide the indicator"
-msgstr "Indikator ausblenden"
+msgstr ""
 
 #: Settings.ui.h:2
 msgid "Send a notification with explanation when a new image is downloaded."
 msgstr ""
-"Eine Benachrichtigung mit Erklärung anzeigen, wenn ein neues\n"
-"Bild heruntergeladen wurde."
 
 #: Settings.ui.h:3
 msgid "Notifications"
-msgstr "Benachrichtigungen"
+msgstr ""
 
 #: Settings.ui.h:4
 msgid "Use transient notifications (auto dismiss)"
-msgstr "Flüchtige Benachrichtigung (automatisches Entfernen)"
+msgstr ""
 
 #: Settings.ui.h:5
 msgid "Set background image"
-msgstr "Hintergrundbild setzen"
+msgstr ""
 
 #: Settings.ui.h:6
 msgid "Set lock screen image"
-msgstr "Hintergrundbild des Sperrbildschirms ändern"
+msgstr ""
 
 #: Settings.ui.h:7
 msgid "Download folder:"
-msgstr "Speicherverzeichnis:"
+msgstr ""
 
 #: Settings.ui.h:8
 msgid "Wallpaper pictures folder"
-msgstr "Bilderordner für Hintergrundbilder"
+msgstr ""
 
 #: Settings.ui.h:9
 msgid "Delete previously downloaded wallpapers:"
-msgstr "Alte Hintergrundbilder löschen:"
+msgstr ""
 
 #: Settings.ui.h:10
 msgid "Refresh interval"
-msgstr "Aktualisierungsintervall"
+msgstr ""
 
 #: Settings.ui.h:11
 msgid "Change effective from next refresh"
-msgstr "Wirksam von der nächsten änderung"
+msgstr ""
 
 #: Settings.ui.h:12
-#, fuzzy
 msgid "Map Provider for external links"
-msgstr "Kartendienstanbieter für externe Links"
+msgstr ""
 
 #: Settings.ui.h:13
-#, fuzzy
 msgid "Provider used to view wallpaper location and context"
-msgstr "Ermöglicht das Betrachten der Bildposition umgibt und den Kontext"
+msgstr ""
 
 #: Settings.ui.h:14 extension.js:205
 msgid "Settings"
-msgstr "Einstellungen"
+msgstr ""
 
 #: Settings.ui.h:15
 msgid "Gnome shell extension version: "
-msgstr "Version dieser GNOME Shell-Erweiterung:"
+msgstr ""
 
 #: Settings.ui.h:16
-#, fuzzy
 msgid ""
 "Set your wallpaper to a random Google Earth photo from a selection of "
 "curated locations."
 msgstr ""
-"Setzen Sie Ihr Hintergrundbild auf eine zufällige Google Earth aus einer "
-"Auswahl von kuratierten Orten."
 
 #: Settings.ui.h:17
 msgid "Maintained by Michael Carroll"
-msgstr "Gewartet durch Michael Carroll"
+msgstr ""
 
 #: Settings.ui.h:18
 msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
@@ -101,7 +93,7 @@ msgstr ""
 
 #: Settings.ui.h:19
 msgid "Based on NASA APOD Gnome shell extension by Elia Argentieri"
-msgstr "Basiert auf der NASA APOD Gnome Shell-Erweiterung von Elia Argentieri"
+msgstr ""
 
 #: Settings.ui.h:20
 msgid ""
@@ -109,9 +101,6 @@ msgid ""
 "See the <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
 "\">GNU General Public License, version 3 or later</a> for details.</span>"
 msgstr ""
-"<span size=\\\"small\\\">Für dieses Programm besteht KEINERLEI GARANTIE.\n"
-"Details unter <a href=\\\"https://www.gnu.org/licenses/old-licenses/gpl-2.0."
-"html\\\">GNU General Public License, version 3 or later</a></span>"
 
 #: Settings.ui.h:22
 msgid "About"
@@ -119,60 +108,56 @@ msgstr ""
 
 #: extension.js:200
 msgid "<No refresh scheduled>"
-msgstr "<Keine Aktualisierung geplant>"
+msgstr ""
 
 #: extension.js:201
 msgid "Show description"
-msgstr "Beschreibung anzeigen"
+msgstr ""
 
 #: extension.js:202
 msgid "External Link"
-msgstr "Externer Weblink"
+msgstr ""
 
 #: extension.js:203
 msgid "Set wallpaper"
-msgstr "Hintergrundbild festlegen"
+msgstr ""
 
 #: extension.js:204
 msgid "Refresh Now"
-msgstr "Aktualisieren"
+msgstr ""
 
 #: extension.js:232 extension.js:383
 msgid "Google Earth Wallpaper"
-msgstr "Google Earth Hintergrundbild"
+msgstr ""
 
 #: extension.js:273 extension.js:306
-#, fuzzy
 msgid "View in "
-msgstr "Zeigen Sie dies in"
+msgstr ""
 
 #: extension.js:329
 msgid "Next refresh"
-msgstr "Nächste Aktualisierung"
+msgstr ""
 
 #: extension.js:351
 msgid "Fetching..."
-msgstr "Wird heruntergeladen..."
+msgstr ""
 
 #: extension.js:438
 msgid "No wallpaper available"
-msgstr "Kein Hintergrundbild verfügbar"
+msgstr ""
 
 #: extension.js:439
 msgid "Something went wrong..."
-msgstr "Kein Bild heute 😞."
+msgstr ""
 
 #: prefs.js:15
 msgid "5 minutes"
-msgstr "5 Minuten"
+msgstr ""
 
 #: prefs.js:15
 msgid "hourly"
-msgstr "stündlich"
+msgstr ""
 
 #: prefs.js:15
 msgid "daily"
-msgstr "täglich"
-
-#~ msgid "View on Google Earth"
-#~ msgstr "Google Earth Webseite"
+msgstr ""
