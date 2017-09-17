@@ -90,7 +90,7 @@
     </key>
 
     <key name="map-link-provider" enum="org.gnome.shell.extensions.googleearthwallpaper.LinkProviderEnum">
-      <default>'google-earth'</default>
+      <default>'google-maps'</default>
       <summary>Provider used to view wallpaper location and context</summary>
       <description></description>
     </key>

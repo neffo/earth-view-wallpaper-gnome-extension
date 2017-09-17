@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-12 18:56+1000\n"
+"POT-Creation-Date: 2017-09-17 18:53+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,15 +61,15 @@ msgstr ""
 msgid "Change effective from next refresh"
 msgstr ""
 
-#: Settings.ui.h:12 prefs.js:15
-msgid "hourly"
+#: Settings.ui.h:12
+msgid "Map Provider for external links"
 msgstr ""
 
-#: Settings.ui.h:13 prefs.js:15
-msgid "daily"
+#: Settings.ui.h:13
+msgid "Provider used to view wallpaper location and context"
 msgstr ""
 
-#: Settings.ui.h:14 extension.js:194
+#: Settings.ui.h:14 extension.js:205
 msgid "Settings"
 msgstr ""
 
@@ -106,46 +106,58 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: extension.js:142
-msgid "View on Google Earth"
-msgstr ""
-
-#: extension.js:190
+#: extension.js:200
 msgid "<No refresh scheduled>"
 msgstr ""
 
-#: extension.js:191
+#: extension.js:201
 msgid "Show description"
 msgstr ""
 
-#: extension.js:192
+#: extension.js:202
+msgid "External Link"
+msgstr ""
+
+#: extension.js:203
 msgid "Set wallpaper"
 msgstr ""
 
-#: extension.js:193
+#: extension.js:204
 msgid "Refresh Now"
 msgstr ""
 
-#: extension.js:217 extension.js:335
+#: extension.js:232 extension.js:383
 msgid "Google Earth Wallpaper"
 msgstr ""
 
-#: extension.js:255
+#: extension.js:273 extension.js:306
+msgid "View in "
+msgstr ""
+
+#: extension.js:329
 msgid "Next refresh"
 msgstr ""
 
-#: extension.js:303
+#: extension.js:351
 msgid "Fetching..."
 msgstr ""
 
-#: extension.js:388
+#: extension.js:438
 msgid "No wallpaper available"
 msgstr ""
 
-#: extension.js:389
+#: extension.js:439
 msgid "Something went wrong..."
 msgstr ""
 
 #: prefs.js:15
 msgid "5 minutes"
+msgstr ""
+
+#: prefs.js:15
+msgid "hourly"
+msgstr ""
+
+#: prefs.js:15
+msgid "daily"
 msgstr ""

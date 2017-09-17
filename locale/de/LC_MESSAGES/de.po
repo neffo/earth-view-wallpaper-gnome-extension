@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-12 18:57+1000\n"
-"PO-Revision-Date: 2017-09-12 19:13+1000\n"
+"POT-Creation-Date: 2017-09-17 18:43+1000\n"
+"PO-Revision-Date: 2017-09-17 18:48+1000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.1\n"
-"Last-Translator: \n"
+"X-Generator: Poedit 2.0.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: de\n"
 
 #: Settings.ui.h:1
 msgid "Hide the indicator"
@@ -64,15 +64,17 @@ msgstr "Aktualisierungsintervall"
 msgid "Change effective from next refresh"
 msgstr "Wirksam von der nächsten änderung"
 
-#: Settings.ui.h:12 prefs.js:15
-msgid "hourly"
-msgstr "stündlich"
+#: Settings.ui.h:12
+#, fuzzy
+msgid "Map Provider for external links"
+msgstr "Kartendienstanbieter für externe Links"
 
-#: Settings.ui.h:13 prefs.js:15
-msgid "daily"
-msgstr "täglich"
+#: Settings.ui.h:13
+#, fuzzy
+msgid "Provider used to view wallpaper location and context"
+msgstr "Ermöglicht das Betrachten der Bildposition umgibt und den Kontext"
 
-#: Settings.ui.h:14 extension.js:194
+#: Settings.ui.h:14 extension.js:205
 msgid "Settings"
 msgstr "Einstellungen"
 
@@ -99,8 +101,7 @@ msgstr ""
 
 #: Settings.ui.h:19
 msgid "Based on NASA APOD Gnome shell extension by Elia Argentieri"
-msgstr ""
-"Basiert auf der NASA APOD Gnome Shell-Erweiterung von Elia Argentieri"
+msgstr "Basiert auf der NASA APOD Gnome Shell-Erweiterung von Elia Argentieri"
 
 #: Settings.ui.h:20
 msgid ""
@@ -109,53 +110,69 @@ msgid ""
 "\">GNU General Public License, version 3 or later</a> for details.</span>"
 msgstr ""
 "<span size=\\\"small\\\">Für dieses Programm besteht KEINERLEI GARANTIE.\n"
-"Details unter <a href=\\\"https://www.gnu.org/licenses/old-licenses/"
-"gpl-2.0.html\\\">GNU General Public License, version 3 or later</a></span>"
+"Details unter <a href=\\\"https://www.gnu.org/licenses/old-licenses/gpl-2.0."
+"html\\\">GNU General Public License, version 3 or later</a></span>"
 
 #: Settings.ui.h:22
 msgid "About"
 msgstr ""
 
-#: extension.js:142
-msgid "View on Google Earth"
-msgstr "Google Earth Webseite"
-
-#: extension.js:190
+#: extension.js:200
 msgid "<No refresh scheduled>"
 msgstr "<Keine Aktualisierung geplant>"
 
-#: extension.js:191
+#: extension.js:201
 msgid "Show description"
 msgstr "Beschreibung anzeigen"
 
-#: extension.js:192
+#: extension.js:202
+msgid "External Link"
+msgstr "Externer Weblink"
+
+#: extension.js:203
 msgid "Set wallpaper"
 msgstr "Hintergrundbild festlegen"
 
-#: extension.js:193
+#: extension.js:204
 msgid "Refresh Now"
 msgstr "Aktualisieren"
 
-#: extension.js:217 extension.js:335
+#: extension.js:232 extension.js:383
 msgid "Google Earth Wallpaper"
 msgstr "Google Earth Hintergrundbild"
 
-#: extension.js:255
+#: extension.js:273 extension.js:306
+#, fuzzy
+msgid "View in "
+msgstr "Zeigen Sie dies in"
+
+#: extension.js:329
 msgid "Next refresh"
 msgstr "Nächste Aktualisierung"
 
-#: extension.js:303
+#: extension.js:351
 msgid "Fetching..."
 msgstr "Wird heruntergeladen..."
 
-#: extension.js:388
+#: extension.js:438
 msgid "No wallpaper available"
 msgstr "Kein Hintergrundbild verfügbar"
 
-#: extension.js:389
+#: extension.js:439
 msgid "Something went wrong..."
 msgstr "Kein Bild heute 😞."
 
 #: prefs.js:15
 msgid "5 minutes"
 msgstr "5 Minuten"
+
+#: prefs.js:15
+msgid "hourly"
+msgstr "stündlich"
+
+#: prefs.js:15
+msgid "daily"
+msgstr "täglich"
+
+#~ msgid "View on Google Earth"
+#~ msgstr "Google Earth Webseite"

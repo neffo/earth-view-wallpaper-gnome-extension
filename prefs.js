@@ -14,7 +14,7 @@ let settings;
 const intervals = [ 300, 3600, 86400 ];
 const interval_names = [ _("5 minutes"), _("hourly"), _("daily")];
 
-const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' /*, 'GNOME Maps'*/];
+const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 
 function init() {
     settings = Utils.getSettings(Me);
@@ -89,12 +89,10 @@ function buildPrefsWidget(){
     providerSpin.set_active_id(settings.get_enum('map-link-provider').toString()); // set to current
     providerSpin.connect('changed', function() {
         settings.set_enum('map-link-provider',parseInt(providerSpin.get_active_id(),10));
-        //log('Map-link-provider currently set to '+providerSpin['active_id']);
     });
 
     settings.connect('changed::map-link-provider', function() {
         providerSpin.set_active_id(settings.get_enum('map-link-provider').toString());
-        //log('map-link-provider set to '+refreshSpin['active_id']);
     });
 
     box.show_all();

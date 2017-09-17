@@ -13,10 +13,10 @@ This extension is derived from my [Bing Wallpaper](https://github.com/neffo/bing
 * Fetches a random Google Earth wallpaper and sets as both lock screen and desktop wallpaper
 * User selectable refresh intervals (default is once per day)
 * Optional: keep images or clean up after (later is default)
+* View location on Google Maps, Gnome Maps, OpenStreetMaps
 
 ## TODO
 
-* View location on Google Maps, Gnome Maps, OpenStreetMaps
 * Location relative to user - could be fun, yeah?
 * Place pin on a map/globe in settings menu
 * Pixel scale

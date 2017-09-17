@@ -96,7 +96,7 @@ const imageids = [
     "2410", "2411", "2412", "2413", "2414", "2416", "2418", "2419", "2421", "2422", "2423", "2426", "2430", "2431",
     "2432", "2433", "2434", "2435", "2436", "2437", "2438", "2439", "2442", "2443", "2444", "2446", "2447", "2448" ];
 
-const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' /*, 'GNOME Maps'*/];
+const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 
 let googleearthWallpaperIndicator=null;
 
@@ -191,21 +191,29 @@ const GEWallpaperIndicator = new Lang.Class({
         this._settings.connect('changed::hide', Lang.bind(this, function() {
             this.actor.visible = !this._settings.get_boolean('hide');
         }));
-
         this.actor.visible = !this._settings.get_boolean('hide');
+
+        this._settings.connect('changed::map-link-provider', Lang.bind(this, function() {
+            this._updateProviderLink();
+        }));
 
         this.refreshDueItem = new PopupMenu.PopupMenuItem(_("<No refresh scheduled>"));
         this.showItem = new PopupMenu.PopupMenuItem(_("Show description"));
+        this.extLink = new PopupMenu.PopupMenuItem(_("External Link"));
         this.wallpaperItem = new PopupMenu.PopupMenuItem(_("Set wallpaper"));
         this.refreshItem = new PopupMenu.PopupMenuItem(_("Refresh Now"));
         this.settingsItem = new PopupMenu.PopupMenuItem(_("Settings"));
         this.menu.addMenuItem(this.refreshDueItem);
         this.menu.addMenuItem(this.showItem);
+        this.menu.addMenuItem(this.extLink);
         this.menu.addMenuItem(this.wallpaperItem);
         this.menu.addMenuItem(this.refreshItem);
         this.menu.addMenuItem(this.settingsItem);
         this.refreshDueItem.setSensitive(false);
         this.showItem.connect('activate', Lang.bind(this, this._showDescription));
+        this.extLink.connect('activate', Lang.bind(this, function() {
+            Util.spawn(["xdg-open", this.link]);
+        }));
         this.wallpaperItem.connect('activate', Lang.bind(this, this._setBackground));
         this.refreshItem.connect('activate', Lang.bind(this, this._refresh));
         this.settingsItem.connect('activate', function() {
@@ -237,6 +245,7 @@ const GEWallpaperIndicator = new Lang.Class({
             let unixtime = GLib.DateTime.new_now(timezone).to_unix();
             let seconds = this._settings.get_int('next-refresh') - unixtime;
             log(" image: "+this.filename+" explanation: "+this.explanation+"\n next refresh in: "+seconds+" seconds");
+            this._updateProviderLink();
             this._setBackground();
             this._restartTimeout(seconds < 60 ? 60 : seconds); // never refresh early than 60 seconds after startup
         }
@@ -287,13 +296,14 @@ const GEWallpaperIndicator = new Lang.Class({
                         this.zoom + '/' + this.lat + '/' + this.lon;
           break;
         case 4: // GNOME Maps
-          this.link = 'https://github.com/neffo/earth-view-wallpaper-gnome-extension/issues'; // not implemented
+          this.link = 'geo:'+this.lat+','+this.lon;
           break;
 
         case 0: // Google Earth
         default:
           this.link = 'https://g.co/ev/'+this.imageid;
       }
+      this.extLink.label.set_text(_("View in ")+providerNames[provider]);
     },
 
     _setBackground: function() {
@@ -388,7 +398,6 @@ const GEWallpaperIndicator = new Lang.Class({
             this.lon = imagejson['lng'];
             this.zoom = imagejson['zoom'];
             this.imageid = imagejson['id'];
-            //this.link = 'https://g.co/ev/' + imagejson['id']; //this will instead be generated at notification time
 
             let GEWallpaperDir = this._settings.get_string('download-folder');
             let userHomeDir = GLib.get_home_dir();
