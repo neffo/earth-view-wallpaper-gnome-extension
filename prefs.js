@@ -4,6 +4,7 @@ const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
+const Webkit = imports.gi.WebKit;
 
 const Convenience = Me.imports.convenience;
 const Gettext = imports.gettext.domain('GEWallpaper');
@@ -40,6 +41,12 @@ function buildPrefsWidget(){
     let deleteSwitch = buildable.get_object('delete_previous');
     let refreshSpin = buildable.get_object('refresh_combo');
     let providerSpin = buildable.get_object('map_provider_combo');
+    let globeFrame = buildable.get_object('globe_frame');
+    let webview =  new Webkit.WebView ();
+
+    globeFrame.add(webview);
+
+    update_globe(webview);
 
     // Indicator
     settings.bind('hide', hideSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -104,4 +111,24 @@ function validate_interval() {
     let interval = settings.get_string('refresh-interval');
     if (interval == "" || interval.indexOf(intervals) == -1) // if not a valid interval
         settings.reset('refresh-interval');
+}
+
+function update_globe(webview) {
+  let imagedata = settings.get_string('image-details').split('|');
+  let lat = parseFloat(imagedata[2]);
+  let lon = parseFloat(imagedata[3]);
+  //let bbox = (lat-5)+'%2C'+(lon-5)+'%2C'+(lat+5)+'%2C'+(lon+5);
+  let bbox = '-180,60,180,-60';
+  let marker = lat + '%2C' + lon;
+  let webcontent = `<html><iframe width="100%" height="320" frameborder="0"
+                    scrolling="no" marginheight="0" margin="auto"
+                    src="http://www.openstreetmap.org/export/embed.html?bbox=`
+                    +bbox+ `&amp;layer=mapnik&amp;marker=`+ marker + `"
+                    style="border: 0px solid black"></iframe></html>`;
+    // '<html>hello world!</html>';
+
+    log('update_globe() -> bbox: '+bbox+' marker: '+marker+' html: '+webcontent);
+
+    webview.load_html_string(webcontent,'');
+    //webview.load_uri(GLib.filename_to_uri ('file:///home/michael/Downloads/test.html', null));
 }
