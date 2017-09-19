@@ -1,10 +1,15 @@
-
 const Gtk = imports.gi.Gtk;
 const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
-const Webkit = imports.gi.WebKit;
+var Webkit;
+try {
+  Webkit = imports.gi.WebKitasd;
+} catch (e) {
+  Webkit = null;
+  log("unable to load webkit : "+e);
+}
 
 const Convenience = Me.imports.convenience;
 const Gettext = imports.gettext.domain('GoogleEarthWallpaper');
@@ -42,12 +47,20 @@ function buildPrefsWidget(){
     let refreshSpin = buildable.get_object('refresh_combo');
     let providerSpin = buildable.get_object('map_provider_combo');
     let globeFrame = buildable.get_object('globe_frame');
-    let webview =  new Webkit.WebView ();
-    webview.transparent = true;
 
-    globeFrame.add(webview);
+    if (Webkit != null) {
+      let webview =  new Webkit.WebView ();
+      webview.transparent = true;
+      globeFrame.add(webview);
+      update_globe(webview, buildable);
 
-    update_globe(webview, buildable);
+      settings.connect('changed::image-details', function() {
+          update_globe(webview, buildable);
+      });
+    } else {
+      let wklabel = new Gtk.Label({ justify: 'center', label: _("Please install WebKitGtk package to enable the map view.") });
+      globeFrame.add(wklabel);
+    }
 
     // Indicator
     settings.bind('hide', hideSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -101,10 +114,6 @@ function buildPrefsWidget(){
 
     settings.connect('changed::map-link-provider', function() {
         providerSpin.set_active_id(settings.get_enum('map-link-provider').toString());
-    });
-
-    settings.connect('changed::image-details', function() {
-        update_globe(webview, buildable);
     });
 
     box.show_all();
