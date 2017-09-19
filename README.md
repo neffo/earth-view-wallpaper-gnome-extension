@@ -31,7 +31,7 @@ Gnome 3.18+ (Ubuntu Gnome 16.04+, Fedora 23+)
 
 or install directly to your GNOME extensions directory (if you want to hack on it)
 
-`git clone https://github.com/neffo/earth-view-wallpaper-gnome-extension.git $HOME/.local/share/gnome-shell/extensions/GoogleEarthWallpaper@ineffable-gmail.com`
+`git clone https://github.com/neffo/earth-view-wallpaper-gnome-extension.git $HOME/.local/share/gnome-shell/extensions/GoogleEarthWallpaper@neffo.github.com`
 
 Or, here is a suitable [zip file](https://neffo.github.io/GoogleEarthWallpaper@neffo.github.com.zip) I prepared earlier.
 

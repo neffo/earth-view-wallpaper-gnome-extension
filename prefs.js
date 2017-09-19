@@ -5,7 +5,7 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 var Webkit;
 try {
-  Webkit = imports.gi.WebKitasd;
+  Webkit = imports.gi.WebKit;
 } catch (e) {
   Webkit = null;
   log("unable to load webkit : "+e);
