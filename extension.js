@@ -432,7 +432,12 @@ const GEWallpaperIndicator = new Lang.Class({
                 this._setBackground();
                 this._updatePending = false;
             }
-            this._settings.set_string('image-details',[this.explanation, this.copyright, this.lat.toString(),this.lon.toString(),this.zoom.toString()].join('|'));
+            this._settings.set_string('image-details',[
+                this.explanation.replace('|', ''), // just incase (see below)
+                this.copyright.replace('|', '&'), // i think copyright info uses | instead of &
+                this.lat.toString(),
+                this.lon.toString(),
+                this.zoom.toString()].join('|'));
             this._settings.set_int('image-id',imagejson['id']);
         } else {
             this.title = _("No wallpaper available");

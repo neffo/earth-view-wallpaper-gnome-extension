@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.0 
+<!-- Generated with glade 3.20.0
 
 Copyright (C) 2017
 
@@ -563,29 +563,20 @@ Modified by: Michael Carroll
           <placeholder/>
         </child>
         <child>
-          <object class="GtkLabel" id="extension_name">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label">&lt;b&gt;Google Earth Wallpaper&lt;/b&gt;</property>
-            <property name="use_markup">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkBox" id="version_box">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="halign">center</property>
+            <property name="valign">center</property>
             <property name="margin_bottom">12</property>
             <child>
-              <object class="GtkLabel" id="extension_version_label">
+              <object class="GtkLabel" id="extension_name">
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
-                <property name="label" translatable="yes">Gnome shell extension version: </property>
+                <property name="label" translatable="yes">Google Earth Wallpaper</property>
+                <attributes>
+                  <attribute name="weight" value="bold"/>
+                </attributes>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -609,12 +600,29 @@ Modified by: Michael Carroll
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLinkButton" id="homepage_link">
+            <property name="label" translatable="yes">https://github.com/neffo/earth-view-wallpaper-gnome-extension</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="receives_default">True</property>
+            <property name="events"/>
+            <property name="halign">center</property>
+            <property name="relief">none</property>
+            <property name="uri">https://github.com/neffo/earth-view-wallpaper-gnome-extension</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="position">2</property>
           </packing>
         </child>
         <child>
           <object class="GtkFrame" id="globe_frame">
-            <property name="height_request">310</property>
+            <property name="height_request">320</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="label_xalign">0</property>
@@ -627,8 +635,8 @@ Modified by: Michael Carroll
             </child>
           </object>
           <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
             <property name="pack_type">end</property>
             <property name="position">3</property>
           </packing>
@@ -637,7 +645,7 @@ Modified by: Michael Carroll
           <object class="GtkLabel" id="extension_description">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Set your wallpaper to a random Google Earth photo from a selection of curated locations.</property>
+            <property name="label" translatable="yes">This GNOME shell extension sets your wallpaper to a random Google Earth photo from a selection of curated locations.</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
           </object>
@@ -684,23 +692,6 @@ Modified by: Michael Carroll
           </packing>
         </child>
         <child>
-          <object class="GtkLinkButton" id="homepage_link">
-            <property name="label" translatable="yes">https://github.com/neffo/earth-view-wallpaper-gnome-extension</property>
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="receives_default">True</property>
-            <property name="events"/>
-            <property name="halign">center</property>
-            <property name="relief">none</property>
-            <property name="uri">https://github.com/neffo/earth-view-wallpaper-gnome-extension</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">6</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
@@ -709,7 +700,7 @@ Modified by: Michael Carroll
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Based on NASA APOD Gnome shell extension by Elia Argentieri</property>
+                <property name="label" translatable="yes">Based on NASA APOD Wallpaper extension by Elia Argentieri</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
                 <attributes>
@@ -726,7 +717,7 @@ Modified by: Michael Carroll
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">7</property>
+            <property name="position">6</property>
           </packing>
         </child>
         <child>
@@ -743,8 +734,11 @@ See the &lt;a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"&gt;G
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">8</property>
+            <property name="position">7</property>
           </packing>
+        </child>
+        <child>
+          <placeholder/>
         </child>
       </object>
       <packing>

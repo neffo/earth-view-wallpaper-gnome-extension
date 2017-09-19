@@ -92,7 +92,7 @@ msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
 msgstr ""
 
 #: Settings.ui.h:19
-msgid "Based on NASA APOD Gnome shell extension by Elia Argentieri"
+msgid "Based on NASA APOD Wallpaper extension by Elia Argentieri"
 msgstr ""
 
 #: Settings.ui.h:20

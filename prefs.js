@@ -29,7 +29,7 @@ function buildPrefsWidget(){
     buildable.add_from_file( Me.dir.get_path() + '/Settings.ui' );
     let box = buildable.get_object('prefs_widget');
 
-    buildable.get_object('extension_version').set_text(Me.metadata.version.toString());
+    buildable.get_object('extension_version').set_text(' v'+Me.metadata.version.toString());
     buildable.get_object('extension_name').set_text(Me.metadata.name.toString());
 
     let hideSwitch = buildable.get_object('hide');
@@ -43,10 +43,11 @@ function buildPrefsWidget(){
     let providerSpin = buildable.get_object('map_provider_combo');
     let globeFrame = buildable.get_object('globe_frame');
     let webview =  new Webkit.WebView ();
+    webview.transparent = true;
 
     globeFrame.add(webview);
 
-    update_globe(webview);
+    update_globe(webview, buildable);
 
     // Indicator
     settings.bind('hide', hideSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -102,6 +103,10 @@ function buildPrefsWidget(){
         providerSpin.set_active_id(settings.get_enum('map-link-provider').toString());
     });
 
+    settings.connect('changed::image-details', function() {
+        update_globe(webview, buildable);
+    });
+
     box.show_all();
 
     return box;
@@ -113,22 +118,26 @@ function validate_interval() {
         settings.reset('refresh-interval');
 }
 
-function update_globe(webview) {
-  let imagedata = settings.get_string('image-details').split('|');
-  let lat = parseFloat(imagedata[2]);
-  let lon = parseFloat(imagedata[3]);
-  //let bbox = (lat-5)+'%2C'+(lon-5)+'%2C'+(lat+5)+'%2C'+(lon+5);
-  let bbox = '-180,60,180,-60';
-  let marker = lat + '%2C' + lon;
-  let webcontent = `<html><iframe width="100%" height="320" frameborder="0"
-                    scrolling="no" marginheight="0" margin="auto"
-                    src="http://www.openstreetmap.org/export/embed.html?bbox=`
-                    +bbox+ `&amp;layer=mapnik&amp;marker=`+ marker + `"
-                    style="border: 0px solid black"></iframe></html>`;
-    // '<html>hello world!</html>';
+function update_globe(webview, buildable) {
+    let imagedata = settings.get_string('image-details').split('|');
+    let lat = parseFloat(imagedata[2]);
+    let lon = parseFloat(imagedata[3]);
+    let address = imagedata[0].split('\n');
+    //let bbox = (lat-5)+'%2C'+(lon-5)+'%2C'+(lat+5)+'%2C'+(lon+5);
+    let bbox = '-180,80,180,-50';
+    let marker = lat + '%2C' + lon;
+    let webcontent = `<html style="background-color: transparent;"><div style="border: 1px solid black; background-color: white;"><span style="margin: 2px; font-size: 0.7em; color: dark-grey;">`+address[0]+`</span>
+                      <iframe width="100%" height="320" frameborder="0"
+                      scrolling="no" marginheight="0"
+                      src="http://www.openstreetmap.org/export/embed.html?bbox=`
+                      +bbox+ `&amp;layer=mapnik&amp;marker=`+ marker + `"
+                      style="border: 0px solid black; margin: 0 auto; overflow: hidden;"></iframe></div></html>`;
+    //let locationLabel = buildable.get_object('location_label');
+      // '<html>hello world!</html>';
 
-    log('update_globe() -> bbox: '+bbox+' marker: '+marker+' html: '+webcontent);
+      log('update_globe() -> imagedata: '+settings.get_string('image-details')+' \n bbox: '+bbox+' marker: '+marker+' html: '+webcontent);
 
-    webview.load_html_string(webcontent,'');
-    //webview.load_uri(GLib.filename_to_uri ('file:///home/michael/Downloads/test.html', null));
+      webview.load_html_string(webcontent,'');
+      //locationLabel.set_text(address[0]);
+      //webview.load_uri(GLib.filename_to_uri ('file:///home/michael/Downloads/test.html', null));
 }

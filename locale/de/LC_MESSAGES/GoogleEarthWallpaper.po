@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-17 11:38+0200\n"
-"PO-Revision-Date: 2017-09-17 11:38+0200\n"
+"POT-Creation-Date: 2017-09-17 11:37+0200\n"
+"PO-Revision-Date: 2017-09-19 18:06+1000\n"
 "Last-Translator: Jonatan Hatakeyama Zeidler <jonatan_zeidler@gmx.de>\n"
 "Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.1\n"
+"X-Generator: Poedit 2.0.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: Settings.ui.h:1
@@ -97,8 +97,9 @@ msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
 msgstr "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
 
 #: Settings.ui.h:19
-msgid "Based on NASA APOD Gnome shell extension by Elia Argentieri"
-msgstr "Basiert auf der NASA APOD Gnome Shell-Erweiterung von Elia Argentieri"
+msgid "Based on NASA APOD Wallpaper extension by Elia Argentieri"
+msgstr ""
+"Basiert auf der NASA APOD Wallpaper Shell-Erweiterung von Elia Argentieri"
 
 #: Settings.ui.h:20
 msgid ""
