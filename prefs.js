@@ -135,12 +135,11 @@ function update_globe(webview, buildable) {
     //let bbox = (lat-5)+'%2C'+(lon-5)+'%2C'+(lat+5)+'%2C'+(lon+5);
     let bbox = '-180,80,180,-50';
     let marker = lat + '%2C' + lon;
-    let webcontent = `<html style="background-color: transparent;"><div style="border: 1px solid black; background-color: white;"><span style="margin: 2px; font-size: 0.7em; color: dark-grey;">`+address[0]+`</span>
-                      <iframe width="100%" height="320" frameborder="0"
-                      scrolling="no" marginheight="0"
-                      src="http://www.openstreetmap.org/export/embed.html?bbox=`
-                      +bbox+ `&amp;layer=mapnik&amp;marker=`+ marker + `"
-                      style="border: 0px solid black; margin: 0 auto; overflow: hidden;"></iframe></div></html>`;
+    let webcontent = '<html style="background-color: transparent;"><div style="border: 1px solid black; background-color: white;">';
+    webcontent = webcontent + '<span style="margin: 2px; font-size: 0.7em; color: dark-grey;">'+address[0];
+    webcontent = webcontent + '</span><iframe width="100%" height="320" frameborder="0" scrolling="no" marginheight="0"';
+    webcontent = webcontent + ' src="http://www.openstreetmap.org/export/embed.html?bbox='+bbox+'&amp;layer=mapnik&amp;marker='+ marker;
+    webcontent = webcontent + ' "style="border: 0px solid black; margin: 0 auto; overflow: hidden;"></iframe></div></html>';
     //let locationLabel = buildable.get_object('location_label');
       // '<html>hello world!</html>';
 
