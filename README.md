@@ -1,6 +1,6 @@
 # GNOME Shell extension - Google Earth Wallpaper
 
-Lightweight GNOME shell extension to set your wallpaper to a random Google Earth photo from a selection of curated locations (around 1000). It will
+Lightweight GNOME shell extension to set your wallpaper to a random Google Earth photo from a selection of curated locations (around 1500). It will
 also show a notification containing the location of the image.
 
 *Disclaimer*: this extension is unofficial and not affiliated with Google in any way. Images are protected by copyright, and are licensed only

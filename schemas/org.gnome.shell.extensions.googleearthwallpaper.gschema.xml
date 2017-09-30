@@ -48,7 +48,7 @@
     </key>
 
     <key name="debug-logging" type="b">
-      <default>false</default>
+      <default>true</default>
         <summary>Log messages to systemd journal</summary>
         <description>Unlikely to be useful for ordinary users, but helpful for debugging</description>
     </key>

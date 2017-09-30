@@ -8,4 +8,4 @@ rm GoogleEarthWallpaper@neffo.github.com.zip
 
 zip -r GoogleEarthWallpaper@neffo.github.com.zip *
 
-zip -d GoogleEarthWallpaper@neffo.github.com.zip screenshot/* screenshot buildzip.sh
+zip -d GoogleEarthWallpaper@neffo.github.com.zip screenshot/* screenshot buildzip.sh *~

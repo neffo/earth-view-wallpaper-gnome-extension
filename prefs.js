@@ -5,7 +5,7 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 var Webkit;
 try {
-  Webkit = imports.gi.WebKit;
+  Webkit = imports.gi.WebKit2;
 } catch (e) {
   Webkit = null;
   log("unable to load webkit : "+e);
@@ -51,6 +51,8 @@ function buildPrefsWidget(){
     if (Webkit != null) {
       let webview =  new Webkit.WebView ();
       webview.transparent = true;
+      webview.margin_left = 10;
+      webview.margin_right = 10;
       globeFrame.add(webview);
       update_globe(webview, buildable);
 
@@ -58,7 +60,8 @@ function buildPrefsWidget(){
           update_globe(webview, buildable);
       });
     } else {
-      let wklabel = new Gtk.Label({ justify: 'center', label: _("Please install WebKitGtk package to enable the map view.") });
+      let wklabel = new Gtk.Label();
+      wklabel.set_label(_("Please install WebKit2Gtk package to enable the map view."))
       globeFrame.add(wklabel);
     }
 
@@ -135,17 +138,17 @@ function update_globe(webview, buildable) {
     //let bbox = (lat-5)+'%2C'+(lon-5)+'%2C'+(lat+5)+'%2C'+(lon+5);
     let bbox = '-180,80,180,-50';
     let marker = lat + '%2C' + lon;
-    let webcontent = '<html style="background-color: transparent;"><div style="border: 1px solid black; background-color: white;">';
-    webcontent = webcontent + '<span style="margin: 2px; font-size: 0.7em; color: dark-grey;">'+address[0];
-    webcontent = webcontent + '</span><iframe width="100%" height="320" frameborder="0" scrolling="no" marginheight="0"';
+    let webcontent = '<html style="background-color: transparent;"><div style="border: 0px; background-color: white; padding: 0px; margin: 0px;">';
+    webcontent = webcontent + '<span style="margin: 0px; font-size: 0.7em; color: dark-grey;">'+address[0];
+    webcontent = webcontent + '</span><iframe width="100%" height="300" ';
     webcontent = webcontent + ' src="http://www.openstreetmap.org/export/embed.html?bbox='+bbox+'&amp;layer=mapnik&amp;marker='+ marker;
-    webcontent = webcontent + ' "style="border: 0px solid black; margin: 0 auto; overflow: hidden;"></iframe></div></html>';
+    webcontent = webcontent + ' "style="border: 0px solid black; margin: 0px 0px 0px 0px; overflow: hidden; padding: 0px;"></iframe></div></html>';
     //let locationLabel = buildable.get_object('location_label');
       // '<html>hello world!</html>';
 
       log('update_globe() -> imagedata: '+settings.get_string('image-details')+' \n bbox: '+bbox+' marker: '+marker+' html: '+webcontent);
 
-      webview.load_html_string(webcontent,'');
+      webview.load_html(webcontent,'');
       //locationLabel.set_text(address[0]);
       //webview.load_uri(GLib.filename_to_uri ('file:///home/michael/Downloads/test.html', null));
 }
