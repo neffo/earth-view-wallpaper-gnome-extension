@@ -95,5 +95,11 @@
       <description></description>
     </key>
 
+    <key name="brightness" type="i">
+      <default>80</default>
+      <summary>Percentage brightness change for indicator icon</summary>
+      <description></description>
+    </key>
+
   </schema>
 </schemalist>

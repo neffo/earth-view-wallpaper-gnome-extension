@@ -9,6 +9,7 @@ const GLib = imports.gi.GLib;
 const Util = imports.misc.util;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
+const Clutter = imports.gi.Clutter;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -136,9 +137,11 @@ const imageids = [
     "7002", "7003", "7004", "7005", "7006", "7008", "7009", "7010", "7011", "7012", "7013", "7015", "7016", "7017",
     "7018", "7019", "7020", "7021", "7023" ];
 
-const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 
+const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 let googleearthWallpaperIndicator=null;
+let httpSession = new Soup.SessionAsync();
+Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
 
 function log(msg) {
     if (googleearthWallpaperIndicator==null || googleearthWallpaperIndicator._settings.get_boolean('debug-logging'))
@@ -178,24 +181,20 @@ function doSetBackground(uri, schema) {
     gsettings.apply();
 }
 
-let httpSession = new Soup.SessionAsync();
-Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
-
 const GEWallpaperIndicator = new Lang.Class({
     Name: IndicatorName,
     Extends: PanelMenu.Button,
 
     _init: function() {
         this.parent(0.0, IndicatorName);
-        
-        this.icon = new St.Icon({icon_name: ICON, style_class: 'system-status-icon'});
-        this.actor.add_child(this.icon);
 
+        this.icon = new St.Icon({icon_name: ICON, style_class: 'system-status-icon'});
+        this.x_fill = true;
+        this.y_fill = false;
         this.title = "";
         this.explanation = "";
         this.filename = "";
         this.copyright = "";
-        this.version = "0.1";
         this._updatePending = false;
         this._timeout = null;
         this.lat = 0;
@@ -212,6 +211,19 @@ const GEWallpaperIndicator = new Lang.Class({
 
         this._settings.connect('changed::map-link-provider', Lang.bind(this, function() {
             this._updateProviderLink();
+        }));
+
+        // this is how we handle dynamic icon brightness
+        this.bright_effect = new Clutter.BrightnessContrastEffect({});
+        this.bright_effect.set_brightness(-1.0 + (clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
+        this.bright_effect.set_contrast(0);
+        this.icon.add_effect_with_name('brightness-contrast', this.bright_effect);
+        this.actor.add_child(this.icon);
+        // connect to brightness setting
+        this._settings.connect('changed::brightness', Lang.bind(this, function() {
+          this.bright_effect.set_contrast(0);
+          //let brightness = -1.0 + (this._settings.get_int('brightness')/100.0);
+          this.bright_effect.set_brightness(-1.0 + (clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
         }));
 
         this.refreshDueItem = new PopupMenu.PopupMenuItem(_("<No refresh scheduled>"));
@@ -313,7 +325,7 @@ const GEWallpaperIndicator = new Lang.Class({
                         this.zoom + '/' + this.lat + '/' + this.lon;
           break;
         case 4: // GNOME Maps (most likely, or whatever is default app for geo: uris)
-          this.link = 'geo:'+this.lat+','+this.lon; 
+          this.link = 'geo:'+this.lat+','+this.lon;
           break;
 
         case 0: // Google Earth
@@ -518,4 +530,8 @@ function disable() {
     googleearthWallpaperIndicator.stop();
     googleearthWallpaperIndicator.destroy();
     googleearthWallpaperIndicator = null;
+}
+
+function clamp_value(value, min, max) {
+	return Math.min(Math.max(value, min), max);
 }

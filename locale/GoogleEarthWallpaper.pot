@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-17 11:37+0200\n"
+"POT-Creation-Date: 2017-10-10 21:42+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,142 +22,158 @@ msgid "Hide the indicator"
 msgstr ""
 
 #: Settings.ui.h:2
-msgid "Send a notification with explanation when a new image is downloaded."
+msgid "Indicator brightness"
 msgstr ""
 
 #: Settings.ui.h:3
-msgid "Notifications"
+msgid "Indicator"
 msgstr ""
 
 #: Settings.ui.h:4
-msgid "Use transient notifications (auto dismiss)"
+msgid "Send a notification with explanation when a new image is downloaded."
 msgstr ""
 
 #: Settings.ui.h:5
-msgid "Set background image"
+msgid "Notifications"
 msgstr ""
 
 #: Settings.ui.h:6
-msgid "Set lock screen image"
+msgid "Use transient notifications (auto dismiss)"
 msgstr ""
 
 #: Settings.ui.h:7
-msgid "Download folder:"
-msgstr ""
-
-#: Settings.ui.h:8
-msgid "Wallpaper pictures folder"
-msgstr ""
-
-#: Settings.ui.h:9
-msgid "Delete previously downloaded wallpapers:"
-msgstr ""
-
-#: Settings.ui.h:10
 msgid "Refresh interval"
 msgstr ""
 
-#: Settings.ui.h:11
+#: Settings.ui.h:8
 msgid "Change effective from next refresh"
 msgstr ""
 
+#: Settings.ui.h:9
+msgid "Set background image"
+msgstr ""
+
+#: Settings.ui.h:10
+msgid "Set lock screen image"
+msgstr ""
+
+#: Settings.ui.h:11
+msgid "Download folder:"
+msgstr ""
+
 #: Settings.ui.h:12
-msgid "Map Provider for external links"
+msgid "Wallpaper pictures folder"
 msgstr ""
 
 #: Settings.ui.h:13
-msgid "Provider used to view wallpaper location and context"
+msgid "Delete previously downloaded wallpapers:"
 msgstr ""
 
-#: Settings.ui.h:14 extension.js:205
-msgid "Settings"
+#: Settings.ui.h:14
+msgid "Map Provider for external links"
 msgstr ""
 
 #: Settings.ui.h:15
-msgid "Gnome shell extension version: "
+msgid "Provider used to view wallpaper location and context"
 msgstr ""
 
 #: Settings.ui.h:16
-msgid ""
-"Set your wallpaper to a random Google Earth photo from a selection of "
-"curated locations."
+msgid "Background"
 msgstr ""
 
 #: Settings.ui.h:17
-msgid "Maintained by Michael Carroll"
+msgid "Map View"
 msgstr ""
 
 #: Settings.ui.h:18
-msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
-msgstr ""
-
-#: Settings.ui.h:19
-msgid "Based on NASA APOD Wallpaper extension by Elia Argentieri"
-msgstr ""
-
-#: Settings.ui.h:20
 msgid ""
 "<span size=\"small\">This program comes with ABSOLUTELY NO WARRANTY.\n"
 "See the <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
 "\">GNU General Public License, version 3 or later</a> for details.</span>"
 msgstr ""
 
+#: Settings.ui.h:20
+msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
+msgstr ""
+
+#: Settings.ui.h:21
+msgid "Based on NASA APOD Wallpaper extension by Elia Argentieri"
+msgstr ""
+
 #: Settings.ui.h:22
-msgid "About"
+msgid ""
+"This GNOME shell extension sets your wallpaper to a random Google Earth "
+"photo from a selection of curated locations."
 msgstr ""
 
-#: extension.js:200
-msgid "<No refresh scheduled>"
-msgstr ""
-
-#: extension.js:201
-msgid "Show description"
-msgstr ""
-
-#: extension.js:202
-msgid "External Link"
-msgstr ""
-
-#: extension.js:203
-msgid "Set wallpaper"
-msgstr ""
-
-#: extension.js:204
-msgid "Refresh Now"
-msgstr ""
-
-#: extension.js:232 extension.js:383
+#: Settings.ui.h:23 extension.js:261 extension.js:412
 msgid "Google Earth Wallpaper"
 msgstr ""
 
-#: extension.js:273 extension.js:306
+#: Settings.ui.h:24
+msgid "Maintained by Michael Carroll"
+msgstr ""
+
+#: Settings.ui.h:25
+msgid "About"
+msgstr ""
+
+#: extension.js:229
+msgid "<No refresh scheduled>"
+msgstr ""
+
+#: extension.js:230
+msgid "Show description"
+msgstr ""
+
+#: extension.js:231
+msgid "External Link"
+msgstr ""
+
+#: extension.js:232
+msgid "Set wallpaper"
+msgstr ""
+
+#: extension.js:233
+msgid "Refresh Now"
+msgstr ""
+
+#: extension.js:234
+msgid "Settings"
+msgstr ""
+
+#: extension.js:302 extension.js:335
 msgid "View in "
 msgstr ""
 
-#: extension.js:329
+#: extension.js:358
 msgid "Next refresh"
 msgstr ""
 
-#: extension.js:351
+#: extension.js:380
 msgid "Fetching..."
 msgstr ""
 
-#: extension.js:438
+#: extension.js:472
 msgid "No wallpaper available"
 msgstr ""
 
-#: extension.js:439
+#: extension.js:473
 msgid "Something went wrong..."
 msgstr ""
 
-#: prefs.js:15
+#: prefs.js:21
 msgid "5 minutes"
 msgstr ""
 
-#: prefs.js:15
+#: prefs.js:21
 msgid "hourly"
 msgstr ""
 
-#: prefs.js:15
+#: prefs.js:21
 msgid "daily"
+msgstr ""
+
+#: prefs.js:67
+msgid "Please install WebKit2Gtk package to enable the map view."
 msgstr ""

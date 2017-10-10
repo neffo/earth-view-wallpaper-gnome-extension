@@ -28,7 +28,6 @@ function init() {
 }
 
 function buildPrefsWidget(){
-
     // Prepare labels and controls
     let buildable = new Gtk.Builder();
     buildable.add_from_file( Me.dir.get_path() + '/Settings.ui' );
@@ -47,12 +46,16 @@ function buildPrefsWidget(){
     let refreshSpin = buildable.get_object('refresh_combo');
     let providerSpin = buildable.get_object('map_provider_combo');
     let globeFrame = buildable.get_object('globe_frame');
+    let brightnessValue = buildable.get_object('brightness_adjustment');
 
     if (Webkit != null) {
       let webview =  new Webkit.WebView ();
       webview.transparent = true;
-      webview.margin_left = 10;
-      webview.margin_right = 10;
+      webview.margin_left = 0;
+      webview.margin_right =0;
+      webview.margin_top = 0;
+      webview.margin_bottom = 0;
+      webview.vexpand = true;
       globeFrame.add(webview);
       update_globe(webview, buildable);
 
@@ -79,6 +82,7 @@ function buildPrefsWidget(){
 
     settings.bind('set-background', bgSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('set-lock-screen', lsSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('brightness', brightnessValue, 'value', Gio.SettingsBindFlags.DEFAULT);
 
     //download folder
     fileChooser.set_filename(settings.get_string('download-folder'));
@@ -120,7 +124,6 @@ function buildPrefsWidget(){
     });
 
     box.show_all();
-
     return box;
 }
 
@@ -143,12 +146,8 @@ function update_globe(webview, buildable) {
     webcontent = webcontent + '</span><iframe width="100%" height="300" ';
     webcontent = webcontent + ' src="http://www.openstreetmap.org/export/embed.html?bbox='+bbox+'&amp;layer=mapnik&amp;marker='+ marker;
     webcontent = webcontent + ' "style="border: 0px solid black; margin: 0px 0px 0px 0px; overflow: hidden; padding: 0px;"></iframe></div></html>';
-    //let locationLabel = buildable.get_object('location_label');
-      // '<html>hello world!</html>';
 
-      log('update_globe() -> imagedata: '+settings.get_string('image-details')+' \n bbox: '+bbox+' marker: '+marker+' html: '+webcontent);
+    log('update_globe() -> imagedata: '+settings.get_string('image-details')+' \n bbox: '+bbox+' marker: '+marker+' html: '+webcontent);
 
-      webview.load_html(webcontent,'');
-      //locationLabel.set_text(address[0]);
-      //webview.load_uri(GLib.filename_to_uri ('file:///home/michael/Downloads/test.html', null));
+    webview.load_html(webcontent,'');
 }
