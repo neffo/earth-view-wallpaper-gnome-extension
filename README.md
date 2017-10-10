@@ -14,10 +14,12 @@ This extension is derived from my [Bing Wallpaper](https://github.com/neffo/bing
 * User selectable refresh intervals (default is once per day)
 * Optional: keep images or clean up after (later is default)
 * View location on Google Maps, Bing Maps, Gnome Maps, OpenStreetMaps
-* Place pin on a map in settings/about
+* Place pin on a map in settings
+* Adjustable indicator brightness (to match themes better)
 
 ## TODO
 
+* Migrate to Champlain for Map View (in prefs)
 * Location relative to user
 * Pixel scale
 
