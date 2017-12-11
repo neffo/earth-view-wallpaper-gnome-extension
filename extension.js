@@ -298,7 +298,6 @@ const GEWallpaperIndicator = new Lang.Class({
         Main.messageTray.add(source);
         let notification = new LongNotification(source, msg, details);
         notification.setTransient(transient);
-        this._updateProviderLink();
         notification.addAction(_("View in ")+providerNames[this._settings.get_enum('map-link-provider')], Lang.bind(this, function() {
             Util.spawn(["xdg-open", this.link]);
         }));
@@ -427,6 +426,7 @@ const GEWallpaperIndicator = new Lang.Class({
             this.lon = imagejson['lng'];
             this.zoom = imagejson['zoom'];
             this.imageid = imagejson['id'];
+			this._updateProviderLink();
 
             let GEWallpaperDir = this._settings.get_string('download-folder');
             let userHomeDir = GLib.get_home_dir();
