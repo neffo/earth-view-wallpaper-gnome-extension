@@ -29,7 +29,7 @@ Gnome 3.18+ (Ubuntu Gnome 16.04+, Fedora 23+)
 
 ## Install
 
-[Install from extensions.gnome.org](https://extensions.gnome.org/extension/1262/bing-wallpaper-changer/)
+[Install from extensions.gnome.org](https://extensions.gnome.org/extension/1295/google-earth-wallpaper/)
 
 or install directly to your GNOME extensions directory (if you want to hack on it)
 
