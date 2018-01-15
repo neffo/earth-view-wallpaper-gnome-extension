@@ -140,6 +140,8 @@ const imageids = [
 
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 let googleearthWallpaperIndicator=null;
+let init_called=false;
+let ext_enabled=false;
 let httpSession = new Soup.SessionAsync();
 Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
 
@@ -429,13 +431,9 @@ const GEWallpaperIndicator = new Lang.Class({
 			this._updateProviderLink();
 
             let GEWallpaperDir = this._settings.get_string('download-folder');
-            let userHomeDir = GLib.get_home_dir();
-            if (userHomeDir == '') {
-                userHomeDir = '/tmp';
-                log("Unable to get user home directory, defaulting to "+userHomeDir);
-            }
+            let userPicturesDir = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_PICTURES); // XDG pictures directory
             if (GEWallpaperDir == '') {
-                GEWallpaperDir = userHomeDir + "/Pictures/GoogleEarthWallpaper/";
+                GEWallpaperDir = userPicturesDir + "/GoogleEarthWallpaper/";
                 this._settings.set_string('download-folder',GEWallpaperDir);
             }
             else if (!GEWallpaperDir.endsWith('/')) {
@@ -497,7 +495,7 @@ const GEWallpaperIndicator = new Lang.Class({
 
         // open the Gfile
         let fstream = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
-        let decodeddata = GLib.base64_decode(json.dataUri.replace('data:image/jpeg;base64,','')); //fixme: how do we handle failures?
+        let decodeddata = GLib.base64_decode(json.dataUri.replace('data:image/jpeg;base64,','')); // FIXME: how do we handle failures? check for magic number/JFIF?
         fstream.write(decodeddata, null /*, decodeddata.length*/);
         fstream.close(null);
         this._updatePending = false;
@@ -516,20 +514,38 @@ const GEWallpaperIndicator = new Lang.Class({
 });
 
 function init(extensionMeta) {
-    let theme = imports.gi.Gtk.IconTheme.get_default();
-    theme.append_search_path(extensionMeta.path + "/icons");
-    Convenience.initTranslations("GoogleEarthWallpaper");
+    if (init_called === false) {
+        let theme = imports.gi.Gtk.IconTheme.get_default();
+        theme.append_search_path(extensionMeta.path + "/icons");
+        Convenience.initTranslations("GoogleEarthWallpaper");
+        init_called = true;
+	log("init() called");
+    }
+    else {
+        log("WARNING: init() called more than once, ignoring");
+    }
 }
 
 function enable() {
-    googleearthWallpaperIndicator = new GEWallpaperIndicator();
-    Main.panel.addToStatusArea(IndicatorName, googleearthWallpaperIndicator);
+    if (ext_enabled === false) {
+        googleearthWallpaperIndicator = new GEWallpaperIndicator();
+        Main.panel.addToStatusArea(IndicatorName, googleearthWallpaperIndicator);
+        ext_enabled = true;
+	log("enable() called");
+    }
+    else {
+        log("WARNING: enabled() called while already enabled, ignoring");
+    }
 }
 
 function disable() {
+    log("disable() called");
+    if (this._timeout)
+            Mainloop.source_remove(this._timeout); // not strictly sure this is necessary, but let's clean it up anyway
     googleearthWallpaperIndicator.stop();
     googleearthWallpaperIndicator.destroy();
     googleearthWallpaperIndicator = null;
+    ext_enabled = false;
 }
 
 function clamp_value(value, min, max) {
