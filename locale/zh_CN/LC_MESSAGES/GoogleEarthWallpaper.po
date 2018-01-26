@@ -1,164 +1,180 @@
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-17 11:37+0200\n"
-"PO-Revision-Date: 2018-01-23 22:33+0800\n"
+"POT-Creation-Date: 2017-10-10 21:42+1000\n"
+"PO-Revision-Date: 2018-01-25 23:26+0800\n"
+"Last-Translator: 金立龙 <trampover@gmail.com>\n"
 "Language-Team: \n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.0.4\n"
-"Last-Translator: 金立龙 <trampover@gmail.com>\n"
+"X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: zh_CN\n"
 
 #: Settings.ui.h:1
 msgid "Hide the indicator"
 msgstr "隐藏指示器图标"
 
 #: Settings.ui.h:2
+msgid "Indicator brightness"
+msgstr "指示器亮度"
+
+#: Settings.ui.h:3
+msgid "Indicator"
+msgstr "指示器"
+
+#: Settings.ui.h:4
 msgid "Send a notification with explanation when a new image is downloaded."
 msgstr "下载新的壁纸图片时显示详细说明"
 
-#: Settings.ui.h:3
+#: Settings.ui.h:5
 msgid "Notifications"
 msgstr "通知"
 
-#: Settings.ui.h:4
-msgid "Use transient notifications (auto dismiss)"
-msgstr "使用瞬时通知(自动消失)"
-
-#: Settings.ui.h:5
-msgid "Set background image"
-msgstr "设置桌面壁纸"
-
 #: Settings.ui.h:6
-msgid "Set lock screen image"
-msgstr "设置锁屏壁纸"
+msgid "Use transient notifications (auto dismiss)"
+msgstr "更换壁纸时显示通知(自动消失)"
 
 #: Settings.ui.h:7
-msgid "Download folder:"
-msgstr "保存下载壁纸的文件夹"
+msgid "Refresh interval"
+msgstr "刷新间隔"
 
 #: Settings.ui.h:8
-msgid "Wallpaper pictures folder"
-msgstr "壁纸图片文件夹"
-
-#: Settings.ui.h:9
-msgid "Delete previously downloaded wallpapers:"
-msgstr "删除以前下载的壁纸："
-
-#: Settings.ui.h:10
-msgid "Refresh interval"
-msgstr "刷新时间间隔"
-
-#: Settings.ui.h:11
 msgid "Change effective from next refresh"
 msgstr "从下次刷新更改生效"
 
+#: Settings.ui.h:9
+msgid "Set background image"
+msgstr "设置桌面壁纸"
+
+#: Settings.ui.h:10
+msgid "Set lock screen image"
+msgstr "设置锁屏壁纸"
+
+#: Settings.ui.h:11
+msgid "Download folder:"
+msgstr "保存下载壁纸的文件夹"
+
 #: Settings.ui.h:12
+msgid "Wallpaper pictures folder"
+msgstr "壁纸图片文件夹"
+
+#: Settings.ui.h:13
+msgid "Delete previously downloaded wallpapers:"
+msgstr "删除以前下载的壁纸："
+
+#: Settings.ui.h:14
 msgid "Map Provider for external links"
 msgstr "地图提供商的外部链接"
 
-#: Settings.ui.h:13
+#: Settings.ui.h:15
 msgid "Provider used to view wallpaper location and context"
 msgstr "选择壁纸图片的地理位置和详情的地图提供商"
 
-#: Settings.ui.h:14 extension.js:205
-msgid "Settings"
-msgstr "偏好设置"
-
-#: Settings.ui.h:15
-msgid "Gnome shell extension version: "
-msgstr "Gnome Shell版本"
-
 #: Settings.ui.h:16
-msgid ""
-"Set your wallpaper to a random Google Earth photo from a selection of "
-"curated locations."
-msgstr "将您的壁纸设置为随机选择的策划位置的谷歌地球照片。"
+msgid "Background"
+msgstr "壁纸"
 
 #: Settings.ui.h:17
-msgid "Maintained by Michael Carroll"
-msgstr "由Michael Carroll维护"
+msgid "Map View"
+msgstr "壁纸地图"
 
 #: Settings.ui.h:18
-msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
-msgstr "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
-
-#: Settings.ui.h:19
-msgid "Based on NASA APOD Wallpaper extension by Elia Argentieri"
-msgstr "基于美国航空航天局APOD墙纸扩展由Elia Argentieri提供"
-
-#: Settings.ui.h:20
 msgid ""
 "<span size=\"small\">This program comes with ABSOLUTELY NO WARRANTY.\n"
 "See the <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
 "\">GNU General Public License, version 3 or later</a> for details.</span>"
 msgstr ""
-"<span size=\"small\">本程序不担保任何法律责任.\n"
-"See the <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
-"\">GNU通用公共许可证，版本3或更高版本</a> 获取详细信息.</span>"
+"本程序不担保任何法律责任.\n"
+"参考这个链接给出的详情 <a href=\"https://www.gnu.org/licenses/old-"
+"licenses/gpl-2.0.html\">GNU通用公共许可证，版本3或更高版本</a>"
+
+#: Settings.ui.h:20
+msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
+msgstr "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
+
+#: Settings.ui.h:21
+msgid "Based on NASA APOD Wallpaper extension by Elia Argentieri"
+msgstr "基于美国航空航天局APOD墙纸扩展由Elia Argentieri提供"
 
 #: Settings.ui.h:22
-msgid "About"
-msgstr "关于"
+msgid ""
+"This GNOME shell extension sets your wallpaper to a random Google Earth "
+"photo from a selection of curated locations."
+msgstr ""
+"谷歌地球精选壁纸扩展将您的壁纸设置为随机选择一个精选位置的谷歌地球照片。"
 
-#: extension.js:200
-msgid "<No refresh scheduled>"
-msgstr "<没有刷新计划>"
-
-#: extension.js:201
-msgid "Show description"
-msgstr "显示说明"
-
-#: extension.js:202
-msgid "External Link"
-msgstr "外部链接"
-
-#: extension.js:203
-msgid "Set wallpaper"
-msgstr "设置壁纸"
-
-#: extension.js:204
-msgid "Refresh Now"
-msgstr "现在刷新"
-
-#: extension.js:232 extension.js:383
+#: Settings.ui.h:23 extension.js:261 extension.js:412
 msgid "Google Earth Wallpaper"
 msgstr "谷歌地球精选壁纸"
 
-#: extension.js:273 extension.js:306
+#: Settings.ui.h:24
+msgid "Maintained by Michael Carroll"
+msgstr "由Michael Carroll维护"
+
+#: Settings.ui.h:25
+msgid "About"
+msgstr "关于"
+
+#: extension.js:229
+msgid "<No refresh scheduled>"
+msgstr "<没有刷新计划>"
+
+#: extension.js:230
+msgid "Show description"
+msgstr "显示详情"
+
+#: extension.js:231
+msgid "External Link"
+msgstr "外部链接"
+
+#: extension.js:232
+msgid "Set wallpaper"
+msgstr "设置壁纸"
+
+#: extension.js:233
+msgid "Refresh Now"
+msgstr "现在刷新"
+
+#: extension.js:234
+msgid "Settings"
+msgstr "偏好设置"
+
+#: extension.js:302 extension.js:335
 msgid "View in "
 msgstr "查看"
 
-#: extension.js:329
+#: extension.js:358
 msgid "Next refresh"
 msgstr "下一次刷新"
 
-#: extension.js:351
+#: extension.js:380
 msgid "Fetching..."
 msgstr "正在获取壁纸..."
 
-#: extension.js:438
+#: extension.js:472
 msgid "No wallpaper available"
 msgstr "没有壁纸可用"
 
-#: extension.js:439
+#: extension.js:473
 msgid "Something went wrong..."
 msgstr "好像出现了一点问题..."
 
-#: prefs.js:15
+#: prefs.js:21
 msgid "5 minutes"
 msgstr "5秒"
 
-#: prefs.js:15
+#: prefs.js:21
 msgid "hourly"
 msgstr "小时"
 
-#: prefs.js:15
+#: prefs.js:21
 msgid "daily"
 msgstr "天"
 
+#: prefs.js:67
+msgid "Please install WebKit2Gtk package to enable the map view."
+msgstr "请安装WebKit2Gtk依赖包，才能查看壁纸在地图上的位置以及详情"
