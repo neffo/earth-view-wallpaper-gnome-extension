@@ -3,6 +3,7 @@ const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
+
 var Webkit;
 try {
   Webkit = imports.gi.WebKit2;
@@ -37,8 +38,6 @@ function buildPrefsWidget(){
     buildable.get_object('extension_name').set_text(Me.metadata.name.toString());
 
     let hideSwitch = buildable.get_object('hide');
-    let notifySwitch = buildable.get_object('notifications');
-    let transientSwitch = buildable.get_object('transient_notifications');
     let bgSwitch = buildable.get_object('background');
     let lsSwitch = buildable.get_object('lock_screen');
     let fileChooser = buildable.get_object('download_folder');
@@ -70,15 +69,6 @@ function buildPrefsWidget(){
 
     // Indicator
     settings.bind('hide', hideSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-
-    // Notifications
-    settings.bind('notify', notifySwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-    settings.bind('transient', transientSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-
-    transientSwitch.set_sensitive(settings.get_boolean('notify'));
-    settings.connect('changed::notify', function() {
-        transientSwitch.set_sensitive(settings.get_boolean('notify'));
-    });
 
     settings.bind('set-background', bgSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('set-lock-screen', lsSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -137,12 +127,12 @@ function update_globe(webview, buildable) {
     let imagedata = settings.get_string('image-details').split('|');
     let lat = parseFloat(imagedata[2]);
     let lon = parseFloat(imagedata[3]);
-    let address = imagedata[0].split('\n');
+    let address = imagedata[0] + '<br>' + Utils.friendly_coordinates(lat, lon);
     //let bbox = (lat-5)+'%2C'+(lon-5)+'%2C'+(lat+5)+'%2C'+(lon+5);
     let bbox = '-180,80,180,-50';
     let marker = lat + '%2C' + lon;
     let webcontent = '<html style="background-color: transparent;"><div style="border: 0px; background-color: white; padding: 0px; margin: 0px;">';
-    webcontent = webcontent + '<span style="margin: 0px; font-size: 0.7em; color: dark-grey;">'+address[0];
+    webcontent = webcontent + '<span style="margin: 0px; font-size: 0.7em; color: dark-grey;">'+address;
     webcontent = webcontent + '</span><iframe width="100%" height="300" ';
     webcontent = webcontent + ' src="http://www.openstreetmap.org/export/embed.html?bbox='+bbox+'&amp;layer=mapnik&amp;marker='+ marker;
     webcontent = webcontent + ' "style="border: 0px solid black; margin: 0px 0px 0px 0px; overflow: hidden; padding: 0px;"></iframe></div></html>';

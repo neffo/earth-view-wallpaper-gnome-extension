@@ -1,6 +1,6 @@
 const St = imports.gi.St;
 const Main = imports.ui.main;
-const MessageTray = imports.ui.messageTray;
+/*const MessageTray = imports.ui.messageTray;*/
 const Soup = imports.gi.Soup;
 const Lang = imports.lang;
 const Mainloop = imports.mainloop;
@@ -159,6 +159,7 @@ function dump(object) {
     log(output);
 }
 
+/*
 const LongNotification = new Lang.Class({
     Name: 'LongNotification',
     Extends: MessageTray.Notification,
@@ -169,7 +170,7 @@ const LongNotification = new Lang.Class({
         banner.setExpandedLines(20);
         return banner;
     }
-});
+});*/
 
 function notifyError(msg) {
     Main.notifyError("GEWallpaper extension error", msg);
@@ -204,6 +205,7 @@ const GEWallpaperIndicator = new Lang.Class({
         this.zoom = 0;
         this.link = "https://earthview.withgoogle.com/";
         this.imageid = 0;
+        this.refreshdue = 0; // UNIX timestamp when next refresh is due
 
         this._settings = Utils.getSettings();
         this._settings.connect('changed::hide', Lang.bind(this, function() {
@@ -217,7 +219,7 @@ const GEWallpaperIndicator = new Lang.Class({
 
         // this is how we handle dynamic icon brightness
         this.bright_effect = new Clutter.BrightnessContrastEffect({});
-        this.bright_effect.set_brightness(-1.0 + (clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
+        this.bright_effect.set_brightness(-1.0 + (Utils.clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
         this.bright_effect.set_contrast(0);
         this.icon.add_effect_with_name('brightness-contrast', this.bright_effect);
         this.actor.add_child(this.icon);
@@ -225,24 +227,28 @@ const GEWallpaperIndicator = new Lang.Class({
         this._settings.connect('changed::brightness', Lang.bind(this, function() {
           this.bright_effect.set_contrast(0);
           //let brightness = -1.0 + (this._settings.get_int('brightness')/100.0);
-          this.bright_effect.set_brightness(-1.0 + (clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
+          this.bright_effect.set_brightness(-1.0 + (Utils.clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
         }));
 
         this.refreshDueItem = new PopupMenu.PopupMenuItem(_("<No refresh scheduled>"));
-        this.showItem = new PopupMenu.PopupMenuItem(_("Show description"));
-        this.extLink = new PopupMenu.PopupMenuItem(_("External Link"));
+        this.descriptionItem = new PopupMenu.PopupMenuItem(_("Text Location"));
+        this.locationItem = new PopupMenu.PopupMenuItem(_("Geo Location"));
+        this.extLinkItem = new PopupMenu.PopupMenuItem(_("External Link"));
+        this.copyrightItem = new PopupMenu.PopupMenuItem(_("Copyright"));
         this.wallpaperItem = new PopupMenu.PopupMenuItem(_("Set wallpaper"));
         this.refreshItem = new PopupMenu.PopupMenuItem(_("Refresh Now"));
         this.settingsItem = new PopupMenu.PopupMenuItem(_("Settings"));
+        this.menu.addMenuItem(this.descriptionItem);
+        this.menu.addMenuItem(this.locationItem);
+        this.menu.addMenuItem(this.extLinkItem);
         this.menu.addMenuItem(this.refreshDueItem);
-        this.menu.addMenuItem(this.showItem);
-        this.menu.addMenuItem(this.extLink);
-        this.menu.addMenuItem(this.wallpaperItem);
         this.menu.addMenuItem(this.refreshItem);
+        this.menu.addMenuItem(this.wallpaperItem);
         this.menu.addMenuItem(this.settingsItem);
         this.refreshDueItem.setSensitive(false);
-        this.showItem.connect('activate', Lang.bind(this, this._showDescription));
-        this.extLink.connect('activate', Lang.bind(this, function() {
+        this.descriptionItem.setSensitive(false);
+        this.locationItem.setSensitive(false);
+        this.extLinkItem.connect('activate', Lang.bind(this, function() {
             Util.spawn(["xdg-open", this.link]);
         }));
         this.wallpaperItem.connect('activate', Lang.bind(this, this._setBackground));
@@ -251,34 +257,10 @@ const GEWallpaperIndicator = new Lang.Class({
             Util.spawn(["gnome-shell-extension-prefs", Me.metadata.uuid]);
         });
 
-        this.actor.connect('button-press-event', Lang.bind(this, function () {
-            // Grey out menu items if an update is pending
-            this.refreshItem.setSensitive(!this._updatePending);
-            this.showItem.setSensitive(!this._updatePending && this.title != "" && this.explanation != "");
-            this.wallpaperItem.setSensitive(!this._updatePending && this.filename != "");
-        }));
+        this.actor.connect('button-press-event', Lang.bind(this, this._updateMenu));
 
         if (this._settings.get_int('next-refresh') > 0 ) {
-            log("restoring previous state...");
-            this.title = _("Google Earth Wallpaper");
-            let imagedata = this._settings.get_string('image-details').split('|');
-            if (imagedata.length > 0 ) {
-              this.explanation = imagedata[0];
-              this.copyright = imagedata[1];
-            }
-            if (imagedata.length > 2) { // special case handle previous extension version data gaps
-              this.lat = parseFloat(imagedata[2]);
-              this.lon = parseFloat(imagedata[3]);
-              this.zoom = parseInt(imagedata[4]);
-            }
-            this.filename = this._settings.get_string('image-filepath');
-            let timezone = GLib.TimeZone.new_local();
-            let unixtime = GLib.DateTime.new_now(timezone).to_unix();
-            let seconds = this._settings.get_int('next-refresh') - unixtime;
-            log(" image: "+this.filename+" explanation: "+this.explanation+"\n next refresh in: "+seconds+" seconds");
-            this._updateProviderLink();
-            this._setBackground();
-            this._restartTimeout(seconds < 60 ? 60 : seconds); // never refresh early than 60 seconds after startup
+            this._restorePreviousState();
         }
         else {
             log("no previous state to restore... (first run?)");
@@ -286,24 +268,38 @@ const GEWallpaperIndicator = new Lang.Class({
         }
     },
 
-    _notify: function (msg, details, transient) {
-        // set notifications icon
-        let source = new MessageTray.Source("GEWallpaper", ICON);
-        // force expanded notification
-        source.policy = new MessageTray.NotificationPolicy({ enable: true,
-                                            enableSound: false,
-                                            showBanners: true,
-                                            forceExpanded: true,
-                                            showInLockScreen: true,
-                                            detailsInLockScreen: true
-                                          });
-        Main.messageTray.add(source);
-        let notification = new LongNotification(source, msg, details);
-        notification.setTransient(transient);
-        notification.addAction(_("View in ")+providerNames[this._settings.get_enum('map-link-provider')], Lang.bind(this, function() {
-            Util.spawn(["xdg-open", this.link]);
-        }));
-        source.notify(notification);
+    _restorePreviousState () {
+        log("restoring previous state...");
+        this.title = _("Google Earth Wallpaper");
+        let imagedata = this._settings.get_string('image-details').split('|');
+        if (imagedata.length > 0 ) {
+          this.explanation = imagedata[0];
+          this.copyright = imagedata[1];
+        }
+        if (imagedata.length > 2) { // special case handle previous extension version data gaps
+          this.lat = parseFloat(imagedata[2]);
+          this.lon = parseFloat(imagedata[3]);
+          this.zoom = parseInt(imagedata[4]);
+        }
+        this.filename = this._settings.get_string('image-filepath');
+        let timezone = GLib.TimeZone.new_local();
+        let unixtime = GLib.DateTime.new_now(timezone).to_unix();
+        let seconds = this._settings.get_int('next-refresh') - unixtime;
+        log(" image: "+this.filename+" explanation: "+this.explanation+"\n next refresh in: "+seconds+" seconds");
+        this._updateProviderLink();
+        this._setBackground();
+        this._restartTimeout(seconds < 60 ? 60 : seconds); // never refresh early than 60 seconds after startup
+    },
+
+    _updateMenu: function () {
+        // Grey out menu items if an update is pending
+        this.refreshItem.setSensitive(!this._updatePending);
+        this.wallpaperItem.setSensitive(!this._updatePending && this.filename != "");
+        // update menu text
+        this.refreshDueItem.label.set_text(_('Next refresh')+': '+this.refreshdue.format('%X')+' ('+Utils.friendly_time_diff(this.refreshdue)+')');
+        this.descriptionItem.label.set_text(this.explanation);
+        this.locationItem.label.set_text(Utils.friendly_coordinates(this.lat, this.lon));
+        this.copyrightItem.label.set_text(this.copyright);
     },
 
     _updateProviderLink: function() {
@@ -333,7 +329,7 @@ const GEWallpaperIndicator = new Lang.Class({
         default:
           this.link = 'https://g.co/ev/'+this.imageid;
       }
-      this.extLink.label.set_text(_("View in ")+providerNames[provider]);
+      this.extLinkItem.label.set_text(_("View in ")+providerNames[provider]);
     },
 
     _setBackground: function() {
@@ -356,20 +352,9 @@ const GEWallpaperIndicator = new Lang.Class({
         this._timeout = Mainloop.timeout_add_seconds(seconds, Lang.bind(this, this._refresh));
         let timezone = GLib.TimeZone.new_local();
         let localTime = GLib.DateTime.new_now(timezone).add_seconds(seconds);
-        this.refreshDueItem.label.set_text(_('Next refresh')+': '+localTime.format('%F %X'));
+        this.refreshdue = localTime;
         this._settings.set_int('next-refresh',localTime.to_unix());
         log('next check in '+seconds+' seconds @ local time '+localTime.format('%F %X'));
-    },
-
-    _showDescription: function() {
-        if (this.title == "" && this.explanation == "") {
-            this._refresh();
-        } else {
-            let message = this.explanation;
-            if (this.copyright != "")
-                message += "\n" + this.copyright + ""
-            this._notify(this.title, message, this._settings.get_boolean('transient'));
-        }
     },
 
     _refresh: function() {
@@ -412,23 +397,34 @@ const GEWallpaperIndicator = new Lang.Class({
         if (imagejson['id'] != '') {
             this.title = _("Google Earth Wallpaper");
             let location = "";
+            let linelen = 0;
             for (var i in imagejson['geocode']) {
-                if (location != "" && isNaN(location))
+                if (location != "" && isNaN(location)) {
                     location += ", ";
-                else
+                    linelen += 2;
+                }
+                else {
                     location += " ";
+                    linelen += 2;
+                }
+                if (linelen > 40) {
+                     location += "\n";
+                     linelen = 0;
+                }
                location += imagejson['geocode'][i];
+               linelen += imagejson['geocode'][i].length;
+               log('location: '+location+' length: '+linelen);
             }
             //let metersperpixel = 156543.03 * Math.cos(imagejson['lat']) / Math.pow(2,imagejson['zoom']);
-            let coordinates = Math.abs(imagejson['lat']).toFixed(4)+(imagejson['lat']>0 ? 'N': 'S')+', '+Math.abs(imagejson['lng']).toFixed(4)+(imagejson['lng']>0 ? 'W': 'E');
-            this.explanation = location.trim() + '\n' + coordinates;
+            let coordinates = Utils.friendly_coordinates(imagejson['lat'],imagejson['lng']);
+            this.explanation = location.trim(); // + '\n'+ coordinates;
             // + '\nScale: '+metersperpixel.toFixed(2)+' meters/pixel'; //['country'];
             this.copyright = imagejson['attribution'];
             this.lat = imagejson['lat'];
             this.lon = imagejson['lng'];
             this.zoom = imagejson['zoom'];
             this.imageid = imagejson['id'];
-			this._updateProviderLink();
+            this._updateProviderLink();
 
             let GEWallpaperDir = this._settings.get_string('download-folder');
             let userPicturesDir = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_PICTURES); // XDG pictures directory
@@ -471,9 +467,8 @@ const GEWallpaperIndicator = new Lang.Class({
             this.explanation = _("Something went wrong...");
             this.filename = "";
             this._updatePending = false;
-            if (this._settings.get_boolean('notify'))
-                this._showDescription();
         }
+        this._updateMenu();
         this._restartTimeout(this._settings.get_int('refresh-interval'));
     },
 
@@ -546,8 +541,4 @@ function disable() {
     googleearthWallpaperIndicator.destroy();
     googleearthWallpaperIndicator = null;
     ext_enabled = false;
-}
-
-function clamp_value(value, min, max) {
-	return Math.min(Math.max(value, min), max);
 }
