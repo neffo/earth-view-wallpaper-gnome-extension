@@ -63,3 +63,12 @@ function friendly_coordinates(lat, lon) {
 function clamp_value(value, min, max) {
 	return Math.min(Math.max(value, min), max);
 }
+
+// Utility function
+function dump(object) {
+    let output = '';
+    for (let property in object) {
+        output += property + ': ' + object[property]+'; ';
+    }
+    log(output);
+}

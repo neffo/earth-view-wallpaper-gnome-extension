@@ -1,6 +1,5 @@
 const St = imports.gi.St;
 const Main = imports.ui.main;
-/*const MessageTray = imports.ui.messageTray;*/
 const Soup = imports.gi.Soup;
 const Lang = imports.lang;
 const Mainloop = imports.mainloop;
@@ -137,11 +136,8 @@ const imageids = [
     "7002", "7003", "7004", "7005", "7006", "7008", "7009", "7010", "7011", "7012", "7013", "7015", "7016", "7017",
     "7018", "7019", "7020", "7021", "7023" ];
 
-
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 let googleearthWallpaperIndicator=null;
-let init_called=false;
-let ext_enabled=false;
 let httpSession = new Soup.SessionAsync();
 Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
 
@@ -149,28 +145,6 @@ function log(msg) {
     if (googleearthWallpaperIndicator==null || googleearthWallpaperIndicator._settings.get_boolean('debug-logging'))
         print("GEWallpaper extension: " + msg); // disable to keep the noise down in journal
 }
-
-// Utility function
-function dump(object) {
-    let output = '';
-    for (let property in object) {
-        output += property + ': ' + object[property]+'; ';
-    }
-    log(output);
-}
-
-/*
-const LongNotification = new Lang.Class({
-    Name: 'LongNotification',
-    Extends: MessageTray.Notification,
-
-    createBanner: function() {
-        // Explanations are usually longer than default
-        let banner = this.source.createBanner(this);
-        banner.setExpandedLines(20);
-        return banner;
-    }
-});*/
 
 function notifyError(msg) {
     Main.notifyError("GEWallpaper extension error", msg);
@@ -198,6 +172,7 @@ const GEWallpaperIndicator = new Lang.Class({
         this.explanation = "";
         this.filename = "";
         this.copyright = "";
+        this.provider_text = "";
         this._updatePending = false;
         this._timeout = null;
         this.lat = 0;
@@ -226,7 +201,6 @@ const GEWallpaperIndicator = new Lang.Class({
         // connect to brightness setting
         this._settings.connect('changed::brightness', Lang.bind(this, function() {
           this.bright_effect.set_contrast(0);
-          //let brightness = -1.0 + (this._settings.get_int('brightness')/100.0);
           this.bright_effect.set_brightness(-1.0 + (Utils.clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
         }));
 
@@ -297,9 +271,10 @@ const GEWallpaperIndicator = new Lang.Class({
         this.wallpaperItem.setSensitive(!this._updatePending && this.filename != "");
         // update menu text
         this.refreshDueItem.label.set_text(_('Next refresh')+': '+this.refreshdue.format('%X')+' ('+Utils.friendly_time_diff(this.refreshdue)+')');
-        this.descriptionItem.label.set_text(this.explanation);
         this.locationItem.label.set_text(Utils.friendly_coordinates(this.lat, this.lon));
+        this.descriptionItem.label.set_text(this.explanation);
         this.copyrightItem.label.set_text(this.copyright);
+        this.extLinkItem.label.set_text(this.provider_text);
     },
 
     _updateProviderLink: function() {
@@ -312,7 +287,7 @@ const GEWallpaperIndicator = new Lang.Class({
                         'layer=none';
           break;
         case 2: // Bing Maps
-          this.link = 'http://bing.com/maps/default.aspx?' +
+          this.link = 'https://bing.com/maps/default.aspx?' +
                         'cp=' + this.lat + '~' + this.lon + '&' +
                         'lvl=' + this.zoom + '&' + 'style=a' + '&' +
                         'dir=0';
@@ -329,7 +304,7 @@ const GEWallpaperIndicator = new Lang.Class({
         default:
           this.link = 'https://g.co/ev/'+this.imageid;
       }
-      this.extLinkItem.label.set_text(_("View in ")+providerNames[provider]);
+      this.provider_text = _("View in ") + providerNames[provider];
     },
 
     _setBackground: function() {
@@ -344,7 +319,6 @@ const GEWallpaperIndicator = new Lang.Class({
     },
 
     _restartTimeout: function(seconds = null) {
-        //log('refresh called in '+seconds+' seconds');
         if (this._timeout)
             Mainloop.source_remove(this._timeout);
         if (seconds == null || seconds < 60)
@@ -361,7 +335,6 @@ const GEWallpaperIndicator = new Lang.Class({
         if (this._updatePending)
             return;
         this._updatePending = true;
-
         this._restartTimeout(300); // in case of a timeout
         this.refreshDueItem.label.set_text(_('Fetching...'));
 
@@ -371,7 +344,6 @@ const GEWallpaperIndicator = new Lang.Class({
         let url = GEjsonURL+imageids[imgindex]+'.json';
         log("fetching: " + url);
         let request = Soup.Message.new('GET', url);
-
 
         // queue the http request
         httpSession.queue_message(request, Lang.bind(this, function(httpSession, message) {
@@ -415,10 +387,8 @@ const GEWallpaperIndicator = new Lang.Class({
                linelen += imagejson['geocode'][i].length;
                log('location: '+location+' length: '+linelen);
             }
-            //let metersperpixel = 156543.03 * Math.cos(imagejson['lat']) / Math.pow(2,imagejson['zoom']);
             let coordinates = Utils.friendly_coordinates(imagejson['lat'],imagejson['lng']);
             this.explanation = location.trim(); // + '\n'+ coordinates;
-            // + '\nScale: '+metersperpixel.toFixed(2)+' meters/pixel'; //['country'];
             this.copyright = imagejson['attribution'];
             this.lat = imagejson['lat'];
             this.lon = imagejson['lng'];
@@ -491,13 +461,11 @@ const GEWallpaperIndicator = new Lang.Class({
         // open the Gfile
         let fstream = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
         let decodeddata = GLib.base64_decode(json.dataUri.replace('data:image/jpeg;base64,','')); // FIXME: how do we handle failures? check for magic number/JFIF?
-        fstream.write(decodeddata, null /*, decodeddata.length*/);
+        fstream.write(decodeddata, null);
         fstream.close(null);
         this._updatePending = false;
 
         this._setBackground();
-        if (this._settings.get_boolean('notify'))
-            this._showDescription();
     },
 
     stop: function () {
@@ -509,28 +477,16 @@ const GEWallpaperIndicator = new Lang.Class({
 });
 
 function init(extensionMeta) {
-    if (init_called === false) {
-        let theme = imports.gi.Gtk.IconTheme.get_default();
-        theme.append_search_path(extensionMeta.path + "/icons");
-        Convenience.initTranslations("GoogleEarthWallpaper");
-        init_called = true;
+    let theme = imports.gi.Gtk.IconTheme.get_default();
+    theme.append_search_path(extensionMeta.path + "/icons");
+    Convenience.initTranslations("GoogleEarthWallpaper");
 	log("init() called");
-    }
-    else {
-        log("WARNING: init() called more than once, ignoring");
-    }
 }
 
 function enable() {
-    if (ext_enabled === false) {
-        googleearthWallpaperIndicator = new GEWallpaperIndicator();
-        Main.panel.addToStatusArea(IndicatorName, googleearthWallpaperIndicator);
-        ext_enabled = true;
+    googleearthWallpaperIndicator = new GEWallpaperIndicator();
+    Main.panel.addToStatusArea(IndicatorName, googleearthWallpaperIndicator);
 	log("enable() called");
-    }
-    else {
-        log("WARNING: enabled() called while already enabled, ignoring");
-    }
 }
 
 function disable() {
@@ -540,5 +496,4 @@ function disable() {
     googleearthWallpaperIndicator.stop();
     googleearthWallpaperIndicator.destroy();
     googleearthWallpaperIndicator = null;
-    ext_enabled = false;
 }
