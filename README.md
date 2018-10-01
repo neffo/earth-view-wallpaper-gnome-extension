@@ -9,7 +9,7 @@ This extension is derived from my [Bing Wallpaper](https://github.com/neffo/bing
 
 ## Features
 
-* Fetches a random Google Earth wallpaper and sets as both lock screen and desktop wallpaper
+* Fetches a random Google Earth wallpaper and sets as desktop wallpaper, lock screen and (finally!) the lock screen password prompt
 * User selectable refresh intervals (default is once per day)
 * Optional: keep images or clean up after (later is default)
 * View location on Google Maps, Bing Maps, Gnome Maps, OpenStreetMaps
@@ -34,8 +34,6 @@ or install directly to your GNOME extensions directory (if you want to hack on i
 
 `git clone https://github.com/neffo/earth-view-wallpaper-gnome-extension.git $HOME/.local/share/gnome-shell/extensions/GoogleEarthWallpaper@neffo.github.com`
 
-Or, here is a suitable [zip file](https://neffo.github.io/GoogleEarthWallpaper@neffo.github.com.zip) I prepared earlier.
-
 ## Screenshots
 
 ![Menu][/screenshot/menu.png]
@@ -43,3 +41,5 @@ Or, here is a suitable [zip file](https://neffo.github.io/GoogleEarthWallpaper@n
 ![Settings](/screenshot/settings.png)
 
 ![About Page](/screenshot/map.png)
+
+![Lockscreen](/screenshot/lockscreen-dialog.jpg)

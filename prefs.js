@@ -18,8 +18,8 @@ const _ = Gettext.gettext;
 
 let settings;
 
-const intervals = [ 600, 1800, 3600, 4800, 86400 ];
-const interval_names = [ _("10 m"), _("30 m"), _("60 m"), _("90 m"), _("daily")];
+const intervals = [ 300, 600, 1800, 3600, 4800, 86400 ];
+const interval_names = [ _("5 m"), _("10 m"), _("30 m"), _("60 m"), _("90 m"), _("daily")];
 
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 
