@@ -18,6 +18,9 @@ const Convenience = Me.imports.convenience;
 const Gettext = imports.gettext.domain('GoogleEarthWallpaper');
 const _ = Gettext.gettext;
 
+// required to set lock screen dialog background
+const UnlockBackground = Me.imports.unlockdialogbackground;
+
 const GEjsonURL = "https://www.gstatic.com/prettyearth/assets/data/v2/"; // location of image json files
 const GEURL = "https://earth.google.com";
 const IndicatorName = "GEWallpaperIndicator";
@@ -203,6 +206,13 @@ const GEWallpaperIndicator = new Lang.Class({
           this.bright_effect.set_contrast(0);
           this.bright_effect.set_brightness(-1.0 + (Utils.clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
         }));
+
+        // enable or disable lockscreen *dialog* background (this is handled separately to the lockscreen background!)
+        this._settings.connect('changed::set-lock-screen-dialog', Lang.bind(this, function() {
+            UnlockBackground.set_active(this._settings.get_boolean('set-lock-screen-dialog'));
+        }));
+        // set initial state
+        UnlockBackground.set_active(this._settings.get_boolean('set-lock-screen-dialog'));
 
         this.refreshDueItem = new PopupMenu.PopupMenuItem(_("<No refresh scheduled>"));
         this.descriptionItem = new PopupMenu.PopupMenuItem(_("Text Location"));
@@ -480,6 +490,7 @@ function init(extensionMeta) {
     let theme = imports.gi.Gtk.IconTheme.get_default();
     theme.append_search_path(extensionMeta.path + "/icons");
     Convenience.initTranslations("GoogleEarthWallpaper");
+    UnlockBackground.init();
 	log("init() called");
 }
 

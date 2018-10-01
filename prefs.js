@@ -18,8 +18,8 @@ const _ = Gettext.gettext;
 
 let settings;
 
-const intervals = [ 300, 3600, 86400 ];
-const interval_names = [ _("5 minutes"), _("hourly"), _("daily")];
+const intervals = [ 600, 1800, 3600, 4800, 86400 ];
+const interval_names = [ _("10 m"), _("30 m"), _("60 m"), _("90 m"), _("daily")];
 
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 
@@ -40,6 +40,7 @@ function buildPrefsWidget(){
     let hideSwitch = buildable.get_object('hide');
     let bgSwitch = buildable.get_object('background');
     let lsSwitch = buildable.get_object('lock_screen');
+    let ldSwitch = buildable.get_object('lock_dialog');
     let fileChooser = buildable.get_object('download_folder');
     let deleteSwitch = buildable.get_object('delete_previous');
     let refreshSpin = buildable.get_object('refresh_combo');
@@ -72,6 +73,7 @@ function buildPrefsWidget(){
 
     settings.bind('set-background', bgSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('set-lock-screen', lsSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+    settings.bind('set-lock-screen-dialog', ldSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('brightness', brightnessValue, 'value', Gio.SettingsBindFlags.DEFAULT);
 
     //download folder
