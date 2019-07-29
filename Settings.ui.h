@@ -10,6 +10,7 @@ char *s = N_("Set lock screen image");
 char *s = N_("Set lock screen password prompt image");
 char *s = N_("Download folder:");
 char *s = N_("Wallpaper pictures folder");
+char *s = N_("Open download folder");
 char *s = N_("Delete previously downloaded wallpapers:");
 char *s = N_("Background");
 char *s = N_("Map View");

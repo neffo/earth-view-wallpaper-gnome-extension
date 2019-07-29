@@ -1,8 +1,16 @@
 const Gtk = imports.gi.Gtk;
 const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
+var Util; // on some distributions (e.g. UBUNTU) this doesn't appear to work, some issue with GNOME introspection files
+try {
+    Util = imports.misc.util;
+} catch (e) {
+    Util = null; // we'll ignore and try handle this gracefully later on
+    log("Unable to load imports.misc.util");
+}
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
+
 
 var Webkit;
 try {
@@ -47,6 +55,7 @@ function buildPrefsWidget(){
     let providerSpin = buildable.get_object('map_provider_combo');
     let globeFrame = buildable.get_object('globe_frame');
     let brightnessValue = buildable.get_object('brightness_adjustment');
+    let folderButton = buildable.get_object('button_open_download_folder');
 
     if (Webkit != null) {
       let webview =  new Webkit.WebView ();
@@ -82,6 +91,13 @@ function buildPrefsWidget(){
     fileChooser.connect('file-set', function(widget) {
         settings.set_string('download-folder', widget.get_filename());
     });
+
+ 
+    folderButton.connect('button-press-event', function() { 
+        ge_tryspawn(["xdg-open", settings.get_string('download-folder')]);
+        log('open_background_folder '+settings.get_string('download-folder'));
+    });
+
 
     settings.bind('delete-previous', deleteSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
 
@@ -142,4 +158,12 @@ function update_globe(webview, buildable) {
     log('update_globe() -> imagedata: '+settings.get_string('image-details')+' \n bbox: '+bbox+' marker: '+marker+' html: '+webcontent);
 
     webview.load_html(webcontent,'');
+}
+
+function ge_tryspawn(argv) {
+    try {
+        GLib.spawn_async(null, argv, null, GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
+    } catch (err) {
+        log("Unable to open: "+argv[0]+" error: "+err);
+    }
 }

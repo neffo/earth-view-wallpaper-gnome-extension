@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-01 18:46+1000\n"
+"POT-Creation-Date: 2019-07-29 17:49+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,122 +66,130 @@ msgid "Wallpaper pictures folder"
 msgstr ""
 
 #: Settings.ui.h:13
-msgid "Delete previously downloaded wallpapers:"
+msgid "Open download folder"
 msgstr ""
 
 #: Settings.ui.h:14
-msgid "Background"
+msgid "Delete previously downloaded wallpapers:"
 msgstr ""
 
 #: Settings.ui.h:15
-msgid "Map View"
+msgid "Background"
 msgstr ""
 
 #: Settings.ui.h:16
+msgid "Map View"
+msgstr ""
+
+#: Settings.ui.h:17
 msgid ""
 "<span size=\"small\">This program comes with ABSOLUTELY NO WARRANTY.\n"
 "See the <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
 "\">GNU General Public License, version 3 or later</a> for details.</span>"
 msgstr ""
 
-#: Settings.ui.h:18
+#: Settings.ui.h:19
 msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
 msgstr ""
 
-#: Settings.ui.h:19
+#: Settings.ui.h:20
 msgid "Based on NASA APOD Wallpaper extension by Elia Argentieri"
 msgstr ""
 
-#: Settings.ui.h:20
+#: Settings.ui.h:21
 msgid ""
 "This GNOME shell extension sets your wallpaper to a random Google Earth "
 "photo from a selection of curated locations."
 msgstr ""
 
-#: Settings.ui.h:21 extension.js:257 extension.js:380
+#: Settings.ui.h:22 extension.js:248 extension.js:371
 msgid "Google Earth Wallpaper"
 msgstr ""
 
-#: Settings.ui.h:22
+#: Settings.ui.h:23
 msgid "Maintained by Michael Carroll"
 msgstr ""
 
-#: Settings.ui.h:23
+#: Settings.ui.h:24
 msgid "About"
 msgstr ""
 
-#: extension.js:217
+#: extension.js:208
 msgid "<No refresh scheduled>"
 msgstr ""
 
-#: extension.js:218
+#: extension.js:209
 msgid "Text Location"
 msgstr ""
 
-#: extension.js:219
+#: extension.js:210
 msgid "Geo Location"
 msgstr ""
 
-#: extension.js:220
+#: extension.js:211
 msgid "External Link"
 msgstr ""
 
-#: extension.js:221
+#: extension.js:212
 msgid "Copyright"
 msgstr ""
 
-#: extension.js:222
+#: extension.js:213
 msgid "Set wallpaper"
 msgstr ""
 
-#: extension.js:223
+#: extension.js:214
 msgid "Refresh Now"
 msgstr ""
 
-#: extension.js:224
+#: extension.js:215
 msgid "Settings"
 msgstr ""
 
-#: extension.js:283
+#: extension.js:274
 msgid "Next refresh"
 msgstr ""
 
-#: extension.js:317
+#: extension.js:308
 msgid "View in "
 msgstr ""
 
-#: extension.js:349
+#: extension.js:340
 msgid "Fetching..."
 msgstr ""
 
-#: extension.js:446
+#: extension.js:437
 msgid "No wallpaper available"
 msgstr ""
 
-#: extension.js:447
+#: extension.js:438
 msgid "Something went wrong..."
 msgstr ""
 
-#: prefs.js:22
+#: prefs.js:30
+msgid "5 m"
+msgstr ""
+
+#: prefs.js:30
 msgid "10 m"
 msgstr ""
 
-#: prefs.js:22
+#: prefs.js:30
 msgid "30 m"
 msgstr ""
 
-#: prefs.js:22
+#: prefs.js:30
 msgid "60 m"
 msgstr ""
 
-#: prefs.js:22
+#: prefs.js:30
 msgid "90 m"
 msgstr ""
 
-#: prefs.js:22
+#: prefs.js:30
 msgid "daily"
 msgstr ""
 
-#: prefs.js:67
+#: prefs.js:76
 msgid "Please install WebKit2Gtk package to enable the map view."
 msgstr ""
