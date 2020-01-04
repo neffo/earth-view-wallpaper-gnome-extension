@@ -142,7 +142,7 @@ let httpSession = new Soup.SessionAsync();
 Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
 
 function log(msg) {
-    if (googleearthWallpaperIndicator==null || googleearthWallpaperIndicator._settings.get_boolean('debug-logging'))
+    if (googleearthWallpaperIndicator==null || true || googleearthWallpaperIndicator._settings.get_boolean('debug-logging'))
         print("GEWallpaper extension: " + msg); // disable to keep the noise down in journal
 }
 
@@ -185,9 +185,9 @@ const GEWallpaperIndicator = new Lang.Class({
 
         this._settings = Utils.getSettings();
         this._settings.connect('changed::hide', Lang.bind(this, function() {
-            this.actor.visible = !this._settings.get_boolean('hide');
+            ((this instanceof Clutter.Actor) ? this : this.actor).visible = !this._settings.get_boolean('hide'); // FIXME: this a clunky fix for the this.actor depreciation
         }));
-        this.actor.visible = !this._settings.get_boolean('hide');
+        ((this instanceof Clutter.Actor) ? this : this.actor).visible = !this._settings.get_boolean('hide');
 
         this._settings.connect('changed::map-link-provider', Lang.bind(this, function() {
             this._updateProviderLink();
@@ -198,7 +198,7 @@ const GEWallpaperIndicator = new Lang.Class({
         this.bright_effect.set_brightness(-1.0 + (Utils.clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
         this.bright_effect.set_contrast(0);
         this.icon.add_effect_with_name('brightness-contrast', this.bright_effect);
-        this.actor.add_child(this.icon);
+        ((this instanceof Clutter.Actor) ? this : this.actor).add_child(this.icon);
         // connect to brightness setting
         this._settings.connect('changed::brightness', Lang.bind(this, function() {
           this.bright_effect.set_contrast(0);
@@ -232,7 +232,7 @@ const GEWallpaperIndicator = new Lang.Class({
             Util.spawn(["gnome-shell-extension-prefs", Me.metadata.uuid]);
         });
 
-        this.actor.connect('button-press-event', Lang.bind(this, this._updateMenu));
+        ((this instanceof Clutter.Actor) ? this : this.actor).connect('button-press-event', Lang.bind(this, this._updateMenu));
 
         if (this._settings.get_int('next-refresh') > 0 ) {
             this._restorePreviousState();
@@ -349,6 +349,7 @@ const GEWallpaperIndicator = new Lang.Class({
         // queue the http request
         httpSession.queue_message(request, Lang.bind(this, function(httpSession, message) {
             if (message.status_code == 200) {
+                log("Datatype: "+message.response_headers.get_content_type());
                 let data = message.response_body.data;
                 log("Recieved "+data.length+" bytes");
                 this._parseData(data);
