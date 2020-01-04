@@ -25,6 +25,12 @@ const TIMEOUT_SECONDS = 24 * 3600; // FIXME: this should use the end data from t
 const TIMEOUT_SECONDS_ON_HTTP_ERROR = 4 * 3600; // retry in one hour if there is a http error
 const ICON = "pin";
 
+// as per https://robwu.nl/, we can get the image ids from the Google Chrome extension this way
+// extension_id = bhloflhklmhfpedakmangadcdofhnnoh
+// curl -L -o "$extension_id.zip" "https://clients2.google.com/service/update2/crx?response=redirect&os=mac&arch=x86-64&nacl_arch=x86-64&prod=chromecrx&prodchannel=stable&prodversion=44.0.2403.130&x=id%3D$extension_id%26uc" 
+// unzip -d "$extension_id-source" "$extension_id.zip"
+// FIXME: this should probably be automated...
+
 const imageids = [
     "1003", "1004", "1006", "1007", "1008", "1010", "1012", "1014", "1017", "1018", "1019", "1021", "1022", "1023",
     "1024", "1026", "1027", "1032", "1033", "1034", "1035", "1036", "1037", "1038", "1039", "1040", "1041", "1046",
