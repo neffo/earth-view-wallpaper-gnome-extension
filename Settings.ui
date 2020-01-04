@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.0
+<!-- Generated with glade 3.22.1 
 
 Copyright (C) 2017
 
@@ -28,6 +28,7 @@ Modified by: Michael Carroll
   <!-- interface-name BingWallpaperChanger preferences -->
   <!-- interface-copyright 2017 -->
   <!-- interface-authors Elia Argentieri -->
+  <object class="GtkAction" id="action1"/>
   <object class="GtkAdjustment" id="brightness_adjustment">
     <property name="upper">100</property>
     <property name="step_increment">10</property>
@@ -514,6 +515,21 @@ Modified by: Michael Carroll
                             <property name="top_attach">0</property>
                           </packing>
                         </child>
+                        <child>
+                          <object class="GtkButton" id="button_open_download_folder">
+                            <property name="label">gtk-open</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="tooltip_text" translatable="yes">Open download folder</property>
+                            <property name="use_stock">True</property>
+                            <property name="always_show_image">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -571,7 +587,6 @@ Modified by: Michael Carroll
             <property name="position">0</property>
           </packing>
         </child>
-
       </object>
       <packing>
         <property name="position">1</property>

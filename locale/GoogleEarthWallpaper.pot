@@ -66,47 +66,55 @@ msgid "Wallpaper pictures folder"
 msgstr ""
 
 #: Settings.ui.h:13
-msgid "Delete previously downloaded wallpapers:"
+msgid "Open download folder"
 msgstr ""
 
 #: Settings.ui.h:14
-msgid "Background"
+msgid "Delete previously downloaded wallpapers:"
 msgstr ""
 
 #: Settings.ui.h:15
-msgid "Map View"
+msgid "Background"
 msgstr ""
 
 #: Settings.ui.h:16
+msgid "Map View"
+msgstr ""
+
+#: Settings.ui.h:17
 msgid ""
 "<span size=\"small\">This program comes with ABSOLUTELY NO WARRANTY.\n"
 "See the <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
 "\">GNU General Public License, version 3 or later</a> for details.</span>"
 msgstr ""
 
-#: Settings.ui.h:18
+#: Settings.ui.h:19
 msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
 msgstr ""
 
-#: Settings.ui.h:19
+#: Settings.ui.h:20
 msgid "Based on NASA APOD Wallpaper extension by Elia Argentieri"
 msgstr ""
 
-#: Settings.ui.h:20
+#: Settings.ui.h:21
 msgid ""
 "This GNOME shell extension sets your wallpaper to a random Google Earth "
 "photo from a selection of curated locations."
 msgstr ""
 
+<<<<<<< HEAD
 #: Settings.ui.h:21 extension.js:248 extension.js:371
+=======
+#: Settings.ui.h:22 extension.js:248 extension.js:371
+>>>>>>> 0c329e98a3218380dd4c308565ba1c9af03a3bba
 msgid "Google Earth Wallpaper"
 msgstr ""
 
-#: Settings.ui.h:22
+#: Settings.ui.h:23
 msgid "Maintained by Michael Carroll"
 msgstr ""
 
-#: Settings.ui.h:23
+#: Settings.ui.h:24
 msgid "About"
 msgstr ""
 
@@ -162,30 +170,38 @@ msgstr ""
 msgid "Something went wrong..."
 msgstr ""
 
+<<<<<<< HEAD
 #: prefs.js:22
 msgid "5 m"
 msgstr ""
 
 #: prefs.js:22
+=======
+#: prefs.js:30
+msgid "5 m"
+msgstr ""
+
+#: prefs.js:30
+>>>>>>> 0c329e98a3218380dd4c308565ba1c9af03a3bba
 msgid "10 m"
 msgstr ""
 
-#: prefs.js:22
+#: prefs.js:30
 msgid "30 m"
 msgstr ""
 
-#: prefs.js:22
+#: prefs.js:30
 msgid "60 m"
 msgstr ""
 
-#: prefs.js:22
+#: prefs.js:30
 msgid "90 m"
 msgstr ""
 
-#: prefs.js:22
+#: prefs.js:30
 msgid "daily"
 msgstr ""
 
-#: prefs.js:67
+#: prefs.js:76
 msgid "Please install WebKit2Gtk package to enable the map view."
 msgstr ""
