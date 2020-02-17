@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-10 21:42+1000\n"
-"PO-Revision-Date: 2020-01-12 15:41+0100\n"
+"PO-Revision-Date: 2020-02-18 00:57+1000\n"
 "Last-Translator: Onno Giesmann <nutzer3105@gmail.com>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -71,7 +71,7 @@ msgstr "Bilderordner für Hintergrundbilder"
 
 #: Settings.ui.h:13
 msgid "Delete previously downloaded wallpapers:"
-msgstr "Zuvor heruntergeladene Hintergrundbilder löschen"
+msgstr "Zuvor heruntergeladene Hintergrundbilder löschen:"
 
 #: Settings.ui.h:14
 msgid "Map Provider for external links"
