@@ -1,21 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# FIRST AUTHOR: Jonatan Hatakeyama Zeidler <jonatan_zeidler@gmx.de>, 2017.
+# SECOND AUTHOR: Onno Giesmann <nutzer3105@gmail.com>, 2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-10 21:42+1000\n"
-"PO-Revision-Date: 2017-10-10 21:46+1000\n"
-"Last-Translator: Jonatan Hatakeyama Zeidler <jonatan_zeidler@gmx.de>\n"
+"PO-Revision-Date: 2020-01-12 15:41+0100\n"
+"Last-Translator: Onno Giesmann <nutzer3105@gmail.com>\n"
 "Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.2.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: Settings.ui.h:1
@@ -23,9 +24,8 @@ msgid "Hide the indicator"
 msgstr "Indikator ausblenden"
 
 #: Settings.ui.h:2
-#, fuzzy
 msgid "Indicator brightness"
-msgstr "Indikator helligkeit"
+msgstr "Indikator-Helligkeit"
 
 #: Settings.ui.h:3
 msgid "Indicator"
@@ -34,8 +34,8 @@ msgstr "Indikator"
 #: Settings.ui.h:4
 msgid "Send a notification with explanation when a new image is downloaded."
 msgstr ""
-"Eine Benachrichtigung mit Erklärung anzeigen, wenn ein neues\n"
-"Bild heruntergeladen wurde."
+"Eine Benachrichtigung mit Erklärung anzeigen, wenn ein neues Bild "
+"heruntergeladen wurde."
 
 #: Settings.ui.h:5
 msgid "Notifications"
@@ -43,7 +43,7 @@ msgstr "Benachrichtigungen"
 
 #: Settings.ui.h:6
 msgid "Use transient notifications (auto dismiss)"
-msgstr "Flüchtige Benachrichtigung (automatisches Entfernen)"
+msgstr "Flüchtige Benachrichtigungen (automatisches Ausblenden)"
 
 #: Settings.ui.h:7
 msgid "Refresh interval"
@@ -51,19 +51,19 @@ msgstr "Aktualisierungsintervall"
 
 #: Settings.ui.h:8
 msgid "Change effective from next refresh"
-msgstr "Wirksam von der nächsten änderung"
+msgstr "Wirksam ab der nächsten Aktualisierung"
 
 #: Settings.ui.h:9
 msgid "Set background image"
-msgstr "Hintergrundbild setzen"
+msgstr "Hintergrundbild für Schreibtisch einstellen"
 
 #: Settings.ui.h:10
 msgid "Set lock screen image"
-msgstr "Hintergrundbild des Sperrbildschirms ändern"
+msgstr "Hintergrundbild für Sperrbildschirm einstellen"
 
 #: Settings.ui.h:11
 msgid "Download folder:"
-msgstr "Speicherverzeichnis:"
+msgstr "Download-Ordner:"
 
 #: Settings.ui.h:12
 msgid "Wallpaper pictures folder"
@@ -71,7 +71,7 @@ msgstr "Bilderordner für Hintergrundbilder"
 
 #: Settings.ui.h:13
 msgid "Delete previously downloaded wallpapers:"
-msgstr "Alte Hintergrundbilder löschen:"
+msgstr "Zuvor heruntergeladene Hintergrundbilder löschen"
 
 #: Settings.ui.h:14
 msgid "Map Provider for external links"
@@ -82,13 +82,10 @@ msgid "Provider used to view wallpaper location and context"
 msgstr "Anbieter zur Anzeige von Ort und Kontext des Bildes"
 
 #: Settings.ui.h:16
-#, fuzzy
-#| msgid "Set background image"
 msgid "Background"
-msgstr "Hintergrundbild setzen"
+msgstr "Hintergrund"
 
 #: Settings.ui.h:17
-#, fuzzy
 msgid "Map View"
 msgstr "Kartenansicht"
 
@@ -98,9 +95,10 @@ msgid ""
 "See the <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
 "\">GNU General Public License, version 3 or later</a> for details.</span>"
 msgstr ""
-"<span size=\"small\">Für dieses Programm besteht KEINERLEI GARANTIE.\n"
-"Details unter <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0."
-"html\">GNU General Public License, Version 3 oder später</a>.</span>"
+"<span size=\"small\">Dieses Programm kommt OHNE JEDWEDE GARANTIE.\n"
+"Besuchen Sie <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0."
+"html\">GNU General Public License, Version 3 oder neuer</a> für weitere "
+"Informationen.</span>"
 
 #: Settings.ui.h:20
 msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
@@ -109,27 +107,24 @@ msgstr "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
 #: Settings.ui.h:21
 msgid "Based on NASA APOD Wallpaper extension by Elia Argentieri"
 msgstr ""
-"Basiert auf der NASA APOD Wallpaper Shell-Erweiterung von Elia Argentieri"
+"Basiert auf der Shell-Erweiterung NASA APOD Wallpaper\n"
+"von Elia Argentieri"
 
 #: Settings.ui.h:22
-#, fuzzy
-#| msgid ""
-#| "Set your wallpaper to a random Google Earth photo from a selection of "
-#| "curated locations."
 msgid ""
 "This GNOME shell extension sets your wallpaper to a random Google Earth "
 "photo from a selection of curated locations."
 msgstr ""
-"Das Hintergrundbild zufällig zwischen Google Earth-Fotos von ausgewählten "
-"Orten wechseln."
+"Diese GNOME-Shell-Erweiterung stellt Ihr Hintergrundbild mit einem "
+"zufälligen Google Earth-Foto aus einer Auswahl kuratierter Orte ein."
 
 #: Settings.ui.h:23 extension.js:261 extension.js:412
 msgid "Google Earth Wallpaper"
-msgstr "Google Earth Hintergrundbild"
+msgstr "Google Earth Wallpaper"
 
 #: Settings.ui.h:24
 msgid "Maintained by Michael Carroll"
-msgstr "Gewartet durch Michael Carroll"
+msgstr "Betreut von Michael Carroll"
 
 #: Settings.ui.h:25
 msgid "About"
@@ -153,7 +148,7 @@ msgstr "Hintergrundbild festlegen"
 
 #: extension.js:233
 msgid "Refresh Now"
-msgstr "Aktualisieren"
+msgstr "Jetzt aktualisieren"
 
 #: extension.js:234
 msgid "Settings"
@@ -169,7 +164,7 @@ msgstr "Nächste Aktualisierung"
 
 #: extension.js:380
 msgid "Fetching..."
-msgstr "Wird heruntergeladen..."
+msgstr "Wird heruntergeladen…"
 
 #: extension.js:472
 msgid "No wallpaper available"
@@ -177,7 +172,7 @@ msgstr "Kein Hintergrundbild verfügbar"
 
 #: extension.js:473
 msgid "Something went wrong..."
-msgstr "Kein Bild heute 😞."
+msgstr "Etwas lief schief…"
 
 #: prefs.js:21
 msgid "5 minutes"
@@ -185,15 +180,17 @@ msgstr "5 Minuten"
 
 #: prefs.js:21
 msgid "hourly"
-msgstr "stündlich"
+msgstr "Stündlich"
 
 #: prefs.js:21
 msgid "daily"
-msgstr "täglich"
+msgstr "Täglich"
 
 #: prefs.js:67
 msgid "Please install WebKit2Gtk package to enable the map view."
 msgstr ""
+"Bitte das Paket WebKit2Gtk installieren, um die Kartenansicht nutzen zu "
+"können."
 
 #~ msgid "Gnome shell extension version: "
 #~ msgstr "Version dieser GNOME Shell-Erweiterung: "
