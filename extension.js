@@ -459,35 +459,21 @@ const GEWallpaperIndicator = new Lang.Class({
     _parseData: function(data) {
         let imagejson = JSON.parse(data);
 
-        if (imagejson['id'] != '') {
+        if (imagejson.id != '') {
             this.title = _("Google Earth Wallpaper");
             let location = "";
-            let linelen = 0;
-           /* for (var i in imagejson['geocode']) {
-                if (location != "" && isNaN(location)) {
-                    location += ", ";
-                    linelen += 2;
-                }
-                else {
-                    location += " ";
-                    linelen += 2;
-                }
-                if (linelen > 40) {
-                     location += "\n";
-                     linelen = 0;
-                }
-               location += imagejson['geocode'][i];
-               linelen += imagejson['geocode'][i].length;
-               log('location: '+location+' length: '+linelen);
-            }*/
-            location = imagejson['region']+', '+imagejson['country']+' ('+imagejson['edition']+')'
-            let coordinates = Utils.friendly_coordinates(imagejson['lat'],imagejson['lng']);
+            if ('geocode' in imagejson) {
+                location = imagejson.geocode.administrative_area_level_1 +', '+imagejson.geocode.country;
+            } else {
+                location = imagejson.region + ', ' + imagejson.country;    
+            }
+            let coordinates = Utils.friendly_coordinates(imagejson.lat,imagejson.lng);
             this.explanation = location.trim(); // + '\n'+ coordinates;
-            this.copyright = imagejson['attribution'];
-            this.lat = imagejson['lat'];
-            this.lon = imagejson['lng'];
-            this.zoom = imagejson['zoom'];
-            this.imageid = imagejson['id'];
+            this.copyright = imagejson.attribution;
+            this.lat = imagejson.lat;
+            this.lon = imagejson.lng;
+            this.zoom = imagejson.zoom;
+            this.imageid = imagejson.id;
             this._updateProviderLink();
 
             let GEWallpaperDir = this._settings.get_string('download-folder');
@@ -501,7 +487,7 @@ const GEWallpaperIndicator = new Lang.Class({
             }
 
             let prevfile = this._settings.get_string('image-filepath');
-            this.filename = GEWallpaperDir+imagejson['id']+'-'+location.trim().replace(',','').replace(/[^a-z0-9]+/gi, '_').toLowerCase()+'.jpg';
+            this.filename = GEWallpaperDir+(imagejson.id+'-'+location.trim()).replace(',','').replace(/[^a-z0-9]+/gi, '_').toLowerCase()+'.jpg';
             let file = Gio.file_new_for_path(this.filename);
             let file_exists = file.query_exists(null);
             let file_info = file_exists ? file.query_info ('*',Gio.FileQueryInfoFlags.NONE,null): 0;
@@ -525,7 +511,7 @@ const GEWallpaperIndicator = new Lang.Class({
                 this.lat.toString(),
                 this.lon.toString(),
                 this.zoom.toString()].join('|'));
-            this._settings.set_int('image-id',imagejson['id']);
+            this._settings.set_int('image-id',imagejson.id);
         } else {
             this.title = _("No wallpaper available");
             this.explanation = _("Something went wrong...");
