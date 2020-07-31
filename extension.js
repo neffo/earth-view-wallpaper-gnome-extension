@@ -369,34 +369,27 @@ const GEWallpaperIndicator = new Lang.Class({
         this.extLinkItem.label.set_text(this.provider_text);
     },
 
-    _updateProviderLink: function() {
-      let provider = this._settings.get_enum('map-link-provider');
-      switch(provider) {
-        case 1: // Google Maps
-          this.link = 'https://www.google.com/maps/@?api=1&map_action=map'+'&'+
-                        'center=' + this.lat + ',' + this.lon + '&' +
-                        'zoom=' + this.zoom + '&' + 'basemap=satellite' + '&'
-                        'layer=none';
-          break;
-        case 2: // Bing Maps
-          this.link = 'https://bing.com/maps/default.aspx?' +
-                        'cp=' + this.lat + '~' + this.lon + '&' +
-                        'lvl=' + this.zoom + '&' + 'style=a' + '&' +
-                        'dir=0';
-          break;
-        case 3: // OpenStreetMap
-          this.link = 'https://www.openstreetmap.org/#map=' +
-                        this.zoom + '/' + this.lat + '/' + this.lon;
-          break;
-        case 4: // GNOME Maps (most likely, or whatever is default app for geo: uris)
-          this.link = 'geo:'+this.lat+','+this.lon;
-          break;
+    _getProviderLink: function(provider = this._settings.get_enum('map-link-provider')) {
+        switch(provider) {
+          case 1: // Google Maps
+            return `https://www.google.com/maps/@${this.lat},${this.lon},${this.zoom}z/data=!3m1!1e3`;
+            // data=!3m1!1e3 indicates we want the satellite image basemap
+          case 2: // Bing Maps
+            return `https://bing.com/maps/default.aspx?cp=${this.lat}~${this.lon}&lvl=${this.zoom}&style=a&dir=0`;
+          case 3: // OpenStreetMap
+            return `https://www.openstreetmap.org/#map=${this.zoom}/${this.lat}/${this.lon}`;
+          case 4: // GNOME Maps (most likely, or whatever is default app for geo: uris)
+            return `geo:${this.lat},${this.lon}`;
+          case 0: // Google Earth
+          default:
+            return `https://g.co/ev/${this.imageid}`;
+        }
+    },
 
-        case 0: // Google Earth
-        default:
-          this.link = 'https://g.co/ev/'+this.imageid;
-      }
-      this.provider_text = _("View in ") + providerNames[provider];
+    _updateProviderLink: function() {
+        const provider = this._settings.get_enum('map-link-provider');
+        this.link = this._getProviderLink(provider)
+        this.provider_text = _("View in ") + providerNames[provider];
     },
 
     _setBackground: function() {
