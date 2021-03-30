@@ -23,6 +23,7 @@ try {
 const Convenience = Me.imports.convenience;
 const Gettext = imports.gettext.domain('GoogleEarthWallpaper');
 const _ = Gettext.gettext;
+const Images = Me.imports.images;
 
 let settings;
 

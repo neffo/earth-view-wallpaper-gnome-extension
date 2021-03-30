@@ -57,7 +57,7 @@ function friendly_time_diff(time, short = true) {
 }
 
 function friendly_coordinates(lat, lon) {
-  return Math.abs(lat).toFixed(4)+(lat>0 ? 'N': 'S')+', '+Math.abs(lon).toFixed(4)+(lon>0 ? 'E': 'W');
+  return Math.abs(lat).toFixed(4)+(lat>0 ? 'N': 'S')+', '+Math.abs(lon).toFixed(4)+(lon>0 ? 'E':'W');
 }
 
 function clamp_value(value, min, max) {
