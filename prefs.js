@@ -47,6 +47,7 @@ function buildPrefsWidget(){
     buildable.get_object('extension_name').set_text(Me.metadata.name.toString());
 
     let hideSwitch = buildable.get_object('hide');
+    let iconEntry = buildable.get_object('icon');
     let bgSwitch = buildable.get_object('background');
     let lsSwitch = buildable.get_object('lock_screen');
     let ldSwitch = buildable.get_object('lock_dialog');
@@ -57,12 +58,13 @@ function buildPrefsWidget(){
     let globeFrame = buildable.get_object('globe_frame');
     let brightnessValue = buildable.get_object('brightness_adjustment');
     let folderButton = buildable.get_object('button_open_download_folder');
+    let icon_image = buildable.get_object('icon_image');
 
     if (Webkit != null) {
       let webview =  new Webkit.WebView ();
       webview.transparent = true;
-      webview.margin_left = 0;
-      webview.margin_right =0;
+      webview.margin_left = 0; // FIXME: depreciated in GTK4
+      webview.margin_right =0; // FIXME: as above
       webview.margin_top = 0;
       webview.margin_bottom = 0;
       webview.vexpand = true;
@@ -85,7 +87,16 @@ function buildPrefsWidget(){
     settings.bind('set-lock-screen', lsSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('set-lock-screen-dialog', ldSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('brightness', brightnessValue, 'value', Gio.SettingsBindFlags.DEFAULT);
-
+    
+    // adjustable indicator icons
+    Utils.icon_list.forEach(function (iconname, index) { // add icons to dropdown list (aka a GtkComboText)
+        iconEntry.append(iconname, iconname);
+    });
+    settings.bind('icon', iconEntry, 'active_id', Gio.SettingsBindFlags.DEFAULT);
+    settings.connect('changed::icon', function() {
+        Utils.validate_icon(settings, icon_image);
+    });
+    iconEntry.set_active_id(settings.get_string('icon'));
     //download folder
     fileChooser.set_filename(settings.get_string('download-folder'));
     fileChooser.add_shortcut_folder_uri("file://" + GLib.get_user_cache_dir() + "/GoogleEarthWallpaper");
@@ -131,6 +142,20 @@ function buildPrefsWidget(){
     settings.connect('changed::map-link-provider', function() {
         providerSpin.set_active_id(settings.get_enum('map-link-provider').toString());
     });
+
+    if (Convenience.currentVersionGreaterEqual("40.0")) {
+        // GNOME 40 specific code
+        lsSwitch.set_sensitive(false);
+        ldSwitch.set_sensitive(false);
+    }
+    else if (Convenience.currentVersionGreaterEqual("3.36")) {
+        // GNOME 3.36 - 3.38 specific code
+        lsSwitch.set_sensitive(false);
+        ldSwitch.set_sensitive(false);
+    }
+    else {
+        // legacy GNOME versions less than 3.36
+    }
 
     box.show_all();
     return box;

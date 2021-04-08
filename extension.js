@@ -31,6 +31,10 @@ let googleearthWallpaperIndicator=null;
 let httpSession = new Soup.SessionAsync();
 Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
 
+// remove this when dropping support for < 3.33, see https://github.com/OttoAllmendinger/
+const getActorCompat = (obj) =>
+  Convenience.currentVersionGreaterEqual("3.33") ? obj : obj.actor;
+
 function log(msg) {
     if (googleearthWallpaperIndicator==null || true || googleearthWallpaperIndicator._settings.get_boolean('debug-logging'))
         print("GEWallpaper extension: " + msg); // disable to keep the noise down in journal
@@ -55,7 +59,8 @@ const GEWallpaperIndicator = new Lang.Class({
     _init: function() {
         this.parent(0.0, IndicatorName);
 
-        let gicon = Gio.icon_new_for_string(Me.dir.get_child('icons').get_path() + "/" + ICON + ".svg");
+        this._settings = Utils.getSettings();
+        let gicon = Gio.icon_new_for_string(Me.dir.get_child('icons').get_path() + "/" + this._settings.get_string('icon') + "-symbolic.svg");
         this.icon = new St.Icon({gicon: gicon, style_class: 'system-status-icon'});
         this.x_fill = true;
         this.y_fill = false;
@@ -73,26 +78,30 @@ const GEWallpaperIndicator = new Lang.Class({
         this.imageid = 0;
         this.refreshdue = 0; // UNIX timestamp when next refresh is due
 
-        this._settings = Utils.getSettings();
         this._settings.connect('changed::hide', Lang.bind(this, function() {
-            ((this instanceof Clutter.Actor) ? this : this.actor).visible = !this._settings.get_boolean('hide'); // FIXME: this a clunky fix for the this.actor depreciation
+            getActorCompat(this).visible = !this._settings.get_boolean('hide');
         }));
-        ((this instanceof Clutter.Actor) ? this : this.actor).visible = !this._settings.get_boolean('hide');
+        getActorCompat(this).visible = !this._settings.get_boolean('hide');
 
         this._settings.connect('changed::map-link-provider', Lang.bind(this, function() {
             this._updateProviderLink();
         }));
 
-        // this is how we handle dynamic icon brightness
+        // this is how we handle dynamic icon brightness - this is now better handled by 'symbolic' icons which match theme
         this.bright_effect = new Clutter.BrightnessContrastEffect({});
         this.bright_effect.set_brightness(-1.0 + (Utils.clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
         this.bright_effect.set_contrast(0);
         this.icon.add_effect_with_name('brightness-contrast', this.bright_effect);
-        ((this instanceof Clutter.Actor) ? this : this.actor).add_child(this.icon);
-        // connect to brightness setting
+        getActorCompat(this).add_child(this.icon);
+        
+        // watch for indicator icon settings changes
         this._settings.connect('changed::brightness', Lang.bind(this, function() {
           this.bright_effect.set_contrast(0);
           this.bright_effect.set_brightness(-1.0 + (Utils.clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
+        }));
+        this._setIcon(this._settings.get_string('icon'));
+        this._settings.connect('changed::icon', Lang.bind(this, function() {
+            this._setIcon(this._settings.get_string('icon'));
         }));
 
         this.refreshDueItem = new PopupMenu.PopupMenuItem(_("<No refresh scheduled>"));
@@ -100,29 +109,47 @@ const GEWallpaperIndicator = new Lang.Class({
         this.locationItem = new PopupMenu.PopupMenuItem(_("Geo Location"));
         this.extLinkItem = new PopupMenu.PopupMenuItem(_("External Link"));
         this.copyrightItem = new PopupMenu.PopupMenuItem(_("Copyright"));
-        this.wallpaperItem = new PopupMenu.PopupMenuItem(_("Set wallpaper"));
+        this.dwallpaperItem = new PopupMenu.PopupMenuItem(_("Set background image now"));
+        this.swallpaperItem = new PopupMenu.PopupMenuItem(_("Set lockscreen image now"));
         this.refreshItem = new PopupMenu.PopupMenuItem(_("Refresh Now"));
-        this.settingsItem = new PopupMenu.PopupMenuItem(_("Settings"));
+        this.settingsItem = new PopupMenu.PopupMenuItem(_("Extension settings"));
+
+        // menu toggles for settings
+        this.wallpaperToggle = this._newMenuSwitch(_("Set background image"), "set-background", this._settings.get_boolean('set-background'), true);
+        this.lockscreenToggle = this._newMenuSwitch(_("Set lockscreen image"), "set-lock-screen", this._settings.get_boolean('set-lock-screen'), !Convenience.currentVersionGreaterEqual("3.36"));
+        
         this.menu.addMenuItem(this.descriptionItem);
         this.menu.addMenuItem(this.locationItem);
         this.menu.addMenuItem(this.extLinkItem);
         this.menu.addMenuItem(this.refreshDueItem);
         this.menu.addMenuItem(this.refreshItem);
-        this.menu.addMenuItem(this.wallpaperItem);
-        this.menu.addMenuItem(this.settingsItem);
+        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+        this.menu.addMenuItem(this.dwallpaperItem);
+        
+        // disable until fresh is done
         this.refreshDueItem.setSensitive(false);
         this.descriptionItem.setSensitive(false);
         this.locationItem.setSensitive(false);
+        
         this.extLinkItem.connect('activate', Lang.bind(this, function() {
             Util.spawn(["xdg-open", this.link]);
         }));
-        this.wallpaperItem.connect('activate', Lang.bind(this, this._setBackground));
+        this.dwallpaperItem.connect('activate', Lang.bind(this, this._setDesktopBackground));
+        if (!Convenience.currentVersionGreaterEqual("3.36")) { // lockscreen and desktop wallpaper are the same in GNOME 3.36+
+            this.swallpaperItem.connect('activate', Lang.bind(this, this._setLockscreenBackground));
+            this.menu.addMenuItem(this.swallpaperItem);
+        }
+        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
         this.refreshItem.connect('activate', Lang.bind(this, this._refresh));
         this.settingsItem.connect('activate', function() {
             Util.spawn(["gnome-shell-extension-prefs", Me.metadata.uuid]);
         });
+        this.menu.addMenuItem(new PopupMenu.PopupMenuItem(_("On refresh:"), {reactive : false} ));
+        this.menu.addMenuItem(this.wallpaperToggle);
+        this.menu.addMenuItem(this.lockscreenToggle);
+        this.menu.addMenuItem(this.settingsItem);        
 
-        ((this instanceof Clutter.Actor) ? this : this.actor).connect('button-press-event', Lang.bind(this, this._updateMenu));
+        getActorCompat(this).connect('button-press-event', Lang.bind(this, this._updateMenu));
 
         if (this._settings.get_int('next-refresh') > 0 ) {
             this._restorePreviousState();
@@ -159,7 +186,10 @@ const GEWallpaperIndicator = new Lang.Class({
     _updateMenu: function () {
         // Grey out menu items if an update is pending
         this.refreshItem.setSensitive(!this._updatePending);
-        this.wallpaperItem.setSensitive(!this._updatePending && this.filename != "");
+        this.dwallpaperItem.setSensitive(!this._updatePending && this.filename != "");
+        this.swallpaperItem.setSensitive(!this._updatePending && this.filename != "");
+        this.wallpaperToggle.setToggleState(this._settings.get_boolean('set-background'));
+        this.lockscreenToggle.setToggleState(this._settings.get_boolean('set-lock-screen'));
         // update menu text
         this.refreshDueItem.label.set_text(_('Next refresh')+': '+this.refreshdue.format('%X')+' ('+Utils.friendly_time_diff(this.refreshdue)+')');
         this.locationItem.label.set_text(Utils.friendly_coordinates(this.lat, this.lon));
@@ -195,12 +225,37 @@ const GEWallpaperIndicator = new Lang.Class({
         if (this.filename == "")
             return;
         if (this._settings.get_boolean('set-background')) {
-            doSetBackground(this.filename, 'org.gnome.desktop.background');
+            this._setDesktopBackground();
         }
         if (this._settings.get_boolean('set-lock-screen')) {
-            doSetBackground(this.filename, 'org.gnome.desktop.screensaver');
+            this._setLockscreenBackground();
         }
     },
+
+    _setDesktopBackground() {
+        doSetBackground(this.filename, 'org.gnome.desktop.background');
+    },
+
+    _setLockscreenBackground() {
+        doSetBackground(this.filename, 'org.gnome.desktop.screensaver');
+    },
+
+    _newMenuSwitch(string, dconf_key, initialValue, writable) {
+        this._settings.connect(`changed::${dconf_key}`, Lang.bind(this, function() {
+            this._updateMenu();
+        }));
+        let widget = new PopupMenu.PopupSwitchMenuItem(string,
+            initialValue);
+        if (!writable) {
+            widget.actor.reactive = false;
+        } else {
+            widget.connect('toggled', item => {
+                this._settings.set_boolean(dconf_key, item.state); // how do I get state?
+            });
+        }
+        return widget;
+    },
+
 
     _restartTimeout: function(seconds = null) {
         if (this._timeout)
@@ -339,6 +394,22 @@ const GEWallpaperIndicator = new Lang.Class({
         this._updatePending = false;
 
         this._setBackground();
+    },
+
+    _setIcon: function(icon_name) {
+        //log('Icon set to : '+icon_name)
+        Utils.validate_icon(this._settings);
+        let gicon = Gio.icon_new_for_string(Me.dir.get_child('icons').get_path() + "/" + icon_name + "-symbolic.svg");
+        this.icon = new St.Icon({gicon: gicon, style_class: 'system-status-icon'});
+        if (!this.icon.get_parent() && 0) {
+            log('New icon set to : '+icon_name);
+            getActorCompat(this).add_child(this.icon);
+        }
+        else {
+            log('Replace icon set to : '+icon_name);
+            getActorCompat(this).remove_all_children();
+            getActorCompat(this).add_child(this.icon);
+        }
     },
 
     stop: function () {

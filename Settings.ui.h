@@ -1,6 +1,7 @@
 char *s = N_("Hide the indicator");
 char *s = N_("Indicator brightness");
 char *s = N_("Indicator");
+char *s = N_("Indicator icon");
 char *s = N_("Refresh interval");
 char *s = N_("Change effective from next refresh");
 char *s = N_("Map Provider for external links");

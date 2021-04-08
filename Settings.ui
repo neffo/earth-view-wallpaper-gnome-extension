@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.1 
+<!-- Generated with glade 3.22.2 
 
-Copyright (C) 2017
+Copyright (C) 2017-2021
 
-This file is part of Bing Wallpaper extension preferences.
+This file is part of Google Earth Wallpaper extension preferences.
 
 This extension is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
@@ -18,8 +18,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with this extension.  If not, see <http://www.gnu.org/licenses/>.
 
-Author: Elia Argentieri
-Modified by: Michael Carroll
+Author: Michael Carroll <ineffable@gmail.com>
 
 -->
 <interface domain="GoogleEarthWallpaper">
@@ -101,6 +100,7 @@ Modified by: Michael Carroll
                           <packing>
                             <property name="left_attach">1</property>
                             <property name="top_attach">1</property>
+                            <property name="width">2</property>
                           </packing>
                         </child>
                         <child>
@@ -135,6 +135,7 @@ Modified by: Michael Carroll
                           <packing>
                             <property name="left_attach">1</property>
                             <property name="top_attach">2</property>
+                            <property name="width">2</property>
                           </packing>
                         </child>
                         <child>
@@ -149,19 +150,53 @@ Modified by: Michael Carroll
                           <packing>
                             <property name="left_attach">0</property>
                             <property name="top_attach">0</property>
-                            <property name="width">2</property>
+                            <property name="width">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="icon_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Indicator icon</property>
+                            <property name="wrap">True</property>
+                            <style>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkComboBoxText" id="icon">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">end</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkImage" id="icon_image">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">end</property>
+                            <property name="hexpand">True</property>
+                            <property name="pixbuf">icons/pin-symbolic.svg</property>
+                            <style>
+                              <class name="width:64px;"/>
+                            </style>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">3</property>
                           </packing>
                         </child>
                       </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkListBoxRow" id="notifications_listboxrow">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <child>
-                      <placeholder/>
                     </child>
                   </object>
                 </child>

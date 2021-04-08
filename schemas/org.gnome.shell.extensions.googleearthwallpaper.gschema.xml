@@ -8,6 +8,11 @@
     <value value="4" nick="gnome-maps"/>
   </enum>
 
+  <enum id="org.gnome.shell.extensions.googleearthwallpaper.IconEnum">
+    <value value="0" nick="pin"/>
+    <value value="1" nick="globe"/>
+  </enum>
+
   <schema id="org.gnome.shell.extensions.googleearthwallpaper"
       path="/org/gnome/shell/extensions/googleearthwallpaper/">
 
@@ -104,6 +109,12 @@
     <key name="brightness" type="i">
       <default>80</default>
       <summary>Percentage brightness change for indicator icon</summary>
+      <description></description>
+    </key>
+
+    <key name="icon" enum="org.gnome.shell.extensions.googleearthwallpaper.IconEnum">
+      <default>'pin'</default>
+      <summary>Indicator icon</summary>
       <description></description>
     </key>
 
