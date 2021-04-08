@@ -40,7 +40,12 @@ function init() {
 function buildPrefsWidget(){
     // Prepare labels and controls
     let buildable = new Gtk.Builder();
-    buildable.add_from_file( Me.dir.get_path() + '/Settings.ui' );
+    if (Gtk.get_major_version() == 4) { // GTK4 removes some properties, and builder breaks when it sees them
+        buildable.add_from_file( Me.dir.get_path() + '/Settings4.ui' );
+    }
+    else {
+        buildable.add_from_file( Me.dir.get_path() + '/Settings.ui' );
+    }
     let box = buildable.get_object('prefs_widget');
 
     buildable.get_object('extension_version').set_text(' v'+Me.metadata.version.toString());
@@ -52,6 +57,7 @@ function buildPrefsWidget(){
     let lsSwitch = buildable.get_object('lock_screen');
     let ldSwitch = buildable.get_object('lock_dialog');
     let fileChooser = buildable.get_object('download_folder');
+    let fileChooserBtn = buildable.get_object('download_folder_btn');
     let deleteSwitch = buildable.get_object('delete_previous');
     let refreshSpin = buildable.get_object('refresh_combo');
     let providerSpin = buildable.get_object('map_provider_combo');
@@ -77,7 +83,8 @@ function buildPrefsWidget(){
     } else {
       let wklabel = new Gtk.Label();
       wklabel.set_label(_("Please install WebKit2Gtk package to enable the map view."))
-      globeFrame.add(wklabel);
+      /* globeFrame.add(wklabel); */
+
     }
 
     // Indicator
@@ -98,18 +105,39 @@ function buildPrefsWidget(){
     });
     iconEntry.set_active_id(settings.get_string('icon'));
     //download folder
-    fileChooser.set_filename(settings.get_string('download-folder'));
-    fileChooser.add_shortcut_folder_uri("file://" + GLib.get_user_cache_dir() + "/GoogleEarthWallpaper");
-    fileChooser.connect('file-set', function(widget) {
-        settings.set_string('download-folder', widget.get_filename());
-    });
+    if (Gtk.get_major_version() == 4) {
+        fileChooserBtn.connect('clicked', function(widget) {
+            let parent = widget.get_root();
+            fileChooser.set_transient_for(parent);
+            /* fileChooser.set_filename(Gio.File.new_for_path(settings.get_string('download-folder')));*/ //FIXME: unsure why this doesn't work
+            fileChooser.show();
+        });
+        fileChooser.connect('response', function(widget, response) {
+            if (response !== Gtk.ResponseType.ACCEPT) {
+                return;
+            }
+            let fileURI = widget.get_file();
+            log("fileChooser returned: "+fileURI);
+            fileChooserBtn.set_label(fileURI);
+            settings.set_string('download-folder', fileURI);
+        });
+        folderButton.connect('clicked', function() { 
+            ge_tryspawn(["xdg-open", settings.get_string('download-folder')]);
+            log('open_background_folder '+settings.get_string('download-folder'));
+        });
+    }
+    else {
+        fileChooser.set_filename(settings.get_string('download-folder'));
+        fileChooser.add_shortcut_folder_uri("file://" + GLib.get_user_cache_dir() + "/GoogleEarthWallpaper");
 
- 
-    folderButton.connect('button-press-event', function() { 
-        ge_tryspawn(["xdg-open", settings.get_string('download-folder')]);
-        log('open_background_folder '+settings.get_string('download-folder'));
-    });
-
+        fileChooser.connect('file-set', function(widget) {
+            settings.set_string('download-folder', widget.get_filename());
+        });
+        folderButton.connect('button-press-event', function() { 
+            ge_tryspawn(["xdg-open", settings.get_string('download-folder')]);
+            log('open_background_folder '+settings.get_string('download-folder'));
+        }); 
+    }
 
     settings.bind('delete-previous', deleteSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
 
@@ -157,7 +185,9 @@ function buildPrefsWidget(){
         // legacy GNOME versions less than 3.36
     }
 
-    box.show_all();
+    // not required in GTK4 as widgets are displayed by default
+    if (Gtk.get_major_version() < 4)
+        box.show_all();
     return box;
 }
 
