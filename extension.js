@@ -399,7 +399,7 @@ const GEWallpaperIndicator = new Lang.Class({
     _setIcon: function(icon_name) {
         //log('Icon set to : '+icon_name)
         Utils.validate_icon(this._settings);
-        let gicon = Gio.icon_new_for_string(Me.dir.get_child('icons').get_path() + "/" + icon_name + "-symbolic.svg");
+        let gicon = Gio.icon_new_for_string(Me.dir.get_child('icons').get_path() + "/" + Utils.icon_list_filename[Utils.icon_list.indexOf(icon_name)] + ".svg");
         this.icon = new St.Icon({gicon: gicon, style_class: 'system-status-icon'});
         if (!this.icon.get_parent() && 0) {
             log('New icon set to : '+icon_name);

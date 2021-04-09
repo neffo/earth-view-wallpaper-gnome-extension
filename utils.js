@@ -5,7 +5,8 @@ const GLib = imports.gi.GLib;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const GdkPixbuf = imports.gi.GdkPixbuf;
 
-var icon_list = ['pin', 'globe'];
+var icon_list = ['pin', 'globe','official'];
+var icon_list_filename = ['pin-symbolic', 'globe-symbolic', 'official'];
 
 function getSettings() {
 	let extension = ExtensionUtils.getCurrentExtension();
@@ -98,7 +99,7 @@ function validate_icon(settings, icon_image = null) {
 	// if called from prefs
 	if (icon_image) { 
 		log('set icon to: ' + Me.dir.get_path() + '/icons/' + icon_name + '-symbolic.svg');
-		let pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(Me.dir.get_path() + '/icons/' + icon_name + '-symbolic.svg', 32, 32);
+		let pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(Me.dir.get_path() + '/icons/' + icon_list_filename[icon_list.indexOf(icon_name)] + '.svg', 32, 32);
 		icon_image.set_from_pixbuf(pixbuf);
 	}
 }

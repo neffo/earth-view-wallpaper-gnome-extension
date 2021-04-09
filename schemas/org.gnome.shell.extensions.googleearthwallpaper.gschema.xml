@@ -11,6 +11,7 @@
   <enum id="org.gnome.shell.extensions.googleearthwallpaper.IconEnum">
     <value value="0" nick="pin"/>
     <value value="1" nick="globe"/>
+    <value value="2" nick="official"/>
   </enum>
 
   <schema id="org.gnome.shell.extensions.googleearthwallpaper"

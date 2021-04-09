@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-08 15:44+1000\n"
+"POT-Creation-Date: 2021-04-09 12:32+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Provider used to view wallpaper location and context"
 msgstr ""
 
-#: Settings.ui.h:9
+#: Settings.ui.h:9 extension.js:118
 msgid "Set background image"
 msgstr ""
 
@@ -106,7 +106,7 @@ msgid ""
 "photo from a selection of curated locations."
 msgstr ""
 
-#: Settings.ui.h:23 extension.js:138 extension.js:255
+#: Settings.ui.h:23 extension.js:165 extension.js:310
 msgid "Google Earth Wallpaper"
 msgstr ""
 
@@ -118,55 +118,67 @@ msgstr ""
 msgid "About"
 msgstr ""
 
-#: extension.js:98
+#: extension.js:107
 msgid "<No refresh scheduled>"
 msgstr ""
 
-#: extension.js:99
+#: extension.js:108
 msgid "Text Location"
 msgstr ""
 
-#: extension.js:100
+#: extension.js:109
 msgid "Geo Location"
 msgstr ""
 
-#: extension.js:101
+#: extension.js:110
 msgid "External Link"
 msgstr ""
 
-#: extension.js:102
+#: extension.js:111
 msgid "Copyright"
 msgstr ""
 
-#: extension.js:103
-msgid "Set wallpaper"
+#: extension.js:112
+msgid "Set background image now"
 msgstr ""
 
-#: extension.js:104
+#: extension.js:113
+msgid "Set lockscreen image now"
+msgstr ""
+
+#: extension.js:114
 msgid "Refresh Now"
 msgstr ""
 
-#: extension.js:105
-msgid "Settings"
+#: extension.js:115
+msgid "Extension settings"
 msgstr ""
 
-#: extension.js:164
+#: extension.js:119
+msgid "Set lockscreen image"
+msgstr ""
+
+#: extension.js:147
+msgid "On refresh:"
+msgstr ""
+
+#: extension.js:194
 msgid "Next refresh"
 msgstr ""
 
-#: extension.js:191
+#: extension.js:221
 msgid "View in "
 msgstr ""
 
-#: extension.js:223
+#: extension.js:278
 msgid "Fetching..."
 msgstr ""
 
-#: extension.js:309
+#: extension.js:364
 msgid "No wallpaper available"
 msgstr ""
 
-#: extension.js:310
+#: extension.js:365
 msgid "Something went wrong..."
 msgstr ""
 
@@ -194,22 +206,22 @@ msgstr ""
 msgid "daily"
 msgstr ""
 
-#: prefs.js:79
+#: prefs.js:85
 msgid "Please install WebKit2Gtk package to enable the map view."
 msgstr ""
 
-#: utils.js:49 utils.js:52
+#: utils.js:50 utils.js:53
 msgid "minutes"
 msgstr ""
 
-#: utils.js:55
+#: utils.js:56
 msgid "days"
 msgstr ""
 
-#: utils.js:58
+#: utils.js:59
 msgid "hours"
 msgstr ""
 
-#: utils.js:85
+#: utils.js:86
 msgid "No change log found for this release"
 msgstr ""
