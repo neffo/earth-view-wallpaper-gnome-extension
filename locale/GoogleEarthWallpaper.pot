@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-09 12:32+1000\n"
+"POT-Creation-Date: 2021-04-09 19:12+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,7 +106,7 @@ msgid ""
 "photo from a selection of curated locations."
 msgstr ""
 
-#: Settings.ui.h:23 extension.js:165 extension.js:310
+#: Settings.ui.h:23 extension.js:167 extension.js:312
 msgid "Google Earth Wallpaper"
 msgstr ""
 
@@ -162,23 +162,23 @@ msgstr ""
 msgid "On refresh:"
 msgstr ""
 
-#: extension.js:194
+#: extension.js:196
 msgid "Next refresh"
 msgstr ""
 
-#: extension.js:221
+#: extension.js:223
 msgid "View in "
 msgstr ""
 
-#: extension.js:278
+#: extension.js:280
 msgid "Fetching..."
 msgstr ""
 
-#: extension.js:364
+#: extension.js:366
 msgid "No wallpaper available"
 msgstr ""
 
-#: extension.js:365
+#: extension.js:367
 msgid "Something went wrong..."
 msgstr ""
 
@@ -210,18 +210,18 @@ msgstr ""
 msgid "Please install WebKit2Gtk package to enable the map view."
 msgstr ""
 
-#: utils.js:50 utils.js:53
+#: utils.js:51 utils.js:54
 msgid "minutes"
 msgstr ""
 
-#: utils.js:56
+#: utils.js:57
 msgid "days"
 msgstr ""
 
-#: utils.js:59
+#: utils.js:60
 msgid "hours"
 msgstr ""
 
-#: utils.js:86
+#: utils.js:87
 msgid "No change log found for this release"
 msgstr ""

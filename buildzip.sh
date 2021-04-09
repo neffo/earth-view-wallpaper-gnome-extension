@@ -14,4 +14,4 @@ rm GoogleEarthWallpaper@neffo.github.com.zip
 
 zip -r GoogleEarthWallpaper@neffo.github.com.zip *
 
-zip -d GoogleEarthWallpaper@neffo.github.com.zip screenshot/* screenshot buildzip.sh Settings.ui.h *~
+zip -d GoogleEarthWallpaper@neffo.github.com.zip screenshot/* screenshot buildzip.sh Settings.ui.h *.py *~

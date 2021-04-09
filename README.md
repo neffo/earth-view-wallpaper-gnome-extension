@@ -24,7 +24,7 @@ This extension is derived from my [Bing Wallpaper](https://github.com/neffo/bing
 
 ## Requirements
 
-Gnome 3.18+ (Ubuntu Gnome 16.04+, Fedora 23+)
+Gnome 3.28+ (Ubuntu Gnome 18.04+)
 
 ## Install
 
@@ -36,7 +36,7 @@ or install directly to your GNOME extensions directory (if you want to hack on i
 
 ## Screenshots
 
-![Menu][/screenshot/menu.png]
+![Menu](/screenshot/menu.png)
 
 ![Settings](/screenshot/settings.png)
 
