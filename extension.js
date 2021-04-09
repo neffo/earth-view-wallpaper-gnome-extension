@@ -146,7 +146,9 @@ const GEWallpaperIndicator = new Lang.Class({
         });
         this.menu.addMenuItem(new PopupMenu.PopupMenuItem(_("On refresh:"), {reactive : false} ));
         this.menu.addMenuItem(this.wallpaperToggle);
-        this.menu.addMenuItem(this.lockscreenToggle);
+        if (!Convenience.currentVersionGreaterEqual("3.36")) { // lockscreen and desktop wallpaper are the same in GNOME 3.36+
+            this.menu.addMenuItem(this.lockscreenToggle);
+        }
         this.menu.addMenuItem(this.settingsItem);        
 
         getActorCompat(this).connect('button-press-event', Lang.bind(this, this._updateMenu));
