@@ -68,6 +68,7 @@
                                 </layout>
                               </object>
                             </child>
+                            <!--
                             <child>
                               <object class="GtkLabel" id="brightness_label">
                                 <property name="can_focus">0</property>
@@ -99,6 +100,7 @@
                                 </layout>
                               </object>
                             </child>
+                            -->
                             <child>
                               <object class="GtkLabel" id="indicator_label">
                                 <property name="can_focus">0</property>

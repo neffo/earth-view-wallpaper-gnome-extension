@@ -17,7 +17,7 @@ const _ = Gettext.gettext;
 var icon_list = ['pin', 'globe','official'];
 var icon_list_filename = ['pin-symbolic', 'globe-symbolic', 'official'];
 
-let gitreleaseurl = 'https://api.github.com/repos/neffo/earth-view-wallpaper-gnome-extension/releases/tags/';
+var gitreleaseurl = 'https://api.github.com/repos/neffo/earth-view-wallpaper-gnome-extension/releases/tags/';
 
 function getSettings() {
 	let extension = ExtensionUtils.getCurrentExtension();

@@ -103,6 +103,7 @@ Author: Michael Carroll <ineffable@gmail.com>
                             <property name="width">2</property>
                           </packing>
                         </child>
+                        <!-- 
                         <child>
                           <object class="GtkLabel" id="brightness_label">
                             <property name="visible">True</property>
@@ -138,6 +139,7 @@ Author: Michael Carroll <ineffable@gmail.com>
                             <property name="width">2</property>
                           </packing>
                         </child>
+                        -->
                         <child>
                           <object class="GtkLabel" id="indicator_label">
                             <property name="visible">True</property>

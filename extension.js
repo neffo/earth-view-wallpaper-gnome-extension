@@ -7,6 +7,7 @@
 // See the GNU General Public License, version 3 or later for details.
 // Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
 /*global imports*/
+/*eslint class-methods-use-this: "off"*/
 
 const {St, Soup, Gio, GLib, Clutter, GObject} = imports.gi;
 const {main, panelMenu, popupMenu} = imports.ui;
@@ -83,26 +84,12 @@ class GEWallpaperIndicator extends panelMenu.Button {
         });
         getActorCompat(this).visible = !this._settings.get_boolean('hide');
 
-        this._settings.connect('changed::map-link-provider', function() {
-            this._updateProviderLink();
-        });
-
-        // this is how we handle dynamic icon brightness - this is now better handled by 'symbolic' icons which match theme
-        this.bright_effect = new Clutter.BrightnessContrastEffect({});
-        this.bright_effect.set_brightness(-1.0 + (Utils.clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
-        this.bright_effect.set_contrast(0);
-        this.icon.add_effect_with_name('brightness-contrast', this.bright_effect);
-        getActorCompat(this).add_child(this.icon);
+        this._settings.connect('changed::map-link-provider', this._updateProviderLink.bind(this));
         
+        getActorCompat(this).add_child(this.icon);
+        this._setIcon();
         // watch for indicator icon settings changes
-        this._settings.connect('changed::brightness', function() {
-          this.bright_effect.set_contrast(0);
-          this.bright_effect.set_brightness(-1.0 + (Utils.clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
-        });
-        this._setIcon(this._settings.get_string('icon'));
-        this._settings.connect('changed::icon', function() {
-            this._setIcon(this._settings.get_string('icon'));
-        });
+        this._settings.connect('changed::icon', this._setIcon.bind(this));
 
         this.refreshDueItem = new popupMenu.PopupMenuItem(_("<No refresh scheduled>"));
         this.descriptionItem = new popupMenu.PopupMenuItem(_("Text Location"));
@@ -131,9 +118,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
         this.descriptionItem.setSensitive(false);
         this.locationItem.setSensitive(false);
         
-        this.extLinkItem.connect('activate', function() {
-            Util.spawn(["xdg-open", this.link]);
-        });
+        this.extLinkItem.connect('activate', this._open_link.bind(this));
         this.dwallpaperItem.connect('activate', this._setDesktopBackground.bind(this));
         if (!Convenience.currentVersionGreaterEqual("3.36")) { // lockscreen and desktop wallpaper are the same in GNOME 3.36+
             this.swallpaperItem.connect('activate', this._setLockscreenBackground.bind(this));
@@ -141,9 +126,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
         }
         this.menu.addMenuItem(new popupMenu.PopupSeparatorMenuItem());
         this.refreshItem.connect('activate', this._refresh.bind(this));
-        this.settingsItem.connect('activate', function() {
-            Util.spawn(["gnome-shell-extension-prefs", Me.metadata.uuid]);
-        });
+        this.settingsItem.connect('activate', this._open_prefs.bind(this));
         this.menu.addMenuItem(new popupMenu.PopupMenuItem(_("On refresh:"), {reactive : false} ));
         this.menu.addMenuItem(this.wallpaperToggle);
         if (!Convenience.currentVersionGreaterEqual("3.36")) { // lockscreen and desktop wallpaper are the same in GNOME 3.36+
@@ -160,6 +143,14 @@ class GEWallpaperIndicator extends panelMenu.Button {
             log("no previous state to restore... (first run?)");
             this._restartTimeout(60); // wait 60 seconds before performing refresh
         }
+    }
+
+    _open_link () {
+        Util.spawn(["xdg-open", this.link]);
+    }
+
+    _open_prefs () {
+        Util.spawn(["gnome-shell-extension-prefs", Me.metadata.uuid]);
     }
 
     _restorePreviousState () {
@@ -243,9 +234,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
     }
 
     _newMenuSwitch(string, dconf_key, initialValue, writable) {
-        this._settings.connect(`changed::${dconf_key}`, function() {
-            this._updateMenu();
-        });
+        this._settings.connect(`changed::${dconf_key}`, this._updateMenu.bind(this));
         let widget = new popupMenu.PopupSwitchMenuItem(string,
             initialValue);
         if (!writable) {
@@ -287,22 +276,24 @@ class GEWallpaperIndicator extends panelMenu.Button {
         let request = Soup.Message.new('GET', url);
 
         // queue the http request
-        this.httpSession.queue_message(request, function(httpSession, message) {
-            if (message.status_code == 200) {
-                log("Datatype: "+message.response_headers.get_content_type());
-                let data = message.response_body.data;
-                log("Recieved "+data.length+" bytes");
-                this._parseData(data);
-            } else if (message.status_code == 403) {
-                log("Access denied: "+message.status_code);
-                this._updatePending = false;
-                this._restartTimeout(TIMEOUT_SECONDS_ON_HTTP_ERROR);
-            } else {
-                log("Network error occured: "+message.status_code);
-                this._updatePending = false;
-                this._restartTimeout(TIMEOUT_SECONDS_ON_HTTP_ERROR);
-            }
-        });
+        this.httpSession.queue_message(request, this._http_process_message.bind(this));
+    }
+
+    _http_process_message(httpSession, message) {
+        if (message.status_code == 200) {
+            log("Datatype: "+message.response_headers.get_content_type());
+            let data = message.response_body.data;
+            log("Recieved "+data.length+" bytes");
+            this._parseData(data);
+        } else if (message.status_code == 403) {
+            log("Access denied: "+message.status_code);
+            this._updatePending = false;
+            this._restartTimeout(TIMEOUT_SECONDS_ON_HTTP_ERROR);
+        } else {
+            log("Network error occured: "+message.status_code);
+            this._updatePending = false;
+            this._restartTimeout(TIMEOUT_SECONDS_ON_HTTP_ERROR);
+        }
     }
 
     _parseData(data) {
@@ -398,9 +389,9 @@ class GEWallpaperIndicator extends panelMenu.Button {
         this._setBackground();
     }
 
-    _setIcon(icon_name) {
-        //log('Icon set to : '+icon_name)
+    _setIcon() {
         Utils.validate_icon(this._settings);
+        let icon_name = this._settings.get_string('icon');
         let gicon = Gio.icon_new_for_string(Me.dir.get_child('icons').get_path() + "/" + Utils.icon_list_filename[Utils.icon_list.indexOf(icon_name)] + ".svg");
         this.icon = new St.Icon({gicon: gicon, style_class: 'system-status-icon'});
         log('Icon set to : '+icon_name);
@@ -426,8 +417,6 @@ function enable() {
 }
 
 function disable() {
-    if (this._timeout)
-            GLib.source_remove(this._timeout); // not strictly sure this is necessary, but let's clean it up anyway
     googleearthWallpaperIndicator.stop();
     googleearthWallpaperIndicator.destroy();
     googleearthWallpaperIndicator = null;

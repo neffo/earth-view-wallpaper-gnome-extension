@@ -62,15 +62,15 @@ function buildPrefsWidget(){
     let refreshSpin = buildable.get_object('refresh_combo');
     let providerSpin = buildable.get_object('map_provider_combo');
     let globeFrame = buildable.get_object('globe_frame');
-    let brightnessValue = buildable.get_object('brightness_adjustment');
+    //let brightnessValue = buildable.get_object('brightness_adjustment');
     let folderButton = buildable.get_object('button_open_download_folder');
     let icon_image = buildable.get_object('icon_image');
 
     if (Webkit != null) {
       let webview =  new Webkit.WebView ();
       webview.transparent = true;
-      webview.margin_left = 0; // FIXME: depreciated in GTK4
-      webview.margin_right =0; // FIXME: as above
+      // webview.margin_left = 0; // FIXME: depreciated in GTK4
+      // webview.margin_right =0; // FIXME: as above
       webview.margin_top = 0;
       webview.margin_bottom = 0;
       webview.vexpand = true;
@@ -92,7 +92,7 @@ function buildPrefsWidget(){
     settings.bind('set-background', bgSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('set-lock-screen', lsSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('set-lock-screen-dialog', ldSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-    settings.bind('brightness', brightnessValue, 'value', Gio.SettingsBindFlags.DEFAULT);
+    //settings.bind('brightness', brightnessValue, 'value', Gio.SettingsBindFlags.DEFAULT);
     
     // adjustable indicator icons
     Utils.icon_list.forEach(function (iconname, index) { // add icons to dropdown list (aka a GtkComboText)
