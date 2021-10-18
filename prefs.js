@@ -82,9 +82,8 @@ function buildPrefsWidget(){
       });
     } else {
       let wklabel = new Gtk.Label();
-      wklabel.set_label(_("Please install WebKit2Gtk package to enable the map view."))
+      wklabel.set_label(_("Please install WebKit2Gtk package to enable the map view."));
       /* globeFrame.add(wklabel); */
-
     }
 
     // Indicator

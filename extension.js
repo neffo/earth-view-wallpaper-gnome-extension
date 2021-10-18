@@ -28,8 +28,7 @@ const ICON = "pin";
 
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 let googleearthWallpaperIndicator=null;
-let httpSession = new Soup.SessionAsync();
-Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
+
 
 // remove this when dropping support for < 3.33, see https://github.com/OttoAllmendinger/
 const getActorCompat = (obj) =>
@@ -52,11 +51,9 @@ function doSetBackground(uri, schema) {
     gsettings.apply();
 }
 
-const GEWallpaperIndicator = new Lang.Class({
-    Name: IndicatorName,
-    Extends: PanelMenu.Button,
-
-    _init: function() {
+const GEWallpaperIndicator = GObject.registerClass(
+class GEWallpaperIndicator extends PanelMenu.Button {
+    _init (params = {}) {
         this.parent(0.0, IndicatorName);
 
         this._settings = Utils.getSettings();
@@ -77,6 +74,8 @@ const GEWallpaperIndicator = new Lang.Class({
         this.link = "https://earthview.withgoogle.com/";
         this.imageid = 0;
         this.refreshdue = 0; // UNIX timestamp when next refresh is due
+        this.httpSession = new Soup.SessionAsync();
+        Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());
 
         this._settings.connect('changed::hide', Lang.bind(this, function() {
             getActorCompat(this).visible = !this._settings.get_boolean('hide');
@@ -160,7 +159,7 @@ const GEWallpaperIndicator = new Lang.Class({
             log("no previous state to restore... (first run?)");
             this._restartTimeout(60); // wait 60 seconds before performing refresh
         }
-    },
+    }
 
     _restorePreviousState () {
         log("restoring previous state...");
@@ -183,9 +182,9 @@ const GEWallpaperIndicator = new Lang.Class({
         this._updateProviderLink();
         this._setBackground();
         this._restartTimeout(seconds < 60 ? 60 : seconds); // never refresh early than 60 seconds after startup
-    },
+    }
 
-    _updateMenu: function () {
+    _updateMenu() {
         // Grey out menu items if an update is pending
         this.refreshItem.setSensitive(!this._updatePending);
         this.dwallpaperItem.setSensitive(!this._updatePending && this.filename != "");
@@ -198,9 +197,9 @@ const GEWallpaperIndicator = new Lang.Class({
         this.descriptionItem.label.set_text(this.explanation);
         this.copyrightItem.label.set_text(this.copyright);
         this.extLinkItem.label.set_text(this.provider_text);
-    },
+    }
 
-    _getProviderLink: function(provider = this._settings.get_enum('map-link-provider')) {
+    _getProviderLink(provider = this._settings.get_enum('map-link-provider')) {
         switch(provider) {
           case 1: // Google Maps
             return `https://www.google.com/maps/@${this.lat},${this.lon},${this.zoom}z/data=!3m1!1e3`;
@@ -215,15 +214,15 @@ const GEWallpaperIndicator = new Lang.Class({
           default:
             return `https://g.co/ev/${this.imageid}`;
         }
-    },
+    }
 
-    _updateProviderLink: function() {
+    _updateProviderLink() {
         const provider = this._settings.get_enum('map-link-provider');
         this.link = this._getProviderLink(provider)
         this.provider_text = _("View in ") + providerNames[provider];
-    },
+    }
 
-    _setBackground: function() {
+    _setBackground() {
         if (this.filename == "")
             return;
         if (this._settings.get_boolean('set-background')) {
@@ -232,15 +231,15 @@ const GEWallpaperIndicator = new Lang.Class({
         if (this._settings.get_boolean('set-lock-screen')) {
             this._setLockscreenBackground();
         }
-    },
+    }
 
     _setDesktopBackground() {
         doSetBackground(this.filename, 'org.gnome.desktop.background');
-    },
+    }
 
     _setLockscreenBackground() {
         doSetBackground(this.filename, 'org.gnome.desktop.screensaver');
-    },
+    }
 
     _newMenuSwitch(string, dconf_key, initialValue, writable) {
         this._settings.connect(`changed::${dconf_key}`, Lang.bind(this, function() {
@@ -256,10 +255,10 @@ const GEWallpaperIndicator = new Lang.Class({
             });
         }
         return widget;
-    },
+    }
 
 
-    _restartTimeout: function(seconds = null) {
+    _restartTimeout(seconds = null) {
         if (this._timeout)
             Mainloop.source_remove(this._timeout);
         if (seconds == null || seconds < 60)
@@ -270,9 +269,9 @@ const GEWallpaperIndicator = new Lang.Class({
         this.refreshdue = localTime;
         this._settings.set_int('next-refresh',localTime.to_unix());
         log('next check in '+seconds+' seconds @ local time '+localTime.format('%F %X'));
-    },
+    }
 
-    _refresh: function() {
+    _refresh() {
         if (this._updatePending)
             return;
         this._updatePending = true;
@@ -287,7 +286,7 @@ const GEWallpaperIndicator = new Lang.Class({
         let request = Soup.Message.new('GET', url);
 
         // queue the http request
-        httpSession.queue_message(request, Lang.bind(this, function(httpSession, message) {
+        this.httpSession.queue_message(request, Lang.bind(this, function(httpSession, message) {
             if (message.status_code == 200) {
                 log("Datatype: "+message.response_headers.get_content_type());
                 let data = message.response_body.data;
@@ -303,9 +302,9 @@ const GEWallpaperIndicator = new Lang.Class({
                 this._restartTimeout(TIMEOUT_SECONDS_ON_HTTP_ERROR);
             }
         }));
-    },
+    }
 
-    _parseData: function(data) {
+    _parseData(data) {
         let imagejson = JSON.parse(data);
 
         if (imagejson.id != '') {
@@ -337,7 +336,7 @@ const GEWallpaperIndicator = new Lang.Class({
             }
 
             let prevfile = this._settings.get_string('image-filepath');
-            this.filename = GEWallpaperDir+(imagejson.id+'-'+location.trim()).replace(',','').replace(/[^a-z0-9]+/gi, '_').toLowerCase()+'.jpg';
+            this.filename = GEWallpaperDir+(imagejson.id+'-'+location.trim()).replace(/,/g,'').replace(/[^a-z0-9]+/gi, '_').toLowerCase()+'.jpg';
             let file = Gio.file_new_for_path(this.filename);
             let file_exists = file.query_exists(null);
             let file_info = file_exists ? file.query_info ('*',Gio.FileQueryInfoFlags.NONE,null): 0;
@@ -356,8 +355,8 @@ const GEWallpaperIndicator = new Lang.Class({
                 this._updatePending = false;
             }
             this._settings.set_string('image-details',[
-                this.explanation.replace('|', ''), // just incase (see below)
-                this.copyright.replace('|', '&'), // i think copyright info uses | instead of &
+                this.explanation.replace(/\|/gm, ''), // just incase (see below)
+                this.copyright.replace(/\|/gm, '&'), // i think copyright info uses | instead of &
                 this.lat.toString(),
                 this.lon.toString(),
                 this.zoom.toString()].join('|'));
@@ -370,9 +369,9 @@ const GEWallpaperIndicator = new Lang.Class({
         }
         this._updateMenu();
         this._restartTimeout(this._settings.get_int('refresh-interval'));
-    },
+    }
 
-    _delete_previous: function (to_delete) {
+    _delete_previous(to_delete) {
         if (to_delete == '')
             return;
         let deletepictures = this._settings.get_boolean('delete-previous');
@@ -383,9 +382,9 @@ const GEWallpaperIndicator = new Lang.Class({
                 log("deleted previous file: "+ to_delete);
             }
         }
-    },
+    }
 
-    _export_image: function(json, file) {
+    _export_image(json, file) {
         log("Exporting to " + file.get_uri())
 
         // open the Gfile
@@ -396,25 +395,19 @@ const GEWallpaperIndicator = new Lang.Class({
         this._updatePending = false;
 
         this._setBackground();
-    },
+    }
 
-    _setIcon: function(icon_name) {
+    _setIcon(icon_name) {
         //log('Icon set to : '+icon_name)
         Utils.validate_icon(this._settings);
         let gicon = Gio.icon_new_for_string(Me.dir.get_child('icons').get_path() + "/" + Utils.icon_list_filename[Utils.icon_list.indexOf(icon_name)] + ".svg");
         this.icon = new St.Icon({gicon: gicon, style_class: 'system-status-icon'});
-        if (!this.icon.get_parent() && 0) {
-            log('New icon set to : '+icon_name);
-            getActorCompat(this).add_child(this.icon);
-        }
-        else {
-            log('Replace icon set to : '+icon_name);
-            getActorCompat(this).remove_all_children();
-            getActorCompat(this).add_child(this.icon);
-        }
-    },
+        log('Icon set to : '+icon_name);
+        getActorCompat(this).remove_all_children();
+        getActorCompat(this).add_child(this.icon);
+    }
 
-    stop: function () {
+    stop() {
         if (this._timeout)
             Mainloop.source_remove(this._timeout);
         this._timeout = undefined;
