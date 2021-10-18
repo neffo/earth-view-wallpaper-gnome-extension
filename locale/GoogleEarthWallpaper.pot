@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-09 19:12+1000\n"
+"POT-Creation-Date: 2021-10-18 14:48+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,168 +17,172 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: Settings.ui.h:1
+#: Settings.ui.h:1 Settings4.ui.h:1
 msgid "Hide the indicator"
 msgstr ""
 
-#: Settings.ui.h:2
+#: Settings.ui.h:2 Settings4.ui.h:2
 msgid "Indicator brightness"
 msgstr ""
 
-#: Settings.ui.h:3
+#: Settings.ui.h:3 Settings4.ui.h:3
 msgid "Indicator"
 msgstr ""
 
-#: Settings.ui.h:4
+#: Settings.ui.h:4 Settings4.ui.h:4
 msgid "Indicator icon"
 msgstr ""
 
-#: Settings.ui.h:5
+#: Settings.ui.h:5 Settings4.ui.h:5
 msgid "Refresh interval"
 msgstr ""
 
-#: Settings.ui.h:6
+#: Settings.ui.h:6 Settings4.ui.h:6
 msgid "Change effective from next refresh"
 msgstr ""
 
-#: Settings.ui.h:7
+#: Settings.ui.h:7 Settings4.ui.h:7
 msgid "Map Provider for external links"
 msgstr ""
 
-#: Settings.ui.h:8
+#: Settings.ui.h:8 Settings4.ui.h:8
 msgid "Provider used to view wallpaper location and context"
 msgstr ""
 
-#: Settings.ui.h:9 extension.js:118
+#: Settings.ui.h:9 Settings4.ui.h:9 extension.js:117
 msgid "Set background image"
 msgstr ""
 
-#: Settings.ui.h:10
+#: Settings.ui.h:10 Settings4.ui.h:10
 msgid "Set lock screen image"
 msgstr ""
 
-#: Settings.ui.h:11
+#: Settings.ui.h:11 Settings4.ui.h:11
 msgid "Set lock screen password prompt image"
 msgstr ""
 
-#: Settings.ui.h:12
+#: Settings.ui.h:12 Settings4.ui.h:12
 msgid "Download folder:"
 msgstr ""
 
-#: Settings.ui.h:13
+#: Settings.ui.h:13 Settings4.ui.h:14
 msgid "Wallpaper pictures folder"
 msgstr ""
 
-#: Settings.ui.h:14
+#: Settings.ui.h:14 Settings4.ui.h:15
 msgid "Open download folder"
 msgstr ""
 
-#: Settings.ui.h:15
+#: Settings.ui.h:15 Settings4.ui.h:16
 msgid "Delete previously downloaded wallpapers:"
 msgstr ""
 
-#: Settings.ui.h:16
+#: Settings.ui.h:16 Settings4.ui.h:17
 msgid "Background"
 msgstr ""
 
-#: Settings.ui.h:17
+#: Settings.ui.h:17 Settings4.ui.h:18
 msgid "Map View"
 msgstr ""
 
-#: Settings.ui.h:18
+#: Settings.ui.h:18 Settings4.ui.h:19
 msgid ""
 "<span size=\"small\">This program comes with ABSOLUTELY NO WARRANTY.\n"
 "See the <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
 "\">GNU General Public License, version 3 or later</a> for details.</span>"
 msgstr ""
 
-#: Settings.ui.h:20
+#: Settings.ui.h:20 Settings4.ui.h:21
 msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
 msgstr ""
 
-#: Settings.ui.h:21
+#: Settings.ui.h:21 Settings4.ui.h:22
 msgid "Based on NASA APOD Wallpaper extension by Elia Argentieri"
 msgstr ""
 
-#: Settings.ui.h:22
+#: Settings.ui.h:22 Settings4.ui.h:23
 msgid ""
 "This GNOME shell extension sets your wallpaper to a random Google Earth "
 "photo from a selection of curated locations."
 msgstr ""
 
-#: Settings.ui.h:23 extension.js:167 extension.js:312
+#: Settings.ui.h:23 Settings4.ui.h:24 extension.js:166 extension.js:311
 msgid "Google Earth Wallpaper"
 msgstr ""
 
-#: Settings.ui.h:24
+#: Settings.ui.h:24 Settings4.ui.h:25
 msgid "Maintained by Michael Carroll"
 msgstr ""
 
-#: Settings.ui.h:25
+#: Settings.ui.h:25 Settings4.ui.h:26
 msgid "About"
 msgstr ""
 
-#: extension.js:107
+#: Settings4.ui.h:13
+msgid "Bing Wallpaper pictures folder"
+msgstr ""
+
+#: extension.js:106
 msgid "<No refresh scheduled>"
 msgstr ""
 
-#: extension.js:108
+#: extension.js:107
 msgid "Text Location"
 msgstr ""
 
-#: extension.js:109
+#: extension.js:108
 msgid "Geo Location"
 msgstr ""
 
-#: extension.js:110
+#: extension.js:109
 msgid "External Link"
 msgstr ""
 
-#: extension.js:111
+#: extension.js:110
 msgid "Copyright"
 msgstr ""
 
-#: extension.js:112
+#: extension.js:111
 msgid "Set background image now"
 msgstr ""
 
-#: extension.js:113
+#: extension.js:112
 msgid "Set lockscreen image now"
 msgstr ""
 
-#: extension.js:114
+#: extension.js:113
 msgid "Refresh Now"
 msgstr ""
 
-#: extension.js:115
+#: extension.js:114
 msgid "Extension settings"
 msgstr ""
 
-#: extension.js:119
+#: extension.js:118
 msgid "Set lockscreen image"
 msgstr ""
 
-#: extension.js:147
+#: extension.js:146
 msgid "On refresh:"
 msgstr ""
 
-#: extension.js:196
+#: extension.js:195
 msgid "Next refresh"
 msgstr ""
 
-#: extension.js:223
+#: extension.js:222
 msgid "View in "
 msgstr ""
 
-#: extension.js:280
+#: extension.js:279
 msgid "Fetching..."
 msgstr ""
 
-#: extension.js:366
+#: extension.js:365
 msgid "No wallpaper available"
 msgstr ""
 
-#: extension.js:367
+#: extension.js:366
 msgid "Something went wrong..."
 msgstr ""
 
