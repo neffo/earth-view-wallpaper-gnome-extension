@@ -6,6 +6,7 @@
 // (at your option) any later version.
 // See the GNU General Public License, version 3 or later for details.
 // Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
+/*global imports*/
 
 const {St, Soup, Gio, GLib, Clutter, GObject} = imports.gi;
 const {main, panelMenu, popupMenu} = imports.ui;
@@ -35,7 +36,7 @@ const getActorCompat = (obj) =>
   Convenience.currentVersionGreaterEqual("3.33") ? obj : obj.actor;
 
 function log(msg) {
-    if (googleearthWallpaperIndicator==null || true || googleearthWallpaperIndicator._settings.get_boolean('debug-logging'))
+    if (googleearthWallpaperIndicator==null || googleearthWallpaperIndicator._settings.get_boolean('debug-logging'))
         print("GEWallpaper extension: " + msg); // disable to keep the noise down in journal
 }
 

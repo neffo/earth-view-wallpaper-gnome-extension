@@ -6,13 +6,18 @@
 // (at your option) any later version.
 // See the GNU General Public License, version 3 or later for details.
 // Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
+/*global imports, log*/
 
-const {Gio, GLib, GdkPixbuf} = imports.gi;
+const {Gio, GLib, GdkPixbuf, Soup} = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
+const Gettext = imports.gettext.domain('BingWallpaper');
+const _ = Gettext.gettext;
 
 var icon_list = ['pin', 'globe','official'];
 var icon_list_filename = ['pin-symbolic', 'globe-symbolic', 'official'];
+
+let gitreleaseurl = 'https://api.github.com/repos/neffo/earth-view-wallpaper-gnome-extension/releases/tags/';
 
 function getSettings() {
 	let extension = ExtensionUtils.getCurrentExtension();
@@ -75,7 +80,7 @@ function clamp_value(value, min, max) {
 	return Math.min(Math.max(value, min), max);
 }
 
-function fetch_change_log(version, label) {
+function fetch_change_log(version, label, httpSession) {
 	// create an http message
 	let url = gitreleaseurl + "v" + version;
 	let request = Soup.Message.new('GET', url);

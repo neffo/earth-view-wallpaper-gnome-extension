@@ -6,6 +6,7 @@
 // (at your option) any later version.
 // See the GNU General Public License, version 3 or later for details.
 // Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
+/*global imports, log*/
 
 const {Gtk, Gio, GLib} = imports.gi;
 const Me = imports.misc.extensionUtils.getCurrentExtension();

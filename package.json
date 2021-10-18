@@ -1,0 +1,19 @@
+{
+  "name": "earth-view-wallpaper-gnome-extension",
+  "version": "0.0.1",
+  "description": "Lightweight GNOME shell extension to set your wallpaper to a random Google Earth photo from a selection of curated locations (recently to 2604 locations).",
+  "main": "extension.js",
+  "scripts": {
+    "test": "eslint *.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neffo/earth-view-wallpaper-gnome-extension.git"
+  },
+  "author": "Michael Carroll",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/neffo/earth-view-wallpaper-gnome-extension/issues"
+  },
+  "homepage": "https://github.com/neffo/earth-view-wallpaper-gnome-extension#readme"
+}

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+npm test
+
 glib-compile-schemas schemas/
 intltool-extract --type=gettext/glade Settings.ui 
 intltool-extract --type=gettext/glade Settings4.ui
@@ -15,4 +17,4 @@ rm GoogleEarthWallpaper@neffo.github.com.zip
 
 zip -r GoogleEarthWallpaper@neffo.github.com.zip *
 
-zip -d GoogleEarthWallpaper@neffo.github.com.zip screenshot/* screenshot buildzip.sh Settings.ui.h *.py *~ *.sh .* translations.txt *.h package.json *.po *.pot
+zip -d GoogleEarthWallpaper@neffo.github.com.zip screenshot/* screenshot buildzip.sh Settings.ui.h *.py *~ *.sh .* translations.txt *.h package.json *.yaml *.po *.pot

@@ -1,4 +1,6 @@
 /* -*- mode: js; js-basic-offset: 4; indent-tabs-mode: nil -*- */
+/*global imports*/
+/*eslint no-unused-vars: "off"*/
 /*
   Copyright (c) 2011-2012, Giovanni Campagna <scampa.giovanni@gmail.com>
 
