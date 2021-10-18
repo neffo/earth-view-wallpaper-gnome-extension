@@ -1,16 +1,15 @@
-const Gtk = imports.gi.Gtk;
-const Gio = imports.gi.Gio;
-const GLib = imports.gi.GLib;
-var Util; // on some distributions (e.g. UBUNTU) this doesn't appear to work, some issue with GNOME introspection files
-try {
-    Util = imports.misc.util;
-} catch (e) {
-    Util = null; // we'll ignore and try handle this gracefully later on
-    log("Unable to load imports.misc.util");
-}
+// Earth View Wallpaper GNOME extension
+// Copyright (C) 2017-2021 Michael Carroll
+// This extension is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// See the GNU General Public License, version 3 or later for details.
+// Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
+
+const {Gtk, Gio, GLib} = imports.gi;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
-
 
 var Webkit;
 try {
@@ -33,12 +32,12 @@ const interval_names = [ _("5 m"), _("10 m"), _("30 m"), _("60 m"), _("90 m"), _
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 
 function init() {
-    settings = Utils.getSettings(Me);
     Convenience.initTranslations("GoogleEarthWallpaper");
 }
 
 function buildPrefsWidget(){
     // Prepare labels and controls
+    settings = Utils.getSettings(Me);
     let buildable = new Gtk.Builder();
     if (Gtk.get_major_version() == 4) { // GTK4 removes some properties, and builder breaks when it sees them
         buildable.add_from_file( Me.dir.get_path() + '/Settings4.ui' );

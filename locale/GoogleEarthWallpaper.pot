@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-18 14:48+1000\n"
+"POT-Creation-Date: 2021-10-18 17:53+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -186,46 +186,46 @@ msgstr ""
 msgid "Something went wrong..."
 msgstr ""
 
-#: prefs.js:31
+#: prefs.js:30
 msgid "5 m"
 msgstr ""
 
-#: prefs.js:31
+#: prefs.js:30
 msgid "10 m"
 msgstr ""
 
-#: prefs.js:31
+#: prefs.js:30
 msgid "30 m"
 msgstr ""
 
-#: prefs.js:31
+#: prefs.js:30
 msgid "60 m"
 msgstr ""
 
-#: prefs.js:31
+#: prefs.js:30
 msgid "90 m"
 msgstr ""
 
-#: prefs.js:31
+#: prefs.js:30
 msgid "daily"
 msgstr ""
 
-#: prefs.js:85
+#: prefs.js:84
 msgid "Please install WebKit2Gtk package to enable the map view."
 msgstr ""
 
-#: utils.js:51 utils.js:54
+#: utils.js:57 utils.js:60
 msgid "minutes"
 msgstr ""
 
-#: utils.js:57
+#: utils.js:63
 msgid "days"
 msgstr ""
 
-#: utils.js:60
+#: utils.js:66
 msgid "hours"
 msgstr ""
 
-#: utils.js:87
+#: utils.js:93
 msgid "No change log found for this release"
 msgstr ""

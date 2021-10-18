@@ -1,9 +1,15 @@
+// Earth View Wallpaper GNOME extension
+// Copyright (C) 2017-2021 Michael Carroll
+// This extension is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// See the GNU General Public License, version 3 or later for details.
+// Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
 
-const Gio = imports.gi.Gio;
+const {Gio, GLib, GdkPixbuf} = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
-const GLib = imports.gi.GLib;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
-const GdkPixbuf = imports.gi.GdkPixbuf;
 
 var icon_list = ['pin', 'globe','official'];
 var icon_list_filename = ['pin-symbolic', 'globe-symbolic', 'official'];
@@ -76,7 +82,7 @@ function fetch_change_log(version, label) {
 	httpSession.user_agent = 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:'+version+') BingWallpaper Gnome Extension';
 	log("Fetching "+url);
 	// queue the http request
-	httpSession.queue_message(request, Lang.bind(this, function (httpSession, message) {
+	httpSession.queue_message(request, function (httpSession, message) {
 		if (message.status_code == 200) {
 			let data = message.response_body.data;
 			let text = JSON.parse(data).body;
@@ -86,7 +92,7 @@ function fetch_change_log(version, label) {
 			log("Change log not found: " + message.status_code + "\n" + message.response_body.data);
 			label.set_label(_("No change log found for this release") + ": " + message.status_code);
 		}
-	}));
+	});
 }
 
 function validate_icon(settings, icon_image = null) {
