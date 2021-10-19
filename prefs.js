@@ -8,7 +8,7 @@
 // Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
 /*global imports, log*/
 
-const {Gtk, Gio, GLib} = imports.gi;
+const {Gtk, Gio, GLib, Soup} = imports.gi;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 
@@ -18,6 +18,7 @@ const _ = Gettext.gettext;
 const Images = Me.imports.images;
 
 let settings;
+let httpSession = null;
 
 const intervals = [ 300, 600, 1800, 3600, 4800, 86400 ];
 const interval_names = [ _("5 m"), _("10 m"), _("30 m"), _("60 m"), _("90 m"), _("daily")];
@@ -33,10 +34,10 @@ function buildPrefsWidget(){
     settings = Utils.getSettings(Me);
     let buildable = new Gtk.Builder();
     if (Gtk.get_major_version() == 4) { // GTK4 removes some properties, and builder breaks when it sees them
-        buildable.add_from_file( Me.dir.get_path() + '/Settings4.ui' );
+        buildable.add_from_file( Me.dir.get_path() + 'ui/Settings4.ui' );
     }
     else {
-        buildable.add_from_file( Me.dir.get_path() + '/Settings.ui' );
+        buildable.add_from_file( Me.dir.get_path() + 'ui/Settings.ui' );
     }
     let box = buildable.get_object('prefs_widget');
 
@@ -55,6 +56,12 @@ function buildPrefsWidget(){
     let providerSpin = buildable.get_object('map_provider_combo');
     let folderButton = buildable.get_object('button_open_download_folder');
     let icon_image = buildable.get_object('icon_image');
+    let change_log = buildable.get_object('change_log');
+
+    settings = Utils.getSettings(Me);
+    // enable change log access
+    httpSession = new Soup.SessionAsync();
+    Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
 
     // Indicator
     settings.bind('hide', hideSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -158,6 +165,10 @@ function buildPrefsWidget(){
     // not required in GTK4 as widgets are displayed by default
     if (Gtk.get_major_version() < 4)
         box.show_all();
+
+    // fetch
+    Utils.fetch_change_log(Me.metadata.version.toString(), change_log, httpSession);
+
     return box;
 }
 

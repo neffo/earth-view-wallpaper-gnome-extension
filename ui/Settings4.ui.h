@@ -15,7 +15,8 @@ char *s = N_("Wallpaper pictures folder");
 char *s = N_("Open download folder");
 char *s = N_("Delete previously downloaded wallpapers:");
 char *s = N_("Background");
-char *s = N_("Map View");
+char *s = N_("Changes since last version");
+char *s = N_("Change log");
 char *s = N_("<span size=\"small\">This program comes with ABSOLUTELY NO WARRANTY.\n"
              "See the <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html\">GNU General Public License, version 3 or later</a> for details.</span>");
 char *s = N_("https://github.com/neffo/earth-view-wallpaper-gnome-extension");
