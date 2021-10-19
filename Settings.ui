@@ -640,6 +640,7 @@ Author: Michael Carroll <ineffable@gmail.com>
         <property name="tab_fill">False</property>
       </packing>
     </child>
+    <!--
     <child>
       <object class="GtkBox" id="map_box">
         <property name="visible">True</property>
@@ -677,6 +678,7 @@ Author: Michael Carroll <ineffable@gmail.com>
         <property name="position">2</property>
       </packing>
     </child>
+    
     <child type="tab">
       <object class="GtkLabel" id="map_label">
         <property name="visible">True</property>
@@ -688,6 +690,7 @@ Author: Michael Carroll <ineffable@gmail.com>
         <property name="tab_fill">False</property>
       </packing>
     </child>
+    -->
     <child>
       <object class="GtkBox" id="about_box">
         <property name="visible">True</property>

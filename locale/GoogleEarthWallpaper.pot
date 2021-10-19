@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-18 17:53+1000\n"
+"POT-Creation-Date: 2021-10-19 21:02+1000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Provider used to view wallpaper location and context"
 msgstr ""
 
-#: Settings.ui.h:9 Settings4.ui.h:9 extension.js:117
+#: Settings.ui.h:9 Settings4.ui.h:9 extension.js:105
 msgid "Set background image"
 msgstr ""
 
@@ -106,7 +106,7 @@ msgid ""
 "photo from a selection of curated locations."
 msgstr ""
 
-#: Settings.ui.h:23 Settings4.ui.h:24 extension.js:166 extension.js:311
+#: Settings.ui.h:23 Settings4.ui.h:24 extension.js:158 extension.js:303
 msgid "Google Earth Wallpaper"
 msgstr ""
 
@@ -122,110 +122,106 @@ msgstr ""
 msgid "Bing Wallpaper pictures folder"
 msgstr ""
 
-#: extension.js:106
+#: extension.js:94
 msgid "<No refresh scheduled>"
 msgstr ""
 
-#: extension.js:107
+#: extension.js:95
 msgid "Text Location"
 msgstr ""
 
-#: extension.js:108
+#: extension.js:96
 msgid "Geo Location"
 msgstr ""
 
-#: extension.js:109
+#: extension.js:97
 msgid "External Link"
 msgstr ""
 
-#: extension.js:110
+#: extension.js:98
 msgid "Copyright"
 msgstr ""
 
-#: extension.js:111
+#: extension.js:99
 msgid "Set background image now"
 msgstr ""
 
-#: extension.js:112
+#: extension.js:100
 msgid "Set lockscreen image now"
 msgstr ""
 
-#: extension.js:113
+#: extension.js:101
 msgid "Refresh Now"
 msgstr ""
 
-#: extension.js:114
+#: extension.js:102
 msgid "Extension settings"
 msgstr ""
 
-#: extension.js:118
+#: extension.js:106
 msgid "Set lockscreen image"
 msgstr ""
 
-#: extension.js:146
+#: extension.js:130
 msgid "On refresh:"
 msgstr ""
 
-#: extension.js:195
+#: extension.js:187
 msgid "Next refresh"
 msgstr ""
 
-#: extension.js:222
+#: extension.js:214
 msgid "View in "
 msgstr ""
 
-#: extension.js:279
+#: extension.js:269
 msgid "Fetching..."
 msgstr ""
 
-#: extension.js:365
+#: extension.js:357
 msgid "No wallpaper available"
 msgstr ""
 
-#: extension.js:366
+#: extension.js:358
 msgid "Something went wrong..."
 msgstr ""
 
-#: prefs.js:30
+#: prefs.js:23
 msgid "5 m"
 msgstr ""
 
-#: prefs.js:30
+#: prefs.js:23
 msgid "10 m"
 msgstr ""
 
-#: prefs.js:30
+#: prefs.js:23
 msgid "30 m"
 msgstr ""
 
-#: prefs.js:30
+#: prefs.js:23
 msgid "60 m"
 msgstr ""
 
-#: prefs.js:30
+#: prefs.js:23
 msgid "90 m"
 msgstr ""
 
-#: prefs.js:30
+#: prefs.js:23
 msgid "daily"
 msgstr ""
 
-#: prefs.js:84
-msgid "Please install WebKit2Gtk package to enable the map view."
-msgstr ""
-
-#: utils.js:57 utils.js:60
+#: utils.js:62 utils.js:65
 msgid "minutes"
 msgstr ""
 
-#: utils.js:63
+#: utils.js:68
 msgid "days"
 msgstr ""
 
-#: utils.js:66
+#: utils.js:71
 msgid "hours"
 msgstr ""
 
-#: utils.js:93
+#: utils.js:98
 msgid "No change log found for this release"
 msgstr ""

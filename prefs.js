@@ -8,19 +8,9 @@
 // Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
 /*global imports, log*/
 
-// attempt fallback to Gtk3
-imports.gi.versions.Gtk = '3.0';
 const {Gtk, Gio, GLib} = imports.gi;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
-
-var Webkit;
-try {
-  Webkit = imports.gi.WebKit2;
-} catch (e) {
-  Webkit = null;
-  log("unable to load webkit : "+e);
-}
 
 const Convenience = Me.imports.convenience;
 const Gettext = imports.gettext.domain('GoogleEarthWallpaper');
@@ -63,30 +53,8 @@ function buildPrefsWidget(){
     let deleteSwitch = buildable.get_object('delete_previous');
     let refreshSpin = buildable.get_object('refresh_combo');
     let providerSpin = buildable.get_object('map_provider_combo');
-    let globeFrame = buildable.get_object('globe_frame');
-    //let brightnessValue = buildable.get_object('brightness_adjustment');
     let folderButton = buildable.get_object('button_open_download_folder');
     let icon_image = buildable.get_object('icon_image');
-
-    if (Webkit != null) {
-      let webview =  new Webkit.WebView ();
-      webview.transparent = true;
-      // webview.margin_left = 0; // FIXME: depreciated in GTK4
-      // webview.margin_right =0; // FIXME: as above
-      webview.margin_top = 0;
-      webview.margin_bottom = 0;
-      webview.vexpand = true;
-      globeFrame.add(webview);
-      update_globe(webview, buildable);
-
-      settings.connect('changed::image-details', function() {
-          update_globe(webview, buildable);
-      });
-    } else {
-      let wklabel = new Gtk.Label();
-      wklabel.set_label(_("Please install WebKit2Gtk package to enable the map view."));
-      /* globeFrame.add(wklabel); */
-    }
 
     // Indicator
     settings.bind('hide', hideSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -196,25 +164,6 @@ function validate_interval() {
     let interval = settings.get_string('refresh-interval');
     if (interval == "" || interval.indexOf(intervals) == -1) // if not a valid interval
         settings.reset('refresh-interval');
-}
-
-function update_globe(webview, buildable) {
-    let imagedata = settings.get_string('image-details').split('|');
-    let lat = parseFloat(imagedata[2]);
-    let lon = parseFloat(imagedata[3]);
-    let address = imagedata[0] + '<br>' + Utils.friendly_coordinates(lat, lon);
-    //let bbox = (lat-5)+'%2C'+(lon-5)+'%2C'+(lat+5)+'%2C'+(lon+5);
-    let bbox = '-180,80,180,-50';
-    let marker = lat + '%2C' + lon;
-    let webcontent = '<html style="background-color: transparent;"><div style="border: 0px; background-color: white; padding: 0px; margin: 0px;">';
-    webcontent = webcontent + '<span style="margin: 0px; font-size: 0.7em; color: dark-grey;">'+address;
-    webcontent = webcontent + '</span><iframe width="100%" height="300" ';
-    webcontent = webcontent + ' src="http://www.openstreetmap.org/export/embed.html?bbox='+bbox+'&amp;layer=mapnik&amp;marker='+ marker;
-    webcontent = webcontent + ' "style="border: 0px solid black; margin: 0px 0px 0px 0px; overflow: hidden; padding: 0px;"></iframe></div></html>';
-
-    log('update_globe() -> imagedata: '+settings.get_string('image-details')+' \n bbox: '+bbox+' marker: '+marker+' html: '+webcontent);
-
-    webview.load_html(webcontent,'');
 }
 
 function ge_tryspawn(argv) {

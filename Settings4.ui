@@ -526,6 +526,7 @@
         </property>
       </object>
     </child>
+    <!--
     <child>
       <object class="GtkNotebookPage">
         <property name="position">2</property>
@@ -544,7 +545,6 @@
                 <property name="margin-end">12</property>
                 <property name="margin_top">12</property>
                 <property name="margin_bottom">12</property>
-                <!-- <property name="shadow_type">in</property> -->
                 <child>
                   <placeholder/>
                 </child>
@@ -563,6 +563,7 @@
         </property>
       </object>
     </child>
+    -->
     <child>
       <object class="GtkNotebookPage">
         <property name="position">3</property>
