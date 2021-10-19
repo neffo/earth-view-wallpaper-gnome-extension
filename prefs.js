@@ -73,6 +73,7 @@ function buildPrefsWidget(){
         Utils.validate_icon(settings, icon_image);
     });
     iconEntry.set_active_id(settings.get_string('icon'));
+    Utils.validate_icon(settings, icon_image);
     //download folder
     if (Gtk.get_major_version() == 4) {
         fileChooserBtn.connect('clicked', function(widget) {
