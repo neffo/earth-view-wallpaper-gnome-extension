@@ -34,10 +34,10 @@ function buildPrefsWidget(){
     settings = Utils.getSettings(Me);
     let buildable = new Gtk.Builder();
     if (Gtk.get_major_version() == 4) { // GTK4 removes some properties, and builder breaks when it sees them
-        buildable.add_from_file( Me.dir.get_path() + 'ui/Settings4.ui' );
+        buildable.add_from_file( Me.dir.get_path() + '/ui/Settings4.ui' );
     }
     else {
-        buildable.add_from_file( Me.dir.get_path() + 'ui/Settings.ui' );
+        buildable.add_from_file( Me.dir.get_path() + '/ui/Settings.ui' );
     }
     let box = buildable.get_object('prefs_widget');
 
