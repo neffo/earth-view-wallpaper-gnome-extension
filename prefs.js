@@ -8,6 +8,8 @@
 // Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
 /*global imports, log*/
 
+// attempt fallback to Gtk3
+imports.gi.versions.Gtk = '3.0';
 const {Gtk, Gio, GLib} = imports.gi;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
