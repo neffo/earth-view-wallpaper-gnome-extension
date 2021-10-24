@@ -1,24 +1,17 @@
-const Gtk = imports.gi.Gtk;
-const Gio = imports.gi.Gio;
-const GLib = imports.gi.GLib;
-var Util; // on some distributions (e.g. UBUNTU) this doesn't appear to work, some issue with GNOME introspection files
-try {
-    Util = imports.misc.util;
-} catch (e) {
-    Util = null; // we'll ignore and try handle this gracefully later on
-    log("Unable to load imports.misc.util");
-}
+// Earth View Wallpaper GNOME extension
+// Copyright (C) 2017-2021 Michael Carroll
+// This extension is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// See the GNU General Public License, version 3 or later for details.
+// Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
+/*global imports, log*/
+
+imports.gi.versions.Soup = '2.4';
+const {Gtk, Gio, GLib, Soup} = imports.gi;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
-
-
-var Webkit;
-try {
-  Webkit = imports.gi.WebKit2;
-} catch (e) {
-  Webkit = null;
-  log("unable to load webkit : "+e);
-}
 
 const Convenience = Me.imports.convenience;
 const Gettext = imports.gettext.domain('GoogleEarthWallpaper');
@@ -26,6 +19,7 @@ const _ = Gettext.gettext;
 const Images = Me.imports.images;
 
 let settings;
+let httpSession = null;
 
 const intervals = [ 300, 600, 1800, 3600, 4800, 86400 ];
 const interval_names = [ _("5 m"), _("10 m"), _("30 m"), _("60 m"), _("90 m"), _("daily")];
@@ -33,18 +27,18 @@ const interval_names = [ _("5 m"), _("10 m"), _("30 m"), _("60 m"), _("90 m"), _
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 
 function init() {
-    settings = Utils.getSettings(Me);
     Convenience.initTranslations("GoogleEarthWallpaper");
 }
 
 function buildPrefsWidget(){
     // Prepare labels and controls
+    settings = Utils.getSettings(Me);
     let buildable = new Gtk.Builder();
     if (Gtk.get_major_version() == 4) { // GTK4 removes some properties, and builder breaks when it sees them
-        buildable.add_from_file( Me.dir.get_path() + '/Settings4.ui' );
+        buildable.add_from_file( Me.dir.get_path() + '/ui/Settings4.ui' );
     }
     else {
-        buildable.add_from_file( Me.dir.get_path() + '/Settings.ui' );
+        buildable.add_from_file( Me.dir.get_path() + '/ui/Settings.ui' );
     }
     let box = buildable.get_object('prefs_widget');
 
@@ -61,31 +55,14 @@ function buildPrefsWidget(){
     let deleteSwitch = buildable.get_object('delete_previous');
     let refreshSpin = buildable.get_object('refresh_combo');
     let providerSpin = buildable.get_object('map_provider_combo');
-    let globeFrame = buildable.get_object('globe_frame');
-    let brightnessValue = buildable.get_object('brightness_adjustment');
     let folderButton = buildable.get_object('button_open_download_folder');
     let icon_image = buildable.get_object('icon_image');
+    let change_log = buildable.get_object('change_log');
 
-    if (Webkit != null) {
-      let webview =  new Webkit.WebView ();
-      webview.transparent = true;
-      webview.margin_left = 0; // FIXME: depreciated in GTK4
-      webview.margin_right =0; // FIXME: as above
-      webview.margin_top = 0;
-      webview.margin_bottom = 0;
-      webview.vexpand = true;
-      globeFrame.add(webview);
-      update_globe(webview, buildable);
-
-      settings.connect('changed::image-details', function() {
-          update_globe(webview, buildable);
-      });
-    } else {
-      let wklabel = new Gtk.Label();
-      wklabel.set_label(_("Please install WebKit2Gtk package to enable the map view."))
-      /* globeFrame.add(wklabel); */
-
-    }
+    settings = Utils.getSettings(Me);
+    // enable change log access
+    httpSession = new Soup.SessionAsync();
+    Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
 
     // Indicator
     settings.bind('hide', hideSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -93,7 +70,7 @@ function buildPrefsWidget(){
     settings.bind('set-background', bgSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('set-lock-screen', lsSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('set-lock-screen-dialog', ldSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-    settings.bind('brightness', brightnessValue, 'value', Gio.SettingsBindFlags.DEFAULT);
+    //settings.bind('brightness', brightnessValue, 'value', Gio.SettingsBindFlags.DEFAULT);
     
     // adjustable indicator icons
     Utils.icon_list.forEach(function (iconname, index) { // add icons to dropdown list (aka a GtkComboText)
@@ -104,6 +81,7 @@ function buildPrefsWidget(){
         Utils.validate_icon(settings, icon_image);
     });
     iconEntry.set_active_id(settings.get_string('icon'));
+    Utils.validate_icon(settings, icon_image);
     //download folder
     if (Gtk.get_major_version() == 4) {
         fileChooserBtn.connect('clicked', function(widget) {
@@ -188,6 +166,10 @@ function buildPrefsWidget(){
     // not required in GTK4 as widgets are displayed by default
     if (Gtk.get_major_version() < 4)
         box.show_all();
+
+    // fetch
+    Utils.fetch_change_log(Me.metadata.version.toString(), change_log, httpSession);
+
     return box;
 }
 
@@ -195,25 +177,6 @@ function validate_interval() {
     let interval = settings.get_string('refresh-interval');
     if (interval == "" || interval.indexOf(intervals) == -1) // if not a valid interval
         settings.reset('refresh-interval');
-}
-
-function update_globe(webview, buildable) {
-    let imagedata = settings.get_string('image-details').split('|');
-    let lat = parseFloat(imagedata[2]);
-    let lon = parseFloat(imagedata[3]);
-    let address = imagedata[0] + '<br>' + Utils.friendly_coordinates(lat, lon);
-    //let bbox = (lat-5)+'%2C'+(lon-5)+'%2C'+(lat+5)+'%2C'+(lon+5);
-    let bbox = '-180,80,180,-50';
-    let marker = lat + '%2C' + lon;
-    let webcontent = '<html style="background-color: transparent;"><div style="border: 0px; background-color: white; padding: 0px; margin: 0px;">';
-    webcontent = webcontent + '<span style="margin: 0px; font-size: 0.7em; color: dark-grey;">'+address;
-    webcontent = webcontent + '</span><iframe width="100%" height="300" ';
-    webcontent = webcontent + ' src="http://www.openstreetmap.org/export/embed.html?bbox='+bbox+'&amp;layer=mapnik&amp;marker='+ marker;
-    webcontent = webcontent + ' "style="border: 0px solid black; margin: 0px 0px 0px 0px; overflow: hidden; padding: 0px;"></iframe></div></html>';
-
-    log('update_globe() -> imagedata: '+settings.get_string('image-details')+' \n bbox: '+bbox+' marker: '+marker+' html: '+webcontent);
-
-    webview.load_html(webcontent,'');
 }
 
 function ge_tryspawn(argv) {

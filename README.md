@@ -1,30 +1,23 @@
 # GNOME Shell extension - Google Earth Wallpaper
 
-Lightweight GNOME shell extension to set your wallpaper to a random Google Earth photo from a selection of curated locations (recently to 2604 locations).
+![Jiamusi](/screenshot/Jiamusi_China.jpg)
 
-*Disclaimer*: this extension is unofficial and not affiliated with Google in any way. Images are protected by copyright, and are licensed only
-for use as wallpapers.
+[![Get it on GNOME extensions](/screenshot/get_it_on_gnome_extensions.png)](https://extensions.gnome.org/extension/1295/google-earth-wallpaper/) [![<3 Sponsor this project on GitHub <3](/screenshot/sponsor.png)](https://github.com/sponsors/neffo)
 
-This extension is derived from my [Bing Wallpaper](https://github.com/neffo/bing-wallpaper-gnome-extension) GNOME extension, which was based extensively on the NASA APOD extension by [Elinvention](https://github.com/Elinvention). Curated locations and images come from Google's [Earth View](https://earthview.withgoogle.com/) website and the [associated Chrome extension](https://chrome.google.com/webstore/detail/earth-view-from-google-ea/bhloflhklmhfpedakmangadcdofhnnoh?hl=en).
+Lightweight GNOME shell extension to set your wallpaper to a random Google Earth photo from a selection of pool of 2,604 curated locations.
+
+*Disclaimer*: this extension is unofficial and not affiliated with Google in any way. Images are protected by copyright, and are licensed only for use as wallpapers.
 
 ## Features
 
-* Fetches a random Google Earth wallpaper and sets as desktop wallpaper, lock screen and (finally!) the lock screen password prompt
+* Fetches a random Google Earth wallpaper and sets as desktop wallpaper and lock screen
 * User selectable refresh intervals (default is once per day)
 * Optional: keep images or clean up after (later is default)
 * View location on Google Maps, Bing Maps, Gnome Maps, OpenStreetMaps
-* Place pin on a map in settings
-* Adjustable indicator brightness (to match themes better)
-
-## TODO
-
-* Migrate to Champlain for Map View (in prefs)
-* Location relative to user
-* Pixel scale
 
 ## Requirements
 
-Gnome 3.28+ (Ubuntu Gnome 18.04+)
+GNOME Shell 3.38+ (Ubuntu Gnome 21.04+), legacy support exists for earlier GNOME Shell versions (3.28+)
 
 ## Install
 
@@ -32,14 +25,22 @@ Gnome 3.28+ (Ubuntu Gnome 18.04+)
 
 or install directly to your GNOME extensions directory (if you want to hack on it)
 
-`git clone https://github.com/neffo/earth-view-wallpaper-gnome-extension.git $HOME/.local/share/gnome-shell/extensions/GoogleEarthWallpaper@neffo.github.com`
+```
+mkdir ~/source
+cd ~/source
+git clone https://github.com/neffo/earth-view-wallpaper-gnome-extension.git
+cd earth-view-wallpaper-gnome-extension
+sh install.sh
+```
+
+## Other works
+
+This extension is derived from my [Bing Wallpaper](https://github.com/neffo/bing-wallpaper-gnome-extension) GNOME extension, which was based extensively on the NASA APOD extension by [Elinvention](https://github.com/Elinvention). Curated locations and images come from Google's [Earth View](https://earthview.withgoogle.com/) website and the [associated Chrome extension](https://chrome.google.com/webstore/detail/earth-view-from-google-ea/bhloflhklmhfpedakmangadcdofhnnoh?hl=en).
 
 ## Screenshots
 
 ![Menu](/screenshot/menu.png)
 
 ![Settings](/screenshot/settings.png)
-
-![About Page](/screenshot/map.png)
 
 ![Lockscreen](/screenshot/lockscreen-dialog.jpg)

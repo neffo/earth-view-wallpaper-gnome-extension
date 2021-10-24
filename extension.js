@@ -1,14 +1,17 @@
-const St = imports.gi.St;
-const Main = imports.ui.main;
-const Soup = imports.gi.Soup;
-const Lang = imports.lang;
-const Mainloop = imports.mainloop;
-const Gio = imports.gi.Gio;
-const GLib = imports.gi.GLib;
+// Earth View Wallpaper GNOME extension
+// Copyright (C) 2017-2021 Michael Carroll
+// This extension is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// See the GNU General Public License, version 3 or later for details.
+// Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
+/*global imports*/
+/*eslint class-methods-use-this: "off"*/
+
+const {St, Soup, Gio, GLib, Clutter, GObject} = imports.gi;
+const {main, panelMenu, popupMenu} = imports.ui;
 const Util = imports.misc.util;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
-const Clutter = imports.gi.Clutter;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -28,20 +31,18 @@ const ICON = "pin";
 
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 let googleearthWallpaperIndicator=null;
-let httpSession = new Soup.SessionAsync();
-Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
 
 // remove this when dropping support for < 3.33, see https://github.com/OttoAllmendinger/
 const getActorCompat = (obj) =>
   Convenience.currentVersionGreaterEqual("3.33") ? obj : obj.actor;
 
 function log(msg) {
-    if (googleearthWallpaperIndicator==null || true || googleearthWallpaperIndicator._settings.get_boolean('debug-logging'))
+    if (googleearthWallpaperIndicator==null || googleearthWallpaperIndicator._settings.get_boolean('debug-logging'))
         print("GEWallpaper extension: " + msg); // disable to keep the noise down in journal
 }
 
 function notifyError(msg) {
-    Main.notifyError("GEWallpaper extension error", msg);
+    main.notifyError("GEWallpaper extension error", msg);
 }
 
 function doSetBackground(uri, schema) {
@@ -52,12 +53,10 @@ function doSetBackground(uri, schema) {
     gsettings.apply();
 }
 
-const GEWallpaperIndicator = new Lang.Class({
-    Name: IndicatorName,
-    Extends: PanelMenu.Button,
-
-    _init: function() {
-        this.parent(0.0, IndicatorName);
+const GEWallpaperIndicator = GObject.registerClass(
+class GEWallpaperIndicator extends panelMenu.Button {
+    _init (params = {}) {
+        super._init(0, IndicatorName, false);
 
         this._settings = Utils.getSettings();
         let gicon = Gio.icon_new_for_string(Me.dir.get_child('icons').get_path() + "/" + this._settings.get_string('icon') + "-symbolic.svg");
@@ -77,42 +76,30 @@ const GEWallpaperIndicator = new Lang.Class({
         this.link = "https://earthview.withgoogle.com/";
         this.imageid = 0;
         this.refreshdue = 0; // UNIX timestamp when next refresh is due
+        this.httpSession = new Soup.SessionAsync();
+        Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());
 
-        this._settings.connect('changed::hide', Lang.bind(this, function() {
+        this._settings.connect('changed::hide', function() {
             getActorCompat(this).visible = !this._settings.get_boolean('hide');
-        }));
+        });
         getActorCompat(this).visible = !this._settings.get_boolean('hide');
 
-        this._settings.connect('changed::map-link-provider', Lang.bind(this, function() {
-            this._updateProviderLink();
-        }));
-
-        // this is how we handle dynamic icon brightness - this is now better handled by 'symbolic' icons which match theme
-        this.bright_effect = new Clutter.BrightnessContrastEffect({});
-        this.bright_effect.set_brightness(-1.0 + (Utils.clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
-        this.bright_effect.set_contrast(0);
-        this.icon.add_effect_with_name('brightness-contrast', this.bright_effect);
-        getActorCompat(this).add_child(this.icon);
+        this._settings.connect('changed::map-link-provider', this._updateProviderLink.bind(this));
         
+        getActorCompat(this).add_child(this.icon);
+        this._setIcon();
         // watch for indicator icon settings changes
-        this._settings.connect('changed::brightness', Lang.bind(this, function() {
-          this.bright_effect.set_contrast(0);
-          this.bright_effect.set_brightness(-1.0 + (Utils.clamp_value(this._settings.get_int('brightness'),0,100)/100.0));
-        }));
-        this._setIcon(this._settings.get_string('icon'));
-        this._settings.connect('changed::icon', Lang.bind(this, function() {
-            this._setIcon(this._settings.get_string('icon'));
-        }));
+        this._settings.connect('changed::icon', this._setIcon.bind(this));
 
-        this.refreshDueItem = new PopupMenu.PopupMenuItem(_("<No refresh scheduled>"));
-        this.descriptionItem = new PopupMenu.PopupMenuItem(_("Text Location"));
-        this.locationItem = new PopupMenu.PopupMenuItem(_("Geo Location"));
-        this.extLinkItem = new PopupMenu.PopupMenuItem(_("External Link"));
-        this.copyrightItem = new PopupMenu.PopupMenuItem(_("Copyright"));
-        this.dwallpaperItem = new PopupMenu.PopupMenuItem(_("Set background image now"));
-        this.swallpaperItem = new PopupMenu.PopupMenuItem(_("Set lockscreen image now"));
-        this.refreshItem = new PopupMenu.PopupMenuItem(_("Refresh Now"));
-        this.settingsItem = new PopupMenu.PopupMenuItem(_("Extension settings"));
+        this.refreshDueItem = new popupMenu.PopupMenuItem(_("<No refresh scheduled>"));
+        this.descriptionItem = new popupMenu.PopupMenuItem(_("Text Location"));
+        this.locationItem = new popupMenu.PopupMenuItem(_("Geo Location"));
+        this.extLinkItem = new popupMenu.PopupMenuItem(_("External Link"));
+        this.copyrightItem = new popupMenu.PopupMenuItem(_("Copyright"));
+        this.dwallpaperItem = new popupMenu.PopupMenuItem(_("Set background image now"));
+        this.swallpaperItem = new popupMenu.PopupMenuItem(_("Set lockscreen image now"));
+        this.refreshItem = new popupMenu.PopupMenuItem(_("Refresh Now"));
+        this.settingsItem = new popupMenu.PopupMenuItem(_("Extension settings"));
 
         // menu toggles for settings
         this.wallpaperToggle = this._newMenuSwitch(_("Set background image"), "set-background", this._settings.get_boolean('set-background'), true);
@@ -123,7 +110,7 @@ const GEWallpaperIndicator = new Lang.Class({
         this.menu.addMenuItem(this.extLinkItem);
         this.menu.addMenuItem(this.refreshDueItem);
         this.menu.addMenuItem(this.refreshItem);
-        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+        this.menu.addMenuItem(new popupMenu.PopupSeparatorMenuItem());
         this.menu.addMenuItem(this.dwallpaperItem);
         
         // disable until fresh is done
@@ -131,27 +118,23 @@ const GEWallpaperIndicator = new Lang.Class({
         this.descriptionItem.setSensitive(false);
         this.locationItem.setSensitive(false);
         
-        this.extLinkItem.connect('activate', Lang.bind(this, function() {
-            Util.spawn(["xdg-open", this.link]);
-        }));
-        this.dwallpaperItem.connect('activate', Lang.bind(this, this._setDesktopBackground));
+        this.extLinkItem.connect('activate', this._open_link.bind(this));
+        this.dwallpaperItem.connect('activate', this._setDesktopBackground.bind(this));
         if (!Convenience.currentVersionGreaterEqual("3.36")) { // lockscreen and desktop wallpaper are the same in GNOME 3.36+
-            this.swallpaperItem.connect('activate', Lang.bind(this, this._setLockscreenBackground));
+            this.swallpaperItem.connect('activate', this._setLockscreenBackground.bind(this));
             this.menu.addMenuItem(this.swallpaperItem);
         }
-        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        this.refreshItem.connect('activate', Lang.bind(this, this._refresh));
-        this.settingsItem.connect('activate', function() {
-            Util.spawn(["gnome-shell-extension-prefs", Me.metadata.uuid]);
-        });
-        this.menu.addMenuItem(new PopupMenu.PopupMenuItem(_("On refresh:"), {reactive : false} ));
+        this.menu.addMenuItem(new popupMenu.PopupSeparatorMenuItem());
+        this.refreshItem.connect('activate', this._refresh.bind(this));
+        this.settingsItem.connect('activate', this._open_prefs.bind(this));
+        this.menu.addMenuItem(new popupMenu.PopupMenuItem(_("On refresh:"), {reactive : false} ));
         this.menu.addMenuItem(this.wallpaperToggle);
         if (!Convenience.currentVersionGreaterEqual("3.36")) { // lockscreen and desktop wallpaper are the same in GNOME 3.36+
             this.menu.addMenuItem(this.lockscreenToggle);
         }
         this.menu.addMenuItem(this.settingsItem);        
 
-        getActorCompat(this).connect('button-press-event', Lang.bind(this, this._updateMenu));
+        getActorCompat(this).connect('button-press-event', this._updateMenu.bind(this));
 
         if (this._settings.get_int('next-refresh') > 0 ) {
             this._restorePreviousState();
@@ -160,7 +143,15 @@ const GEWallpaperIndicator = new Lang.Class({
             log("no previous state to restore... (first run?)");
             this._restartTimeout(60); // wait 60 seconds before performing refresh
         }
-    },
+    }
+
+    _open_link () {
+        Util.spawn(["xdg-open", this.link]);
+    }
+
+    _open_prefs () {
+        Util.spawn(["gnome-shell-extension-prefs", Me.metadata.uuid]);
+    }
 
     _restorePreviousState () {
         log("restoring previous state...");
@@ -183,9 +174,9 @@ const GEWallpaperIndicator = new Lang.Class({
         this._updateProviderLink();
         this._setBackground();
         this._restartTimeout(seconds < 60 ? 60 : seconds); // never refresh early than 60 seconds after startup
-    },
+    }
 
-    _updateMenu: function () {
+    _updateMenu() {
         // Grey out menu items if an update is pending
         this.refreshItem.setSensitive(!this._updatePending);
         this.dwallpaperItem.setSensitive(!this._updatePending && this.filename != "");
@@ -198,9 +189,9 @@ const GEWallpaperIndicator = new Lang.Class({
         this.descriptionItem.label.set_text(this.explanation);
         this.copyrightItem.label.set_text(this.copyright);
         this.extLinkItem.label.set_text(this.provider_text);
-    },
+    }
 
-    _getProviderLink: function(provider = this._settings.get_enum('map-link-provider')) {
+    _getProviderLink(provider = this._settings.get_enum('map-link-provider')) {
         switch(provider) {
           case 1: // Google Maps
             return `https://www.google.com/maps/@${this.lat},${this.lon},${this.zoom}z/data=!3m1!1e3`;
@@ -215,15 +206,15 @@ const GEWallpaperIndicator = new Lang.Class({
           default:
             return `https://g.co/ev/${this.imageid}`;
         }
-    },
+    }
 
-    _updateProviderLink: function() {
+    _updateProviderLink() {
         const provider = this._settings.get_enum('map-link-provider');
         this.link = this._getProviderLink(provider)
         this.provider_text = _("View in ") + providerNames[provider];
-    },
+    }
 
-    _setBackground: function() {
+    _setBackground() {
         if (this.filename == "")
             return;
         if (this._settings.get_boolean('set-background')) {
@@ -232,21 +223,19 @@ const GEWallpaperIndicator = new Lang.Class({
         if (this._settings.get_boolean('set-lock-screen')) {
             this._setLockscreenBackground();
         }
-    },
+    }
 
     _setDesktopBackground() {
         doSetBackground(this.filename, 'org.gnome.desktop.background');
-    },
+    }
 
     _setLockscreenBackground() {
         doSetBackground(this.filename, 'org.gnome.desktop.screensaver');
-    },
+    }
 
     _newMenuSwitch(string, dconf_key, initialValue, writable) {
-        this._settings.connect(`changed::${dconf_key}`, Lang.bind(this, function() {
-            this._updateMenu();
-        }));
-        let widget = new PopupMenu.PopupSwitchMenuItem(string,
+        this._settings.connect(`changed::${dconf_key}`, this._updateMenu.bind(this));
+        let widget = new popupMenu.PopupSwitchMenuItem(string,
             initialValue);
         if (!writable) {
             widget.actor.reactive = false;
@@ -256,23 +245,23 @@ const GEWallpaperIndicator = new Lang.Class({
             });
         }
         return widget;
-    },
+    }
 
 
-    _restartTimeout: function(seconds = null) {
+    _restartTimeout(seconds = null) {
         if (this._timeout)
-            Mainloop.source_remove(this._timeout);
+            GLib.source_remove(this._timeout);
         if (seconds == null || seconds < 60)
             seconds = TIMEOUT_SECONDS;
-        this._timeout = Mainloop.timeout_add_seconds(seconds, Lang.bind(this, this._refresh));
+        this._timeout = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, seconds, this._refresh.bind(this));
         let timezone = GLib.TimeZone.new_local();
         let localTime = GLib.DateTime.new_now(timezone).add_seconds(seconds);
         this.refreshdue = localTime;
         this._settings.set_int('next-refresh',localTime.to_unix());
         log('next check in '+seconds+' seconds @ local time '+localTime.format('%F %X'));
-    },
+    }
 
-    _refresh: function() {
+    _refresh() {
         if (this._updatePending)
             return;
         this._updatePending = true;
@@ -287,25 +276,27 @@ const GEWallpaperIndicator = new Lang.Class({
         let request = Soup.Message.new('GET', url);
 
         // queue the http request
-        httpSession.queue_message(request, Lang.bind(this, function(httpSession, message) {
-            if (message.status_code == 200) {
-                log("Datatype: "+message.response_headers.get_content_type());
-                let data = message.response_body.data;
-                log("Recieved "+data.length+" bytes");
-                this._parseData(data);
-            } else if (message.status_code == 403) {
-                log("Access denied: "+message.status_code);
-                this._updatePending = false;
-                this._restartTimeout(TIMEOUT_SECONDS_ON_HTTP_ERROR);
-            } else {
-                log("Network error occured: "+message.status_code);
-                this._updatePending = false;
-                this._restartTimeout(TIMEOUT_SECONDS_ON_HTTP_ERROR);
-            }
-        }));
-    },
+        this.httpSession.queue_message(request, this._http_process_message.bind(this));
+    }
 
-    _parseData: function(data) {
+    _http_process_message(httpSession, message) {
+        if (message.status_code == 200) {
+            log("Datatype: "+message.response_headers.get_content_type());
+            let data = message.response_body.data;
+            log("Recieved "+data.length+" bytes");
+            this._parseData(data);
+        } else if (message.status_code == 403) {
+            log("Access denied: "+message.status_code);
+            this._updatePending = false;
+            this._restartTimeout(TIMEOUT_SECONDS_ON_HTTP_ERROR);
+        } else {
+            log("Network error occured: "+message.status_code);
+            this._updatePending = false;
+            this._restartTimeout(TIMEOUT_SECONDS_ON_HTTP_ERROR);
+        }
+    }
+
+    _parseData(data) {
         let imagejson = JSON.parse(data);
 
         if (imagejson.id != '') {
@@ -337,7 +328,7 @@ const GEWallpaperIndicator = new Lang.Class({
             }
 
             let prevfile = this._settings.get_string('image-filepath');
-            this.filename = GEWallpaperDir+(imagejson.id+'-'+location.trim()).replace(',','').replace(/[^a-z0-9]+/gi, '_').toLowerCase()+'.jpg';
+            this.filename = GEWallpaperDir+(imagejson.id+'-'+location.trim()).replace(/,/g,'').replace(/[^a-z0-9]+/gi, '_').toLowerCase()+'.jpg';
             let file = Gio.file_new_for_path(this.filename);
             let file_exists = file.query_exists(null);
             let file_info = file_exists ? file.query_info ('*',Gio.FileQueryInfoFlags.NONE,null): 0;
@@ -356,8 +347,8 @@ const GEWallpaperIndicator = new Lang.Class({
                 this._updatePending = false;
             }
             this._settings.set_string('image-details',[
-                this.explanation.replace('|', ''), // just incase (see below)
-                this.copyright.replace('|', '&'), // i think copyright info uses | instead of &
+                this.explanation.replace(/\|/gm, ''), // just incase (see below)
+                this.copyright.replace(/\|/gm, '&'), // i think copyright info uses | instead of &
                 this.lat.toString(),
                 this.lon.toString(),
                 this.zoom.toString()].join('|'));
@@ -370,9 +361,9 @@ const GEWallpaperIndicator = new Lang.Class({
         }
         this._updateMenu();
         this._restartTimeout(this._settings.get_int('refresh-interval'));
-    },
+    }
 
-    _delete_previous: function (to_delete) {
+    _delete_previous(to_delete) {
         if (to_delete == '')
             return;
         let deletepictures = this._settings.get_boolean('delete-previous');
@@ -383,9 +374,9 @@ const GEWallpaperIndicator = new Lang.Class({
                 log("deleted previous file: "+ to_delete);
             }
         }
-    },
+    }
 
-    _export_image: function(json, file) {
+    _export_image(json, file) {
         log("Exporting to " + file.get_uri())
 
         // open the Gfile
@@ -396,27 +387,21 @@ const GEWallpaperIndicator = new Lang.Class({
         this._updatePending = false;
 
         this._setBackground();
-    },
+    }
 
-    _setIcon: function(icon_name) {
-        //log('Icon set to : '+icon_name)
+    _setIcon() {
         Utils.validate_icon(this._settings);
+        let icon_name = this._settings.get_string('icon');
         let gicon = Gio.icon_new_for_string(Me.dir.get_child('icons').get_path() + "/" + Utils.icon_list_filename[Utils.icon_list.indexOf(icon_name)] + ".svg");
         this.icon = new St.Icon({gicon: gicon, style_class: 'system-status-icon'});
-        if (!this.icon.get_parent() && 0) {
-            log('New icon set to : '+icon_name);
-            getActorCompat(this).add_child(this.icon);
-        }
-        else {
-            log('Replace icon set to : '+icon_name);
-            getActorCompat(this).remove_all_children();
-            getActorCompat(this).add_child(this.icon);
-        }
-    },
+        log('Icon set to : '+icon_name);
+        getActorCompat(this).remove_all_children();
+        getActorCompat(this).add_child(this.icon);
+    }
 
-    stop: function () {
+    stop() {
         if (this._timeout)
-            Mainloop.source_remove(this._timeout);
+            GLib.source_remove(this._timeout);
         this._timeout = undefined;
         this.menu.removeAll();
     }
@@ -428,12 +413,10 @@ function init(extensionMeta) {
 
 function enable() {
     googleearthWallpaperIndicator = new GEWallpaperIndicator();
-    Main.panel.addToStatusArea(IndicatorName, googleearthWallpaperIndicator);
+    main.panel.addToStatusArea(IndicatorName, googleearthWallpaperIndicator);
 }
 
 function disable() {
-    if (this._timeout)
-            Mainloop.source_remove(this._timeout); // not strictly sure this is necessary, but let's clean it up anyway
     googleearthWallpaperIndicator.stop();
     googleearthWallpaperIndicator.destroy();
     googleearthWallpaperIndicator = null;

@@ -1,12 +1,23 @@
+// Earth View Wallpaper GNOME extension
+// Copyright (C) 2017-2021 Michael Carroll
+// This extension is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// See the GNU General Public License, version 3 or later for details.
+// Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
+/*global imports, log*/
 
-const Gio = imports.gi.Gio;
+const {Gio, GLib, GdkPixbuf, Soup} = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
-const GLib = imports.gi.GLib;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
-const GdkPixbuf = imports.gi.GdkPixbuf;
+const Gettext = imports.gettext.domain('BingWallpaper');
+const _ = Gettext.gettext;
 
 var icon_list = ['pin', 'globe','official'];
 var icon_list_filename = ['pin-symbolic', 'globe-symbolic', 'official'];
+
+var gitreleaseurl = 'https://api.github.com/repos/neffo/earth-view-wallpaper-gnome-extension/releases/tags/';
 
 function getSettings() {
 	let extension = ExtensionUtils.getCurrentExtension();
@@ -69,24 +80,24 @@ function clamp_value(value, min, max) {
 	return Math.min(Math.max(value, min), max);
 }
 
-function fetch_change_log(version, label) {
+function fetch_change_log(version, label, httpSession) {
 	// create an http message
 	let url = gitreleaseurl + "v" + version;
 	let request = Soup.Message.new('GET', url);
-	httpSession.user_agent = 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:'+version+') BingWallpaper Gnome Extension';
+	httpSession.user_agent = 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:'+version+') Google Earth Wallpaper Gnome Extension';
 	log("Fetching "+url);
 	// queue the http request
-	httpSession.queue_message(request, Lang.bind(this, function (httpSession, message) {
+	httpSession.queue_message(request, function (httpSession, message) {
 		if (message.status_code == 200) {
 			let data = message.response_body.data;
-			text = JSON.parse(data).body;
+			let text = JSON.parse(data).body;
 			label.set_label(text);
 		} 
 		else {
 			log("Change log not found: " + message.status_code + "\n" + message.response_body.data);
 			label.set_label(_("No change log found for this release") + ": " + message.status_code);
 		}
-	}));
+	});
 }
 
 function validate_icon(settings, icon_image = null) {
