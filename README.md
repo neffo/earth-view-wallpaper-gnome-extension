@@ -17,7 +17,7 @@ Lightweight GNOME shell extension to set your wallpaper to a random Google Earth
 
 ## Requirements
 
-Gnome 3.38+ (Ubuntu Gnome 21.04+), older extension versus suport exists for GNOME 3.28+.
+GNOME Shell 3.38+ (Ubuntu Gnome 21.04+), legacy support exists for earlier GNOME Shell versions (3.28+)
 
 ## Install
 
