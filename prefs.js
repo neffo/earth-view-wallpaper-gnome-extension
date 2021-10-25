@@ -27,12 +27,12 @@ const interval_names = [ _("5 m"), _("10 m"), _("30 m"), _("60 m"), _("90 m"), _
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 
 function init() {
-    Convenience.initTranslations("GoogleEarthWallpaper");
+    ExtensionUtils.initTranslations("GoogleEarthWallpaper");
 }
 
 function buildPrefsWidget(){
     // Prepare labels and controls
-    settings = Utils.getSettings(Me);
+    settings = ExtensionUtils.getSettings(Utils.schema);
     let buildable = new Gtk.Builder();
     if (Gtk.get_major_version() == 4) { // GTK4 removes some properties, and builder breaks when it sees them
         buildable.add_from_file( Me.dir.get_path() + '/ui/Settings4.ui' );

@@ -58,7 +58,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
     _init (params = {}) {
         super._init(0, IndicatorName, false);
 
-        this._settings = Utils.getSettings();
+        this._settings = ExtensionUtils.getSettings(Utils.schema);
         let gicon = Gio.icon_new_for_string(Me.dir.get_child('icons').get_path() + "/" + this._settings.get_string('icon') + "-symbolic.svg");
         this.icon = new St.Icon({gicon: gicon, style_class: 'system-status-icon'});
         this.x_fill = true;
@@ -126,7 +126,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
         }
         this.menu.addMenuItem(new popupMenu.PopupSeparatorMenuItem());
         this.refreshItem.connect('activate', this._refresh.bind(this));
-        this.settingsItem.connect('activate', this._open_prefs.bind(this));
+        this.settingsItem.connect('activate', ExtensionUtils.openPrefs.bind(this));
         this.menu.addMenuItem(new popupMenu.PopupMenuItem(_("On refresh:"), {reactive : false} ));
         this.menu.addMenuItem(this.wallpaperToggle);
         if (!Convenience.currentVersionGreaterEqual("3.36")) { // lockscreen and desktop wallpaper are the same in GNOME 3.36+
@@ -147,10 +147,6 @@ class GEWallpaperIndicator extends panelMenu.Button {
 
     _open_link () {
         Util.spawn(["xdg-open", this.link]);
-    }
-
-    _open_prefs () {
-        Util.spawn(["gnome-shell-extension-prefs", Me.metadata.uuid]);
     }
 
     _restorePreviousState () {
@@ -408,7 +404,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
 });
 
 function init(extensionMeta) {
-    Convenience.initTranslations("GoogleEarthWallpaper");
+    ExtensionUtils.initTranslations("GoogleEarthWallpaper");
 }
 
 function enable() {
