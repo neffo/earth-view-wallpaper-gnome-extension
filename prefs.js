@@ -12,6 +12,7 @@ imports.gi.versions.Soup = '2.4';
 const {Gtk, Gio, GLib, Soup} = imports.gi;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
+const ExtensionUtils = imports.misc.extensionUtils;
 
 const Convenience = Me.imports.convenience;
 const Gettext = imports.gettext.domain('GoogleEarthWallpaper');
@@ -27,12 +28,12 @@ const interval_names = [ _("5 m"), _("10 m"), _("30 m"), _("60 m"), _("90 m"), _
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 
 function init() {
-    Convenience.initTranslations("GoogleEarthWallpaper");
+    ExtensionUtils.initTranslations("GoogleEarthWallpaper");
 }
 
 function buildPrefsWidget(){
     // Prepare labels and controls
-    settings = Utils.getSettings(Me);
+    settings = ExtensionUtils.getSettings();
     let buildable = new Gtk.Builder();
     if (Gtk.get_major_version() == 4) { // GTK4 removes some properties, and builder breaks when it sees them
         buildable.add_from_file( Me.dir.get_path() + '/ui/Settings4.ui' );
@@ -58,8 +59,6 @@ function buildPrefsWidget(){
     let folderButton = buildable.get_object('button_open_download_folder');
     let icon_image = buildable.get_object('icon_image');
     let change_log = buildable.get_object('change_log');
-
-    settings = Utils.getSettings(Me);
     // enable change log access
     httpSession = new Soup.SessionAsync();
     Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());

@@ -58,7 +58,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
     _init (params = {}) {
         super._init(0, IndicatorName, false);
 
-        this._settings = Utils.getSettings();
+        this._settings = ExtensionUtils.getSettings();
         let gicon = Gio.icon_new_for_string(Me.dir.get_child('icons').get_path() + "/" + this._settings.get_string('icon') + "-symbolic.svg");
         this.icon = new St.Icon({gicon: gicon, style_class: 'system-status-icon'});
         this.x_fill = true;
@@ -408,7 +408,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
 });
 
 function init(extensionMeta) {
-    Convenience.initTranslations("GoogleEarthWallpaper");
+    ExtensionUtils.initTranslations("GoogleEarthWallpaper");
 }
 
 function enable() {
