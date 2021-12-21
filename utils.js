@@ -18,6 +18,7 @@ var icon_list = ['pin', 'globe','official'];
 var icon_list_filename = ['pin-symbolic', 'globe-symbolic', 'official'];
 
 var gitreleaseurl = 'https://api.github.com/repos/neffo/earth-view-wallpaper-gnome-extension/releases/tags/';
+var schema = 'org.gnome.shell.extensions.googleearthwallpaper';
 
 function friendly_time_diff(time, short = true) {
     // short we want to keep ~4-5 characters
@@ -86,10 +87,14 @@ function validate_icon(settings, icon_image = null) {
 }
 
 // Utility function
-function dump(object) {
+function dump(object, level = 0) {
     let output = '';
     for (let property in object) {
-        output += property + ': ' + object[property]+'; ';
+        output += "-".repeat(level)+property + ': ' + object[property]+'\n ';
+		if ( typeof property === 'object' )
+			output += dump(property, level+1);
     }
-    log(output);
+	if (level == 0)
+		log(output);
+    return(output);
 }
