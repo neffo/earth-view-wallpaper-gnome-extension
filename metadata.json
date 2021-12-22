@@ -1,9 +1,9 @@
 {
     "uuid": "GoogleEarthWallpaper@neffo.github.com",
-    "shell-version": ["3.38", "40", "41"],
+    "shell-version": ["3.36", "3.38", "40", "41"],
     "name": "Google Earth Wallpaper",
     "settings-schema": "org.gnome.shell.extensions.googleearthwallpaper",
-    "description": "Lightweight GNOME shell extension to set your wallpaper to a random photo from the curated Google Earth collection (1500 photos).\n\n*Disclaimer*: this extension is unofficial and not affiliated with Google in any way. Images are protected by copyright and are licensed only for use as wallpapers.\n\nSee also my other extension, Bing Wallpaper Changer (https://github.com/neffo/bing-wallpaper-gnome-extension).\n\nFeatures:\n* Fetches a random Google Earth wallpaper and sets as both lock screen and desktop wallpaper\n* User selectable refresh intervals (default is once per day)\n* View location on Google Maps, Bing Maps, Gnome Maps, OpenStreetMaps\n*  German, Dutch and Chinese translations\n\nPlease report any bugs or suggestions to extension GitHub page below.",
+    "description": "Lightweight GNOME shell extension to set your wallpaper to a random photo from the curated Google Earth collection (2604 photos).\n\n*Disclaimer*: this extension is unofficial and not affiliated with Google in any way. Images are protected by copyright and are licensed only for use as wallpapers.\n\nSee also my other extension, Bing Wallpaper Changer (https://github.com/neffo/bing-wallpaper-gnome-extension).\n\nFeatures:\n* Fetches a random Google Earth wallpaper and sets as both lock screen and desktop wallpaper\n* User selectable refresh intervals (default is once per day)\n* View location on Google Maps, Bing Maps, Gnome Maps, OpenStreetMaps\n*  German, Dutch and Chinese translations\n\nPlease report any bugs or suggestions to extension GitHub page below.",
     "version": "13",
     "url": "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
 }

@@ -9,7 +9,7 @@ npm --version && (npm test; if [ $? -ne 0 ]; then exit 1; fi)
 glib-compile-schemas schemas/
 intltool-extract --type=gettext/glade ui/Settings.ui 
 intltool-extract --type=gettext/glade ui/Settings4.ui
-xgettext -k -k_ -kN_ -o locale/GoogleEarthWallpaper.pot ui/Settings.ui.h ui/Settings4.ui.h extension.js prefs.js utils.js --from-code=UTF-8
+xgettext -k -k_ -kN_ --omit-header -o locale/GoogleEarthWallpaper.pot ui/Settings.ui.h ui/Settings4.ui.h extension.js prefs.js utils.js --from-code=UTF-8
 
 for D in locale/*; do
     if [ -d "${D}" ]; then
