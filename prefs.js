@@ -10,7 +10,8 @@
 
 imports.gi.versions.Soup = '2.4';
 const {Gtk, Gio, GLib, Soup} = imports.gi;
-const Me = imports.misc.extensionUtils.getCurrentExtension();
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
 
 const Convenience = Me.imports.convenience;
@@ -58,8 +59,7 @@ function buildPrefsWidget(){
     let folderButton = buildable.get_object('button_open_download_folder');
     let icon_image = buildable.get_object('icon_image');
     let change_log = buildable.get_object('change_log');
-
-    settings = Utils.getSettings(Me);
+    
     // enable change log access
     httpSession = new Soup.SessionAsync();
     Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());

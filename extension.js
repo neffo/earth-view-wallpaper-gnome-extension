@@ -126,7 +126,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
         }
         this.menu.addMenuItem(new popupMenu.PopupSeparatorMenuItem());
         this.refreshItem.connect('activate', this._refresh.bind(this));
-        this.settingsItem.connect('activate', ExtensionUtils.openPrefs.bind(this));
+        this.settingsItem.connect('activate', this._openPrefs.bind(this));
         this.menu.addMenuItem(new popupMenu.PopupMenuItem(_("On refresh:"), {reactive : false} ));
         this.menu.addMenuItem(this.wallpaperToggle);
         if (!Convenience.currentVersionGreaterEqual("3.36")) { // lockscreen and desktop wallpaper are the same in GNOME 3.36+
@@ -147,6 +147,10 @@ class GEWallpaperIndicator extends panelMenu.Button {
 
     _open_link () {
         Util.spawn(["xdg-open", this.link]);
+    }
+
+    _openPrefs() {
+        ExtensionUtils.openPrefs();
     }
 
     _restorePreviousState () {
