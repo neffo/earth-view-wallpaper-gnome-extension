@@ -725,7 +725,7 @@ Author: Michael Carroll <ineffable@gmail.com>
                             <property name="margin_top">36</property>
                             <property name="margin_bottom">12</property>
                             <property name="label" translatable="yes">&lt;span size="small"&gt;This program comes with ABSOLUTELY NO WARRANTY.
-See the &lt;a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"&gt;GNU General Public License, version 3 or later&lt;/a&gt; for details.&lt;/span&gt;</property>
+See the &lt;a href="https://www.gnu.org/licenses/gpl-3.0.html"&gt;GNU General Public License, version 3 or later&lt;/a&gt; for details.&lt;/span&gt;</property>
                             <property name="use_markup">True</property>
                             <property name="justify">center</property>
                             <property name="wrap">True</property>
