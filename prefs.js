@@ -82,6 +82,7 @@ function buildPrefsWidget(){
     iconEntry.set_active_id(settings.get_string('icon'));
     Utils.validate_icon(settings, icon_image);
     //download folder
+    fileChooserBtn.set_label(settings.get_string('download-folder'));
     if (Gtk.get_major_version() == 4) {
         fileChooserBtn.connect('clicked', function(widget) {
             let parent = widget.get_root();
@@ -99,7 +100,7 @@ function buildPrefsWidget(){
             let fileURI = widget.get_file().get_uri().replace('file://', '');
             log("fileChooser returned: "+fileURI);
             fileChooserBtn.set_label(fileURI);
-            let oldPath = settings.set_string('download-folder');
+            let oldPath = settings.get_string('download-folder');
             Utils.moveImagesToNewFolder(settings, oldPath, fileURI);
             settings.set_string('download-folder', fileURI);
         });

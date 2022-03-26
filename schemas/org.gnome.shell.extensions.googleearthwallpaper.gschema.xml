@@ -24,7 +24,7 @@
     </key>
 
     <key name="notify" type="b">
-      <default>true</default>
+      <default>false</default>
         <summary>Send a notifications</summary>
         <description>Send a notification with explanation when the picture of the day is downloaded</description>
     </key>
@@ -60,7 +60,7 @@
     </key>
 
     <key name="debug-logging" type="b">
-      <default>true</default>
+      <default>false</default>
         <summary>Log messages to systemd journal</summary>
         <description>Unlikely to be useful for ordinary users, but helpful for debugging</description>
     </key>
