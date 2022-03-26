@@ -54,7 +54,7 @@ function doSetBackground(uri, schema) {
     catch (e) {
         log("unable to set dark background for : " + e);
     }
-    gsettings.set_string('picture-options', 'zoom');
+    //gsettings.set_string('picture-options', 'zoom');
     Gio.Settings.sync();
     gsettings.apply();
 }

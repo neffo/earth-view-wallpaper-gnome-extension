@@ -82,8 +82,9 @@ function buildPrefsWidget(){
     iconEntry.set_active_id(settings.get_string('icon'));
     Utils.validate_icon(settings, icon_image);
     //download folder
-    fileChooserBtn.set_label(settings.get_string('download-folder'));
+    
     if (Gtk.get_major_version() == 4) {
+        fileChooserBtn.set_label(settings.get_string('download-folder'));
         fileChooserBtn.connect('clicked', function(widget) {
             let parent = widget.get_root();
             fileChooser.set_transient_for(parent);
