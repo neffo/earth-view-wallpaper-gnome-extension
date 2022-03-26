@@ -595,7 +595,7 @@
                                 <property name="margin_top">36</property>
                                 <property name="margin_bottom">12</property>
                                 <property name="label" translatable="yes">&lt;span size=&quot;small&quot;&gt;This program comes with ABSOLUTELY NO WARRANTY.
-See the &lt;a href=&quot;https://www.gnu.org/licenses/old-licenses/gpl-2.0.html&quot;&gt;GNU General Public License, version 3 or later&lt;/a&gt; for details.&lt;/span&gt;</property>
+See the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;GNU General Public License, version 3 or later&lt;/a&gt; for details.&lt;/span&gt;</property>
                                 <property name="use_markup">1</property>
                                 <property name="justify">center</property>
                                 <property name="wrap">1</property>

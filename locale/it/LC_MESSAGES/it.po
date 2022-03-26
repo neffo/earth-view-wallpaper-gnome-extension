@@ -1,212 +1,240 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Amro Soliman <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-19 21:56+1000\n"
+"PO-Revision-Date: 2021-12-21 16:41+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+
 #: ui/Settings.ui.h:1 ui/Settings4.ui.h:1
 msgid "Hide the indicator"
-msgstr ""
+msgstr "Nascondi l'indicatore"
 
 #: ui/Settings.ui.h:2 ui/Settings4.ui.h:2
 msgid "Indicator brightness"
-msgstr ""
+msgstr "Luminosità dell'indicatore"
 
 #: ui/Settings.ui.h:3 ui/Settings4.ui.h:3
 msgid "Indicator"
-msgstr ""
+msgstr "Indicatore"
 
 #: ui/Settings.ui.h:4 ui/Settings4.ui.h:4
 msgid "Indicator icon"
-msgstr ""
+msgstr "Icona dell'indicatore"
 
 #: ui/Settings.ui.h:5 ui/Settings4.ui.h:5
 msgid "Refresh interval"
-msgstr ""
+msgstr "Intervallo di aggiornamento"
 
 #: ui/Settings.ui.h:6 ui/Settings4.ui.h:6
 msgid "Change effective from next refresh"
-msgstr ""
+msgstr "Le modifiche avranno effetto dal prossimo aggiornamento"
 
 #: ui/Settings.ui.h:7 ui/Settings4.ui.h:7
 msgid "Map Provider for external links"
-msgstr ""
+msgstr "Sito mappe per link esterni"
 
 #: ui/Settings.ui.h:8 ui/Settings4.ui.h:8
 msgid "Provider used to view wallpaper location and context"
-msgstr ""
+msgstr "Sito usato per mostrare la localizzazione e il contesto della foto"
 
 #: ui/Settings.ui.h:9 ui/Settings4.ui.h:9 extension.js:105
 msgid "Set background image"
-msgstr ""
+msgstr "Imposta come sfondo"
 
 #: ui/Settings.ui.h:10 ui/Settings4.ui.h:10
 msgid "Set lock screen image"
-msgstr ""
+msgstr "Imposta come schermata di blocco"
 
 #: ui/Settings.ui.h:11 ui/Settings4.ui.h:11
 msgid "Set lock screen password prompt image"
 msgstr ""
+"Imposta come sfondo della schermata inserimento password per l'accesso"
 
 #: ui/Settings.ui.h:12 ui/Settings4.ui.h:12
 msgid "Download folder:"
-msgstr ""
+msgstr "Cartella di scaricamento:"
 
 #: ui/Settings.ui.h:13 ui/Settings4.ui.h:14
 msgid "Wallpaper pictures folder"
-msgstr ""
+msgstr "Cartella delle immagini"
 
 #: ui/Settings.ui.h:14 ui/Settings4.ui.h:15
 msgid "Open download folder"
-msgstr ""
+msgstr "Apri cartella immagini"
 
 #: ui/Settings.ui.h:15 ui/Settings4.ui.h:16
 msgid "Delete previously downloaded wallpapers:"
-msgstr ""
+msgstr "Elimina sfondi precedentemente scaricati:"
 
 #: ui/Settings.ui.h:16 ui/Settings4.ui.h:17
 msgid "Background"
-msgstr ""
+msgstr "Sfondo"
 
 #: ui/Settings.ui.h:17 ui/Settings4.ui.h:18
 msgid "Changes since last version"
-msgstr ""
+msgstr "Modifiche dall'ultima versione"
 
 #: ui/Settings.ui.h:18 ui/Settings4.ui.h:19
 msgid "Change log"
-msgstr ""
+msgstr "Modifiche"
 
 #: ui/Settings.ui.h:19 ui/Settings4.ui.h:20
 msgid ""
 "<span size=\"small\">This program comes with ABSOLUTELY NO WARRANTY.\n"
-"See the <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GNU General "
-"Public License, version 3 or later</a> for details.</span>"
+"See the <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
+"\">GNU General Public License, version 3 or later</a> for details.</span>"
 msgstr ""
+"<span size=\"small\">Questo programma viene fornito ASSOLUTAMENTE SENZA "
+"GARANZIA.\n"
+"Vedi la <a href=\"https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"
+"\">Licenza Pubblica Generale GNU, versione 3 o successiva</a> per i "
+"dettagli.</span>"
 
 #: ui/Settings.ui.h:21 ui/Settings4.ui.h:22
 msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
-msgstr ""
+msgstr "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
 
 #: ui/Settings.ui.h:22 ui/Settings4.ui.h:23
 msgid "Based on NASA APOD Wallpaper extension by Elia Argentieri"
-msgstr ""
+msgstr "Basato su NASA APOD Wallpaper extension di Elia Argentieri"
 
 #: ui/Settings.ui.h:23 ui/Settings4.ui.h:24
 msgid ""
 "This GNOME shell extension sets your wallpaper to a random Google Earth "
 "photo from a selection of curated locations."
 msgstr ""
+"Questa estensione di Gnome shell imposta come sfondo, in modo casuale, una "
+"delle foto di Google Earth di una curata lista di luoghi."
 
 #: ui/Settings.ui.h:24 ui/Settings4.ui.h:25 extension.js:158 extension.js:303
 msgid "Google Earth Wallpaper"
-msgstr ""
+msgstr "Sfondi di Google Earth"
 
 #: ui/Settings.ui.h:25 ui/Settings4.ui.h:26
 msgid "Maintained by Michael Carroll"
-msgstr ""
+msgstr "Mantenuto da Michael Carroll"
 
 #: ui/Settings.ui.h:26 ui/Settings4.ui.h:27
 msgid "About"
-msgstr ""
+msgstr "Informazioni"
 
 #: ui/Settings4.ui.h:13
 msgid "Bing Wallpaper pictures folder"
-msgstr ""
+msgstr "Cartella sfondi Bing Wallpaper"
 
 #: extension.js:94
 msgid "<No refresh scheduled>"
-msgstr ""
+msgstr "<Nessun aggiornamento pianificato>"
 
 #: extension.js:95
 msgid "Text Location"
-msgstr ""
+msgstr "Posizione testo"
 
 #: extension.js:96
 msgid "Geo Location"
-msgstr ""
+msgstr "Geolocalizzazione"
 
 #: extension.js:97
 msgid "External Link"
-msgstr ""
+msgstr "Link esterno"
 
 #: extension.js:98
 msgid "Copyright"
-msgstr ""
+msgstr "Diritti d'autore"
 
 #: extension.js:99
 msgid "Set background image now"
-msgstr ""
+msgstr "Imposta come sfondo ora"
 
 #: extension.js:100
 msgid "Set lockscreen image now"
-msgstr ""
+msgstr "Imposta come sfondo schermata di blocco ora"
 
 #: extension.js:101
 msgid "Refresh Now"
-msgstr ""
+msgstr "Aggiorna ora"
 
 #: extension.js:102
 msgid "Extension settings"
-msgstr ""
+msgstr "Impostazioni estensione"
 
 #: extension.js:106
 msgid "Set lockscreen image"
-msgstr ""
+msgstr "Imposta come sfondo schermata di blocco"
 
 #: extension.js:130
 msgid "On refresh:"
-msgstr ""
+msgstr "Al momento di aggiornamento:"
 
 #: extension.js:187
 msgid "Next refresh"
-msgstr ""
+msgstr "Prossimo aggiornamento"
 
 #: extension.js:214
 msgid "View in "
-msgstr ""
+msgstr "Mostra su "
 
 #: extension.js:269
 msgid "Fetching..."
-msgstr ""
+msgstr "Scaricamento dati..."
 
 #: extension.js:357
 msgid "No wallpaper available"
-msgstr ""
+msgstr "Nessuno sfondo disponibile"
 
 #: extension.js:358
 msgid "Something went wrong..."
-msgstr ""
+msgstr "Qualcosa è andato storto..."
 
-#: prefs.js:26
+#: prefs.js:24
 msgid "5 m"
-msgstr ""
+msgstr "5 m"
 
-#: prefs.js:26
+#: prefs.js:24
 msgid "10 m"
-msgstr ""
+msgstr "10 m"
 
-#: prefs.js:26
+#: prefs.js:24
 msgid "30 m"
-msgstr ""
+msgstr "30 m"
 
-#: prefs.js:26
+#: prefs.js:24
 msgid "60 m"
-msgstr ""
+msgstr "60 m"
 
-#: prefs.js:26
+#: prefs.js:24
 msgid "90 m"
-msgstr ""
+msgstr "90 m"
 
-#: prefs.js:26
+#: prefs.js:24
 msgid "daily"
-msgstr ""
+msgstr "quotidianamente"
 
-#: utils.js:33 utils.js:36
+#: utils.js:62 utils.js:65
 msgid "minutes"
-msgstr ""
+msgstr "minuti"
 
-#: utils.js:39
+#: utils.js:68
 msgid "days"
-msgstr ""
+msgstr "giorni"
 
-#: utils.js:42
+#: utils.js:71
 msgid "hours"
-msgstr ""
+msgstr "ore"
 
-#: utils.js:69
+#: utils.js:98
 msgid "No change log found for this release"
-msgstr ""
+msgstr "Nessuna lista delle modifiche trovata per questa versione"
