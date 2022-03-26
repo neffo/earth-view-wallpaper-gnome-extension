@@ -20,6 +20,7 @@ const _ = Gettext.gettext;
 const Images = Me.imports.images;
 
 let settings;
+let desktop_settings;
 let httpSession = null;
 
 const intervals = [ 300, 600, 1800, 3600, 4800, 86400 ];
@@ -34,6 +35,7 @@ function init() {
 function buildPrefsWidget(){
     // Prepare labels and controls
     settings = ExtensionUtils.getSettings(Utils.schema);
+    desktop_settings = ExtensionUtils.getSettings(Utils.DESKTOP_SCHEMA);
     let buildable = new Gtk.Builder();
     if (Gtk.get_major_version() == 4) { // GTK4 removes some properties, and builder breaks when it sees them
         buildable.add_from_file( Me.dir.get_path() + '/ui/Settings4.ui' );
@@ -49,8 +51,7 @@ function buildPrefsWidget(){
     let hideSwitch = buildable.get_object('hide');
     let iconEntry = buildable.get_object('icon');
     let bgSwitch = buildable.get_object('background');
-    let lsSwitch = buildable.get_object('lock_screen');
-    let ldSwitch = buildable.get_object('lock_dialog');
+    let styleEntry = buildable.get_object('background_style');
     let fileChooser = buildable.get_object('download_folder');
     let fileChooserBtn = buildable.get_object('download_folder_btn');
     let deleteSwitch = buildable.get_object('delete_previous');
@@ -59,6 +60,7 @@ function buildPrefsWidget(){
     let folderButton = buildable.get_object('button_open_download_folder');
     let icon_image = buildable.get_object('icon_image');
     let change_log = buildable.get_object('change_log');
+    let notifySwitch = buildable.get_object('notify');
     
     // enable change log access
     httpSession = new Soup.SessionAsync();
@@ -66,11 +68,8 @@ function buildPrefsWidget(){
 
     // Indicator
     settings.bind('hide', hideSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-
+    settings.bind('notify', notifySwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
     settings.bind('set-background', bgSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-    settings.bind('set-lock-screen', lsSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-    settings.bind('set-lock-screen-dialog', ldSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-    //settings.bind('brightness', brightnessValue, 'value', Gio.SettingsBindFlags.DEFAULT);
     
     // adjustable indicator icons
     Utils.icon_list.forEach(function (iconname, index) { // add icons to dropdown list (aka a GtkComboText)
@@ -87,16 +86,21 @@ function buildPrefsWidget(){
         fileChooserBtn.connect('clicked', function(widget) {
             let parent = widget.get_root();
             fileChooser.set_transient_for(parent);
-            /* fileChooser.set_filename(Gio.File.new_for_path(settings.get_string('download-folder')));*/ //FIXME: unsure why this doesn't work
+            fileChooser.set_current_folder(Gio.File.new_for_path(settings.get_string('download-folder')).get_parent());
+            fileChooser.set_action(Gtk.FileChooserAction.SELECT_FOLDER);
+            fileChooser.set_transient_for(parent);
+            fileChooser.set_accept_label(_('Select folder'));
             fileChooser.show();
         });
         fileChooser.connect('response', function(widget, response) {
             if (response !== Gtk.ResponseType.ACCEPT) {
                 return;
             }
-            let fileURI = widget.get_file();
+            let fileURI = widget.get_file().get_uri().replace('file://', '');
             log("fileChooser returned: "+fileURI);
             fileChooserBtn.set_label(fileURI);
+            let oldPath = settings.set_string('download-folder');
+            Utils.moveImagesToNewFolder(settings, oldPath, fileURI);
             settings.set_string('download-folder', fileURI);
         });
         folderButton.connect('clicked', function() { 
@@ -150,18 +154,17 @@ function buildPrefsWidget(){
     });
 
     if (Convenience.currentVersionGreaterEqual("40.0")) {
-        // GNOME 40 specific code
-        lsSwitch.set_sensitive(false);
-        ldSwitch.set_sensitive(false);
+        // GNOME 40+ specific code
     }
     else if (Convenience.currentVersionGreaterEqual("3.36")) {
         // GNOME 3.36 - 3.38 specific code
-        lsSwitch.set_sensitive(false);
-        ldSwitch.set_sensitive(false);
     }
-    else {
-        // legacy GNOME versions less than 3.36
-    }
+
+    // background styles (e.g. zoom or span)
+    Utils.backgroundStyle.forEach((style) => {
+        styleEntry.append(style, style);
+    });
+    desktop_settings.bind('picture-options', styleEntry, 'active_id', Gio.SettingsBindFlags.DEFAULT);
 
     // not required in GTK4 as widgets are displayed by default
     if (Gtk.get_major_version() < 4)
