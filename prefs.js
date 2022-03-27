@@ -28,6 +28,9 @@ const interval_names = [ _("5 m"), _("10 m"), _("30 m"), _("60 m"), _("90 m"), _
 
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 
+var PREFS_DEFAULT_WIDTH = 800;
+var PREFS_DEFAULT_HEIGHT = 500;
+
 function init() {
     ExtensionUtils.initTranslations("GoogleEarthWallpaper");
 }
@@ -44,6 +47,14 @@ function buildPrefsWidget(){
         buildable.add_from_file( Me.dir.get_path() + '/ui/Settings.ui' );
     }
     let box = buildable.get_object('prefs_widget');
+
+    if (Convenience.currentVersionGreaterEqual('40')) {
+        box.connect('realize', () => {
+            let window = box.get_root();
+            window.default_width = PREFS_DEFAULT_WIDTH;
+            window.default_height = PREFS_DEFAULT_HEIGHT;
+        });
+    }
 
     buildable.get_object('extension_version').set_text(' v'+Me.metadata.version.toString());
     buildable.get_object('extension_name').set_text(Me.metadata.name.toString());
