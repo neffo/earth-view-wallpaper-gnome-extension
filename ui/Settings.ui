@@ -656,7 +656,7 @@ Author: Michael Carroll <ineffable@gmail.com>
             <property name="margin_right">12</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
-            <property name="label" translatable="yes">Changes since last version</property>
+            <property name="label" translatable="no">Changes since last version</property>
             <property name="wrap">True</property>
           </object>
           <packing>

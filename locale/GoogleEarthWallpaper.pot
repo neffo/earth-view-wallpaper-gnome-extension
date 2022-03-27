@@ -2,39 +2,39 @@
 msgid "Hide the indicator"
 msgstr ""
 
-#: ui/Settings.ui.h:2 ui/Settings4.ui.h:2
+#: ui/Settings.ui.h:2
 msgid "Indicator brightness"
 msgstr ""
 
-#: ui/Settings.ui.h:3 ui/Settings4.ui.h:3
+#: ui/Settings.ui.h:3 ui/Settings4.ui.h:2
 msgid "Indicator"
 msgstr ""
 
-#: ui/Settings.ui.h:4 ui/Settings4.ui.h:4
+#: ui/Settings.ui.h:4 ui/Settings4.ui.h:3
 msgid "Indicator icon"
 msgstr ""
 
-#: ui/Settings.ui.h:5 ui/Settings4.ui.h:5
+#: ui/Settings.ui.h:5 ui/Settings4.ui.h:4
 msgid "Refresh interval"
 msgstr ""
 
-#: ui/Settings.ui.h:6 ui/Settings4.ui.h:6
+#: ui/Settings.ui.h:6 ui/Settings4.ui.h:5
 msgid "Change effective from next refresh"
 msgstr ""
 
-#: ui/Settings.ui.h:7 ui/Settings4.ui.h:7
+#: ui/Settings.ui.h:7 ui/Settings4.ui.h:6
 msgid "Enable desktop notifications"
 msgstr ""
 
-#: ui/Settings.ui.h:8 ui/Settings4.ui.h:8
+#: ui/Settings.ui.h:8 ui/Settings4.ui.h:7
 msgid "Map Provider for external links"
 msgstr ""
 
-#: ui/Settings.ui.h:9 ui/Settings4.ui.h:9
+#: ui/Settings.ui.h:9 ui/Settings4.ui.h:8
 msgid "Provider used to view wallpaper location and context"
 msgstr ""
 
-#: ui/Settings.ui.h:10 ui/Settings4.ui.h:10 extension.js:114
+#: ui/Settings.ui.h:10 ui/Settings4.ui.h:9 extension.js:114
 msgid "Set background image"
 msgstr ""
 
@@ -42,65 +42,69 @@ msgstr ""
 msgid "Background style option"
 msgstr ""
 
-#: ui/Settings.ui.h:12 ui/Settings4.ui.h:12
+#: ui/Settings.ui.h:12 ui/Settings4.ui.h:13
 msgid "Download folder:"
 msgstr ""
 
-#: ui/Settings.ui.h:13 ui/Settings4.ui.h:13
+#: ui/Settings.ui.h:13 ui/Settings4.ui.h:14
 msgid "Wallpaper pictures folder"
 msgstr ""
 
-#: ui/Settings.ui.h:14 ui/Settings4.ui.h:14
+#: ui/Settings.ui.h:14 ui/Settings4.ui.h:15
 msgid "Open download folder"
 msgstr ""
 
-#: ui/Settings.ui.h:15 ui/Settings4.ui.h:15
+#: ui/Settings.ui.h:15 ui/Settings4.ui.h:16
 msgid "Delete previously downloaded wallpapers:"
 msgstr ""
 
-#: ui/Settings.ui.h:16 ui/Settings4.ui.h:16
+#: ui/Settings.ui.h:16 ui/Settings4.ui.h:17
 msgid "Background"
 msgstr ""
 
-#: ui/Settings.ui.h:17 ui/Settings4.ui.h:17
-msgid "Changes since last version"
-msgstr ""
-
-#: ui/Settings.ui.h:18 ui/Settings4.ui.h:18
+#: ui/Settings.ui.h:17
 msgid "Change log"
 msgstr ""
 
-#: ui/Settings.ui.h:19 ui/Settings4.ui.h:19
+#: ui/Settings.ui.h:18 ui/Settings4.ui.h:18
 msgid ""
 "<span size=\"small\">This program comes with ABSOLUTELY NO WARRANTY.\n"
 "See the <a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GNU General "
 "Public License, version 3 or later</a> for details.</span>"
 msgstr ""
 
-#: ui/Settings.ui.h:21 ui/Settings4.ui.h:21
+#: ui/Settings.ui.h:20 ui/Settings4.ui.h:20
 msgid "https://github.com/neffo/earth-view-wallpaper-gnome-extension"
 msgstr ""
 
-#: ui/Settings.ui.h:22 ui/Settings4.ui.h:22
+#: ui/Settings.ui.h:21 ui/Settings4.ui.h:21
 msgid "Based on NASA APOD Wallpaper extension by Elia Argentieri"
 msgstr ""
 
-#: ui/Settings.ui.h:23 ui/Settings4.ui.h:23
+#: ui/Settings.ui.h:22 ui/Settings4.ui.h:22
 msgid ""
 "This GNOME shell extension sets your wallpaper to a random Google Earth "
 "photo from a selection of curated locations."
 msgstr ""
 
-#: ui/Settings.ui.h:24 ui/Settings4.ui.h:24 extension.js:171 extension.js:342
+#: ui/Settings.ui.h:23 ui/Settings4.ui.h:23 extension.js:171 extension.js:342
 msgid "Google Earth Wallpaper"
 msgstr ""
 
-#: ui/Settings.ui.h:25 ui/Settings4.ui.h:25
+#: ui/Settings.ui.h:24 ui/Settings4.ui.h:24
 msgid "Maintained by Michael Carroll"
 msgstr ""
 
-#: ui/Settings.ui.h:26 ui/Settings4.ui.h:26
+#: ui/Settings.ui.h:25 ui/Settings4.ui.h:25
 msgid "About"
+msgstr ""
+
+#: ui/Settings4.ui.h:10
+msgid "Sets background image for desktop and lockscreen"
+msgstr ""
+
+#: ui/Settings4.ui.h:12
+msgid "Select how the image is rendered on desktop"
 msgstr ""
 
 #: extension.js:101
@@ -191,7 +195,7 @@ msgstr ""
 msgid "daily"
 msgstr ""
 
-#: prefs.js:93
+#: prefs.js:105
 msgid "Select folder"
 msgstr ""
 
