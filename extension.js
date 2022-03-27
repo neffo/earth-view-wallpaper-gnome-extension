@@ -113,6 +113,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
         // menu toggles for settings
         this.wallpaperToggle = this._newMenuSwitch(_("Set background image"), "set-background", this._settings.get_boolean('set-background'), true);
         this.lockscreenToggle = this._newMenuSwitch(_("Set lockscreen image"), "set-lock-screen", this._settings.get_boolean('set-lock-screen'), !Convenience.currentVersionGreaterEqual("3.36"));
+        this.notifyToggle = this._newMenuSwitch(_("Send notification"), "notify", this._settings.get_boolean('notify'), true);
         
         this.menu.addMenuItem(this.descriptionItem);
         this.menu.addMenuItem(this.locationItem);
@@ -144,6 +145,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
         if (!Convenience.currentVersionGreaterEqual("3.36")) { // lockscreen and desktop wallpaper are the same in GNOME 3.36+
             this.menu.addMenuItem(this.lockscreenToggle);
         }
+        this.menu.addMenuItem(this.notifyToggle);
         this.menu.addMenuItem(new popupMenu.PopupSeparatorMenuItem());
         this.menu.addMenuItem(this.settingsItem);        
 
@@ -202,7 +204,6 @@ class GEWallpaperIndicator extends panelMenu.Button {
         this.descriptionItem.label.set_text(this.explanation);
         this.copyrightItem.label.set_text(this.copyright);
         this.extLinkItem.label.set_text(this.provider_text);
-        this._notifyCurrentImage();
     }
 
     _notifyCurrentImage() {
@@ -399,6 +400,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
             this._updatePending = false;
         }
         this._updateMenu();
+        this._notifyCurrentImage();
         this._restartTimeout(this._settings.get_int('refresh-interval'));
     }
 

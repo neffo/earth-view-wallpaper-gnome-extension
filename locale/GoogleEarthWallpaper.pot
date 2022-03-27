@@ -87,7 +87,7 @@ msgid ""
 "photo from a selection of curated locations."
 msgstr ""
 
-#: ui/Settings.ui.h:23 ui/Settings4.ui.h:23 extension.js:171 extension.js:342
+#: ui/Settings.ui.h:23 ui/Settings4.ui.h:23 extension.js:173 extension.js:343
 msgid "Google Earth Wallpaper"
 msgstr ""
 
@@ -147,27 +147,31 @@ msgstr ""
 msgid "Set lockscreen image"
 msgstr ""
 
-#: extension.js:142
+#: extension.js:116
+msgid "Send notification"
+msgstr ""
+
+#: extension.js:143
 msgid "On refresh:"
 msgstr ""
 
-#: extension.js:200
+#: extension.js:202
 msgid "Next refresh"
 msgstr ""
 
-#: extension.js:253
+#: extension.js:254
 msgid "View in "
 msgstr ""
 
-#: extension.js:308
+#: extension.js:309
 msgid "Fetching..."
 msgstr ""
 
-#: extension.js:396
+#: extension.js:397
 msgid "No wallpaper available"
 msgstr ""
 
-#: extension.js:397
+#: extension.js:398
 msgid "Something went wrong..."
 msgstr ""
 
