@@ -11,9 +11,10 @@ intltool-extract --type=gettext/glade ui/Settings.ui
 intltool-extract --type=gettext/glade ui/Settings4.ui
 xgettext -k -k_ -kN_ --omit-header -o locale/GoogleEarthWallpaper.pot ui/Settings.ui.h ui/Settings4.ui.h extension.js prefs.js utils.js --from-code=UTF-8
 
+rm translations.txt
 for D in locale/*; do
     if [ -d "${D}" ]; then
-        msgfmt --statistics --template=locale/GoogleEarthWallpaper.pot --verbose -o "${D}/LC_MESSAGES/GoogleEarthWallpaper.mo" "${D}/LC_MESSAGES/GoogleEarthWallpaper.po" 2> translations.txt  # compile translations
+        msgfmt --statistics --template=locale/GoogleEarthWallpaper.pot --verbose -o "${D}/LC_MESSAGES/GoogleEarthWallpaper.mo" "${D}/LC_MESSAGES/GoogleEarthWallpaper.po" 2>> translations.txt  # compile translations
     fi
 done
 

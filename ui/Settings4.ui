@@ -8,9 +8,9 @@
   </object>
   <object class="GtkNotebook" id="prefs_widget">
     <property name="can_focus">0</property>
-    <property name="tab_pos">left</property>
+    <property name="tab_pos">top</property>
     <property name="show_border">0</property>
-    <property name="scrollable">1</property>
+    <property name="scrollable">0</property>
     <child>
       <object class="GtkNotebookPage">
         <property name="child">
@@ -46,7 +46,7 @@
                                 <property name="can_focus">0</property>
                                 <property name="halign">start</property>
                                 <property name="label" translatable="yes">Hide the indicator</property>
-                                <property name="wrap">1</property>
+                                <property name="wrap">0</property>
                                 <style>
                                   <class name="dim-label"/>
                                 </style>
@@ -68,39 +68,6 @@
                                 </layout>
                               </object>
                             </child>
-                            <!--
-                            <child>
-                              <object class="GtkLabel" id="brightness_label">
-                                <property name="can_focus">0</property>
-                                <property name="halign">start</property>
-                                <property name="label" translatable="yes">Indicator brightness</property>
-                                <property name="wrap">1</property>
-                                <style>
-                                  <class name="dim-label"/>
-                                </style>
-                                <layout>
-                                  <property name="column">0</property>
-                                  <property name="row">2</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkScale" id="brightness_scale">
-                                <property name="width_request">200</property>
-                                <property name="halign">end</property>
-                                <property name="adjustment">brightness_adjustment</property>
-                                <property name="show_fill_level">1</property>
-                                <property name="fill_level">100</property>
-                                <property name="round_digits">1</property>
-                                <property name="value_pos">left</property>
-                                <layout>
-                                  <property name="column">1</property>
-                                  <property name="row">2</property>
-                                  <property name="column-span">2</property>
-                                </layout>
-                              </object>
-                            </child>
-                            -->
                             <child>
                               <object class="GtkLabel" id="indicator_label">
                                 <property name="can_focus">0</property>
@@ -120,7 +87,7 @@
                                 <property name="can_focus">0</property>
                                 <property name="halign">start</property>
                                 <property name="label" translatable="yes">Indicator icon</property>
-                                <property name="wrap">1</property>
+                                <property name="wrap">0</property>
                                 <style>
                                   <class name="dim-label"/>
                                 </style>
@@ -207,6 +174,42 @@
                                   <property name="column">1</property>
                                   <property name="row">0</property>
                                   <property name="row-span">2</property>
+                                </layout>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkListBoxRow" id="notify_listboxrow">
+                        <property name="can_focus">0</property>
+                        <property name="child">
+                          <object class="GtkGrid" id="notify_grid">
+                            <property name="can_focus">0</property>
+                            <property name="margin-start">12</property>
+                            <property name="margin-end">12</property>
+                            <property name="margin_top">12</property>
+                            <property name="margin_bottom">12</property>
+                            <property name="column_spacing">32</property>
+                            <child>
+                              <object class="GtkLabel" id="notify_label">
+                                <property name="can_focus">0</property>
+                                <property name="label" translatable="yes">Enable desktop notifications</property>
+                                <property name="wrap">1</property>
+                                <layout>
+                                  <property name="column">0</property>
+                                  <property name="row">0</property>
+                                </layout>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkSwitch" id="notify">
+                                <property name="halign">end</property>
+                                <property name="hexpand">1</property>
+                                <layout>
+                                  <property name="column">1</property>
+                                  <property name="row">0</property>
                                 </layout>
                               </object>
                             </child>
@@ -332,6 +335,7 @@
                             <child>
                               <object class="GtkLabel" id="background_label">
                                 <property name="can_focus">0</property>
+                                <property name="halign">start</property>
                                 <property name="label" translatable="yes">Set background image</property>
                                 <layout>
                                   <property name="column">0</property>
@@ -350,38 +354,18 @@
                                 </layout>
                               </object>
                             </child>
-                          </object>
-                        </property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkListBoxRow" id="lock_screen_listboxrow">
-                        <property name="child">
-                          <object class="GtkGrid" id="lock_screen_grid">
-                            <property name="can_focus">0</property>
-                            <property name="margin-start">12</property>
-                            <property name="margin-end">12</property>
-                            <property name="margin_top">12</property>
-                            <property name="margin_bottom">12</property>
-                            <property name="column_spacing">32</property>
                             <child>
-                              <object class="GtkLabel" id="lock_screen_label">
+                              <object class="GtkLabel" id="background_description">
                                 <property name="can_focus">0</property>
-                                <property name="label" translatable="yes">Set lock screen image</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Sets background image for desktop and lockscreen</property>
+                                <property name="wrap">0</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
                                 <layout>
                                   <property name="column">0</property>
-                                  <property name="row">0</property>
-                                </layout>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkSwitch" id="lock_screen">
-                                <property name="halign">end</property>
-                                <property name="valign">center</property>
-                                <property name="hexpand">1</property>
-                                <layout>
-                                  <property name="column">1</property>
-                                  <property name="row">0</property>
+                                  <property name="row">1</property>
                                 </layout>
                               </object>
                             </child>
@@ -390,9 +374,10 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkListBoxRow" id="lock_dialog_listboxrow">
+                      <object class="GtkListBoxRow" id="style_listboxrow">
+                        <property name="can_focus">0</property>
                         <property name="child">
-                          <object class="GtkGrid" id="lock_dialog_grid">
+                          <object class="GtkGrid" id="style_grid">
                             <property name="can_focus">0</property>
                             <property name="margin-start">12</property>
                             <property name="margin-end">12</property>
@@ -400,9 +385,12 @@
                             <property name="margin_bottom">12</property>
                             <property name="column_spacing">32</property>
                             <child>
-                              <object class="GtkLabel" id="lock_dialog_label">
+                              <object class="GtkLabel" id="style_label">
                                 <property name="can_focus">0</property>
-                                <property name="label" translatable="yes">Set lock screen password prompt image</property>
+                                <property name="halign">start</property>
+                                <property name="hexpand">1</property>
+                                <property name="label" translatable="yes">Background style option</property>
+                                <property name="wrap">0</property>
                                 <layout>
                                   <property name="column">0</property>
                                   <property name="row">0</property>
@@ -410,13 +398,26 @@
                               </object>
                             </child>
                             <child>
-                              <object class="GtkSwitch" id="lock_dialog">
-                                <property name="halign">end</property>
-                                <property name="valign">center</property>
-                                <property name="hexpand">1</property>
+                              <object class="GtkComboBoxText" id="background_style">
                                 <layout>
                                   <property name="column">1</property>
                                   <property name="row">0</property>
+                                  <property name="row-span">1</property>
+                                </layout>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="background_style_description">
+                                <property name="can_focus">0</property>
+                                <property name="halign">start</property>
+                                <property name="label" translatable="yes">Select how the image is rendered on desktop</property>
+                                <property name="wrap">0</property>
+                                <style>
+                                  <class name="dim-label"/>
+                                </style>
+                                <layout>
+                                  <property name="column">0</property>
+                                  <property name="row">1</property>
                                 </layout>
                               </object>
                             </child>
@@ -446,7 +447,7 @@
                                 <property name="can_focus">False</property>
                                 <property name="halign">end</property>
                                 <property name="hexpand">True</property>
-                                <property name="label" translatable="yes">Bing Wallpaper pictures folder</property>
+                                <property name="label" translatable="yes">Wallpaper pictures folder</property>
                                 <layout>
                                   <property name="column">1</property>
                                   <property name="row">0</property>
@@ -522,37 +523,6 @@
           <object class="GtkLabel" id="background_settings_label">
             <property name="can_focus">0</property>
             <property name="label" translatable="yes">Background</property>
-          </object>
-        </property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkNotebookPage">
-        <property name="position">3</property>
-        <property name="child">
-          <object class="GtkBox" id="change_log_box">
-            <property name="can_focus">0</property>
-            <property name="margin-start">12</property>
-            <property name="margin-end">12</property>
-            <property name="margin_top">12</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkLabel" id="change_log">
-                    <property name="can_focus">0</property>
-                    <property name="margin-start">12</property>
-                    <property name="margin-end">12</property>
-                    <property name="hexpand">1</property>
-                    <property name="vexpand">1</property>
-                    <property name="label" translatable="yes">Changes since last version</property>
-                    <property name="wrap">1</property>
-              </object>
-            </child>
-          </object>
-        </property>
-        <property name="tab">
-          <object class="GtkLabel" id="map_label">
-            <property name="can_focus">0</property>
-            <property name="label" translatable="yes">Change log</property>
           </object>
         </property>
       </object>
@@ -639,6 +609,7 @@ See the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;GNU 
                               <object class="GtkLabel" id="extension_description">
                                 <property name="can_focus">0</property>
                                 <property name="label" translatable="yes">This GNOME shell extension sets your wallpaper to a random Google Earth photo from a selection of curated locations.</property>
+                                <property name="justify">center</property>
                                 <property name="wrap">1</property>
                                 <layout>
                                   <property name="column">0</property>
@@ -710,6 +681,26 @@ See the &lt;a href=&quot;https://www.gnu.org/licenses/gpl-3.0.html&quot;&gt;GNU 
                             </child>
                           </object>
                         </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkBox" id="change_log_box">
+                        <property name="can_focus">0</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin_top">12</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkLabel" id="change_log">
+                                <property name="can_focus">0</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <property name="hexpand">1</property>
+                                <property name="vexpand">1</property>
+                                <property name="label" translatable="no">Changes since last version</property>
+                                <property name="wrap">1</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>

@@ -16,9 +16,11 @@ const _ = Gettext.gettext;
 
 var icon_list = ['pin', 'globe','official'];
 var icon_list_filename = ['pin-symbolic', 'globe-symbolic', 'official'];
+var backgroundStyle = ['none', 'wallpaper', 'centered', 'scaled', 'stretched', 'zoom', 'spanned'];
 
 var gitreleaseurl = 'https://api.github.com/repos/neffo/earth-view-wallpaper-gnome-extension/releases/tags/';
 var schema = 'org.gnome.shell.extensions.googleearthwallpaper';
+var DESKTOP_SCHEMA = 'org.gnome.desktop.background';
 
 function friendly_time_diff(time, short = true) {
     // short we want to keep ~4-5 characters
@@ -97,4 +99,54 @@ function dump(object, level = 0) {
 	if (level == 0)
 		log(output);
     return(output);
+}
+
+function moveImagesToNewFolder(settings, oldPath, newPath) {
+    let dir = Gio.file_new_for_path(oldPath);
+    let dirIter = dir.enumerate_children('', Gio.FileQueryInfoFlags.NONE, null );
+    let newDir = Gio.file_new_for_path(newPath);
+    if (!newDir.query_exists(null)) {
+        newDir.make_directory_with_parents(null);
+    }
+    let file = null;
+    while (file = dirIter.next_file(null)) {
+        let filename = file.get_name(); // we only want to move files that we think we own
+        if (filename.match(/.+\.jpg/i)) {
+            log('file: ' + slash(oldPath) + filename + ' -> ' + slash(newPath) + filename);
+            let cur = Gio.file_new_for_path(slash(oldPath) + filename);
+            let dest = Gio.file_new_for_path(slash(newPath) + filename);
+            cur.move(dest, Gio.FileCopyFlags.OVERWRITE, null, function () { log ('...moved'); });
+        }
+    }
+    // correct filenames for GNOME backgrounds
+    if (settings.get_boolean('set-background'))
+        moveBackground(oldPath, newPath, DESKTOP_SCHEMA);
+}
+
+function dirname(path) {
+    return path.match(/.*\//);
+}
+
+function slash(path) {
+    if (!path.endsWith('/'))
+        return path += '/';
+    return path;
+}
+
+function moveBackground(oldPath, newPath, schema) {
+    let gsettings = new Gio.Settings({schema: schema});
+    let uri;
+	let dark_uri;
+	uri = gsettings.get_string('picture-uri');
+    gsettings.set_string('picture-uri', uri.replace(oldPath, newPath));
+	try {
+		dark_uri = gsettings.get_string('picture-uri-dark');
+		gsettings.set_string('picture-uri-dark', dark_uri.replace(oldPath, newPath));
+	}
+	catch (e) {
+		log('no dark background gsettings key found ('+e+')');
+	}
+
+    Gio.Settings.sync();
+    gsettings.apply();
 }
