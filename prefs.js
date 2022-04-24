@@ -22,6 +22,7 @@ const Images = Me.imports.images;
 let settings;
 let desktop_settings;
 let httpSession = null;
+let provider = new Gtk.CssProvider();
 
 const intervals = [ 300, 600, 1800, 3600, 4800, 86400 ];
 const interval_names = [ _("5 m"), _("10 m"), _("30 m"), _("60 m"), _("90 m"), _("daily")];
@@ -42,6 +43,11 @@ function buildPrefsWidget(){
     let buildable = new Gtk.Builder();
     if (Gtk.get_major_version() == 4) { // GTK4 removes some properties, and builder breaks when it sees them
         buildable.add_from_file( Me.dir.get_path() + '/ui/Settings4.ui' );
+        provider.load_from_path(Me.dir.get_path() + '/ui/prefs.css'); 
+        Gtk.StyleContext.add_provider_for_display(
+        Gdk.Display.get_default(),
+        provider,
+        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
     }
     else {
         buildable.add_from_file( Me.dir.get_path() + '/ui/Settings.ui' );
