@@ -113,6 +113,7 @@
                                 <property name="halign">end</property>
                                 <property name="hexpand">1</property>
                                 <property name="file">icons/pin-symbolic.svg</property>
+                                <property name="css_classes">icon_image_black_bg</property>
                                 <style>
                                   <class name="width:64px;"/>
                                 </style>
