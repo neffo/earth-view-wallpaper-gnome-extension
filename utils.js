@@ -57,20 +57,30 @@ function fetch_change_log(version, label, httpSession) {
 	// create an http message
 	let url = gitreleaseurl + "v" + version;
 	let request = Soup.Message.new('GET', url);
-	httpSession.user_agent = 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:'+version+') Google Earth Wallpaper Gnome Extension';
-	log("Fetching "+url);
-	// queue the http request
-	httpSession.queue_message(request, function (httpSession, message) {
-		if (message.status_code == 200) {
-			let data = message.response_body.data;
-			let text = JSON.parse(data).body;
-			label.set_label(text);
-		} 
-		else {
-			log("Change log not found: " + message.status_code + "\n" + message.response_body.data);
-			label.set_label(_("No change log found for this release") + ": " + message.status_code);
-		}
-	});
+	httpSession.user_agent = 'User-Agent: Mozilla/5.0 (X11; GNOME Shell/' + imports.misc.config.PACKAGE_VERSION + '; Linux x86_64; +https://github.com/neffo/earth-view-wallpaper-gnome-extension ) Google Earth Wallpaper Gnome Extension/' + Me.metadata.version;
+	
+    // queue the http request
+    log("Fetching "+url);
+    try {
+        if (Soup.MAJOR_VERSION >= 3) {
+            httpSession.send_and_read_async(request, GLib.PRIORITY_DEFAULT, null, (httpSession, message) => {
+                let data = ByteArray.toString(httpSession.send_and_read_finish(message).get_data());
+                let text = JSON.parse(data).body;
+                label.set_label(text);
+            });
+        }
+        else {
+            httpSession.queue_message(request, (httpSession, message) => {
+                let data = message.response_body.data;
+                let text = JSON.parse(data).body;
+                label.set_label(text);
+            });
+        }
+    } 
+    catch (error) {
+        log("Error fetching change log: " + error);
+        label.set_label(_("Error fetching change log: "+error));
+    }
 }
 
 function validate_icon(settings, icon_image = null) {

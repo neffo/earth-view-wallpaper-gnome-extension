@@ -83,7 +83,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
         this.imageid = 0;
         this.refreshdue = 0; // UNIX timestamp when next refresh is due
         this.httpSession = new Soup.SessionAsync();
-        Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());
+        this.httpSession.user_agent = 'User-Agent: Mozilla/5.0 (X11; GNOME Shell/' + imports.misc.config.PACKAGE_VERSION + '; Linux x86_64; +https://github.com/neffo/earth-view-wallpaper-gnome-extension ) Google Earth Wallpaper Gnome Extension/' + Me.metadata.version;
 
         this._settings.connect('changed::hide', () => {
             getActorCompat(this).visible = !this._settings.get_boolean('hide');
@@ -308,29 +308,50 @@ class GEWallpaperIndicator extends panelMenu.Button {
         this._restartTimeout(300); // in case of a timeout
         this.refreshDueItem.label.set_text(_('Fetching...'));
 
+        // pick random image to fetch
         log('locations count: '+Images.imageids.length);
-        // create an http message
         let imgindex = GLib.random_int_range(0,Images.imageids.length);
+
+        // create an http message
         let url = GEjsonURL+Images.imageids[imgindex]+'.json';
         log("fetching: " + url);
         let request = Soup.Message.new('GET', url);
+        request.request_headers.append('Accept', 'application/json');
 
         // queue the http request
-        this.httpSession.queue_message(request, this._http_process_message.bind(this));
+        if (Soup.MAJOR_VERSION >= 3) { // soup3 changes this significantly
+            try {
+                this.httpSession.send_and_read_async(request, GLib.PRIORITY_DEFAULT, null, this._http_process_message.bind(this));
+            }
+            catch(error) {
+                log('unable to send libsoup json message '+error);
+            }
+        }
+        else {
+            try {
+                this.httpSession.queue_message(request, this._http_process_message.bind(this));
+            }
+            catch(error) {
+                log('unable to send libsoup json message '+error);
+            }
+        }
     }
 
     _http_process_message(httpSession, message) {
-        if (message.status_code == 200) {
-            log("Datatype: "+message.response_headers.get_content_type());
-            let data = message.response_body.data;
+        try {
+            let data;
+            if (Soup.MAJOR_VERSION >= 3) {
+                data = ByteArray.toString(this.httpSession.send_and_read_finish(message).get_data());
+            }
+            else {
+                log("Datatype: "+message.response_headers.get_content_type());
+                data = message.response_body.data;
+            }
             log("Recieved "+data.length+" bytes");
             this._parseData(data);
-        } else if (message.status_code == 403) {
-            log("Access denied: "+message.status_code);
-            this._updatePending = false;
-            this._restartTimeout(TIMEOUT_SECONDS_ON_HTTP_ERROR);
-        } else {
-            log("Network error occured: "+message.status_code);
+        }
+        catch (error) {
+            log("Network error occured: "+error);
             this._updatePending = false;
             this._restartTimeout(TIMEOUT_SECONDS_ON_HTTP_ERROR);
         }
