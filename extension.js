@@ -12,6 +12,7 @@
 const {St, Soup, Gio, GLib, Clutter, GObject} = imports.gi;
 const {main, panelMenu, popupMenu, messageTray} = imports.ui;
 const Util = imports.misc.util;
+const ByteArray = imports.byteArray;
 
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
@@ -23,11 +24,9 @@ const Gettext = imports.gettext.domain('GoogleEarthWallpaper');
 const _ = Gettext.gettext;
 
 const GEjsonURL = "https://www.gstatic.com/prettyearth/assets/data/v3/"; // previously was v2
-const GEURL = "https://earth.google.com";
 const IndicatorName = "GEWallpaperIndicator";
 const TIMEOUT_SECONDS = 24 * 3600; // FIXME: this should use the end data from the json data
 const TIMEOUT_SECONDS_ON_HTTP_ERROR = 4 * 3600; // retry in one hour if there is a http error
-const ICON = "pin";
 
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 let googleearthWallpaperIndicator=null;
@@ -89,14 +88,9 @@ class GEWallpaperIndicator extends panelMenu.Button {
             getActorCompat(this).visible = !this._settings.get_boolean('hide');
         });
         getActorCompat(this).visible = !this._settings.get_boolean('hide');
-
-        this._settings.connect('changed::map-link-provider', this._updateProviderLink.bind(this));
-        this._settings.connect('changed::notify', this._notifyCurrentImage.bind(this));
         
         getActorCompat(this).add_child(this.icon);
         this._setIcon();
-        // watch for indicator icon settings changes
-        this._settings.connect('changed::icon', this._setIcon.bind(this));
 
         this.refreshDueItem = new popupMenu.PopupMenuItem(_("<No refresh scheduled>"));
         this.descriptionItem = new popupMenu.PopupMenuItem(_("Text Location"));
@@ -107,6 +101,8 @@ class GEWallpaperIndicator extends panelMenu.Button {
         this.swallpaperItem = new popupMenu.PopupMenuItem(_("Set lockscreen image now"));
         this.refreshItem = new popupMenu.PopupMenuItem(_("Refresh Now"));
         this.settingsItem = new popupMenu.PopupMenuItem(_("Extension settings"));
+
+        // force word wrapping for potentially long menu items
         this._wrapLabelItem(this.descriptionItem);
         this._wrapLabelItem(this.copyrightItem);
 
@@ -130,16 +126,12 @@ class GEWallpaperIndicator extends panelMenu.Button {
         this.descriptionItem.setSensitive(false);
         this.copyrightItem.setSensitive(false);
         this.locationItem.setSensitive(false);
-        
-        this.extLinkItem.connect('activate', this._open_link.bind(this));
-        this.dwallpaperItem.connect('activate', this._setDesktopBackground.bind(this));
+           
         if (!Convenience.currentVersionGreaterEqual("3.36")) { // lockscreen and desktop wallpaper are the same in GNOME 3.36+
             this.swallpaperItem.connect('activate', this._setLockscreenBackground.bind(this));
             this.menu.addMenuItem(this.swallpaperItem);
         }
         this.menu.addMenuItem(new popupMenu.PopupSeparatorMenuItem());
-        this.refreshItem.connect('activate', this._refresh.bind(this));
-        this.settingsItem.connect('activate', this._openPrefs.bind(this));
         this.menu.addMenuItem(new popupMenu.PopupMenuItem(_("On refresh:"), {reactive : false} ));
         this.menu.addMenuItem(this.wallpaperToggle);
         if (!Convenience.currentVersionGreaterEqual("3.36")) { // lockscreen and desktop wallpaper are the same in GNOME 3.36+
@@ -147,10 +139,12 @@ class GEWallpaperIndicator extends panelMenu.Button {
         }
         this.menu.addMenuItem(this.notifyToggle);
         this.menu.addMenuItem(new popupMenu.PopupSeparatorMenuItem());
-        this.menu.addMenuItem(this.settingsItem);        
+        this.menu.addMenuItem(this.settingsItem);
+        
+        // connect menu items and settings changes to functions
+        this._setMenuConnections();
 
-        getActorCompat(this).connect('button-press-event', this._updateMenu.bind(this));
-
+        // persistance of notification interval
         if (this._settings.get_int('next-refresh') > 0 ) {
             this._restorePreviousState();
         }
@@ -158,6 +152,26 @@ class GEWallpaperIndicator extends panelMenu.Button {
             log("no previous state to restore... (first run?)");
             this._restartTimeout(60); // wait 60 seconds before performing refresh
         }
+    }
+
+    _setMenuConnections() {
+        // update link to map of location
+        this._settings.connect('changed::map-link-provider', this._updateProviderLink.bind(this));
+
+        // on notification toggle change immediately create a notification
+        this._settings.connect('changed::notify', this._notifyCurrentImage.bind(this));
+
+        // watch for indicator icon settings changes (including hiding indicator)
+        this._settings.connect('changed::icon', this._setIcon.bind(this));
+
+        // connect menu items clicks to functions
+        this.extLinkItem.connect('activate', this._open_link.bind(this));
+        this.dwallpaperItem.connect('activate', this._setDesktopBackground.bind(this));
+        this.refreshItem.connect('activate', this._refresh.bind(this));
+        this.settingsItem.connect('activate', this._openPrefs.bind(this));
+
+        // update menu when user clicks button
+        getActorCompat(this).connect('button-press-event', this._updateMenu.bind(this));
     }
 
     _open_link () {
@@ -363,13 +377,14 @@ class GEWallpaperIndicator extends panelMenu.Button {
         if (imagejson.id != '') {
             this.title = _("Google Earth Wallpaper");
             let location = "";
+            
             if ('geocode' in imagejson) {
                 //location = imagejson.geocode.administrative_area_level_1 +', '+imagejson.geocode.country;
                 location = Object.values(imagejson.geocode).join(", ");
             } else {
                 location = [imagejson.region,imagejson.country].filter(Boolean).join(', ');
             }
-            let coordinates = Utils.friendly_coordinates(imagejson.lat,imagejson.lng);
+
             this.explanation = location.trim(); // + '\n'+ coordinates;
             this.copyright = imagejson.attribution;
             this.lat = imagejson.lat;
@@ -380,6 +395,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
 
             let GEWallpaperDir = this._settings.get_string('download-folder');
             let userPicturesDir = GLib.get_user_special_dir(GLib.UserDirectory.DIRECTORY_PICTURES); // XDG pictures directory
+            
             if (GEWallpaperDir == '') {
                 GEWallpaperDir = userPicturesDir + "/GoogleEarthWallpaper/";
                 this._settings.set_string('download-folder',GEWallpaperDir);
@@ -407,6 +423,7 @@ class GEWallpaperIndicator extends panelMenu.Button {
                 this._setBackground();
                 this._updatePending = false;
             }
+
             this._settings.set_string('image-details',[
                 this.explanation.replace(/\|/gm, ''), // just incase (see below)
                 this.copyright.replace(/\|/gm, '&'), // i think copyright info uses | instead of &
@@ -414,12 +431,15 @@ class GEWallpaperIndicator extends panelMenu.Button {
                 this.lon.toString(),
                 this.zoom.toString()].join('|'));
             this._settings.set_int('image-id',imagejson.id);
-        } else {
+        }
+        else {
+            log('refresh failed, no valid image returned');
             this.title = _("No wallpaper available");
             this.explanation = _("Something went wrong...");
             this.filename = "";
             this._updatePending = false;
         }
+
         this._updateMenu();
         this._notifyCurrentImage();
         this._restartTimeout(this._settings.get_int('refresh-interval'));
@@ -428,7 +448,9 @@ class GEWallpaperIndicator extends panelMenu.Button {
     _delete_previous(to_delete) {
         if (to_delete == '')
             return;
+
         let deletepictures = this._settings.get_boolean('delete-previous');
+        
         if (deletepictures) {
             let oldfile = Gio.file_new_for_path(to_delete);
             if (oldfile.query_exists(null)) {

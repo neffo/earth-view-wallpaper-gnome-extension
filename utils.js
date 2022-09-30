@@ -13,6 +13,7 @@ const ExtensionUtils = imports.misc.extensionUtils;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Gettext = imports.gettext.domain('BingWallpaper');
 const _ = Gettext.gettext;
+const ByteArray = imports.byteArray;
 
 var icon_list = ['pin', 'globe','official'];
 var icon_list_filename = ['pin-symbolic', 'globe-symbolic', 'official'];
@@ -125,7 +126,9 @@ function moveImagesToNewFolder(settings, oldPath, newPath) {
             log('file: ' + slash(oldPath) + filename + ' -> ' + slash(newPath) + filename);
             let cur = Gio.file_new_for_path(slash(oldPath) + filename);
             let dest = Gio.file_new_for_path(slash(newPath) + filename);
-            cur.move(dest, Gio.FileCopyFlags.OVERWRITE, null, function () { log ('...moved'); });
+            cur.move(dest, Gio.FileCopyFlags.OVERWRITE, null, () => { 
+                log ('...moved');
+            });
         }
     }
     // correct filenames for GNOME backgrounds
@@ -139,7 +142,7 @@ function dirname(path) {
 
 function slash(path) {
     if (!path.endsWith('/'))
-        return path += '/';
+        return path+'/';
     return path;
 }
 
