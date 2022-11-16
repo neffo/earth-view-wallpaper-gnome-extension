@@ -81,8 +81,10 @@ class GEWallpaperIndicator extends panelMenu.Button {
         this.link = "https://earthview.withgoogle.com/";
         this.imageid = 0;
         this.refreshdue = 0; // UNIX timestamp when next refresh is due
-        this.httpSession = new Soup.SessionAsync();
-        this.httpSession.user_agent = 'User-Agent: Mozilla/5.0 (X11; GNOME Shell/' + imports.misc.config.PACKAGE_VERSION + '; Linux x86_64; +https://github.com/neffo/earth-view-wallpaper-gnome-extension ) Google Earth Wallpaper Gnome Extension/' + Me.metadata.version;
+        this.httpSession = null;
+
+        // create libSoup session for http requests
+        this._initSoup();
 
         this._settings.connect('changed::hide', () => {
             getActorCompat(this).visible = !this._settings.get_boolean('hide');
@@ -152,6 +154,13 @@ class GEWallpaperIndicator extends panelMenu.Button {
             log("no previous state to restore... (first run?)");
             this._restartTimeout(60); // wait 60 seconds before performing refresh
         }
+    }
+
+    // create soup Session
+    _initSoup() {
+        this.httpSession = new Soup.Session();
+        this.httpSession.user_agent = 'User-Agent: Mozilla/5.0 (GNOME Shell/' + imports.misc.config.PACKAGE_VERSION + '; Linux; +https://github.com/neffo/earth-view-wallpaper-gnome-extension ) Google Earth Wallpaper Gnome Extension/' + Me.metadata.version;
+
     }
 
     _setMenuConnections() {
