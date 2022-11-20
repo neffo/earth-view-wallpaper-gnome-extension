@@ -224,9 +224,9 @@ class GEWallpaperIndicator extends panelMenu.Button {
         // update menu text
         this.refreshDueItem.label.set_text(_('Next refresh')+': '+this.refreshdue.format('%X')+' ('+Utils.friendly_time_diff(this.refreshdue)+')');
         this.locationItem.label.set_text(Utils.friendly_coordinates(this.lat, this.lon));
-        this.descriptionItem.label.set_text(this.explanation);
-        this.copyrightItem.label.set_text(this.copyright);
-        this.extLinkItem.label.set_text(this.provider_text);
+        this.descriptionItem.label.set_text(this._ifString(this.explanation));
+        this.copyrightItem.label.set_text(this._ifString(this.copyright));
+        this.extLinkItem.label.set_text(this._ifString(this.provider_text));
     }
 
     _notifyCurrentImage() {
@@ -310,6 +310,9 @@ class GEWallpaperIndicator extends panelMenu.Button {
         return widget;
     }
 
+    _ifString(check) {
+        return (typeof check === 'string' || check instanceof String)?check:'';
+    }
 
     _restartTimeout(seconds = null) {
         if (this._timeout)
