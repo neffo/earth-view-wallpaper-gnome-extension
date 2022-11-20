@@ -9,7 +9,7 @@
 /*global imports, log*/
 
 imports.gi.versions.Soup = '2.4';
-const {Gtk, Gio, GLib, Soup} = imports.gi;
+const {Gtk, Gio, GLib, Soup, Gdk} = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
@@ -18,11 +18,6 @@ const Convenience = Me.imports.convenience;
 const Gettext = imports.gettext.domain('GoogleEarthWallpaper');
 const _ = Gettext.gettext;
 const Images = Me.imports.images;
-
-let settings;
-let desktop_settings;
-let httpSession = null;
-let provider = new Gtk.CssProvider();
 
 const intervals = [ 300, 600, 1800, 3600, 4800, 86400 ];
 const interval_names = [ _("5 m"), _("10 m"), _("30 m"), _("60 m"), _("90 m"), _("daily")];
@@ -36,7 +31,12 @@ function init() {
     ExtensionUtils.initTranslations("GoogleEarthWallpaper");
 }
 
-function buildPrefsWidget(){
+function buildPrefsWidget() {
+    // formerly globals
+    let settings;
+    let desktop_settings;
+    let httpSession = null;
+    let provider = new Gtk.CssProvider();
     // Prepare labels and controls
     settings = ExtensionUtils.getSettings(Utils.schema);
     desktop_settings = ExtensionUtils.getSettings(Utils.DESKTOP_SCHEMA);
@@ -102,6 +102,7 @@ function buildPrefsWidget(){
     
     if (Gtk.get_major_version() == 4) {
         fileChooserBtn.set_label(settings.get_string('download-folder'));
+        
         fileChooserBtn.connect('clicked', function(widget) {
             let parent = widget.get_root();
             fileChooser.set_transient_for(parent);
@@ -111,6 +112,7 @@ function buildPrefsWidget(){
             fileChooser.set_accept_label(_('Select folder'));
             fileChooser.show();
         });
+
         fileChooser.connect('response', function(widget, response) {
             if (response !== Gtk.ResponseType.ACCEPT) {
                 return;
@@ -122,6 +124,7 @@ function buildPrefsWidget(){
             Utils.moveImagesToNewFolder(settings, oldPath, fileURI);
             settings.set_string('download-folder', fileURI);
         });
+        
         folderButton.connect('clicked', function() { 
             ge_tryspawn(["xdg-open", settings.get_string('download-folder')]);
             log('open_background_folder '+settings.get_string('download-folder'));
@@ -134,6 +137,7 @@ function buildPrefsWidget(){
         fileChooser.connect('file-set', function(widget) {
             settings.set_string('download-folder', widget.get_filename());
         });
+        
         folderButton.connect('button-press-event', function() { 
             ge_tryspawn(["xdg-open", settings.get_string('download-folder')]);
             log('open_background_folder '+settings.get_string('download-folder'));
@@ -141,7 +145,6 @@ function buildPrefsWidget(){
     }
 
     settings.bind('delete-previous', deleteSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-
     intervals.forEach(function (interval, index) { // add intervals to dropdown list (aka a GtkComboText)
         refreshSpin.append(interval.toString(), interval_names[index]);
     });
@@ -195,7 +198,7 @@ function buildPrefsWidget(){
     return box;
 }
 
-function validate_interval() {
+function validate_interval(settings) {
     let interval = settings.get_string('refresh-interval');
     if (interval == "" || interval.indexOf(intervals) == -1) // if not a valid interval
         settings.reset('refresh-interval');
@@ -204,7 +207,8 @@ function validate_interval() {
 function ge_tryspawn(argv) {
     try {
         GLib.spawn_async(null, argv, null, GLib.SpawnFlags.SEARCH_PATH | GLib.SpawnFlags.DO_NOT_REAP_CHILD, null);
-    } catch (err) {
+    }
+    catch (err) {
         log("Unable to open: "+argv[0]+" error: "+err);
     }
 }
