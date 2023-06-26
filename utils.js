@@ -54,6 +54,12 @@ function clamp_value(value, min, max) {
 	return Math.min(Math.max(value, min), max);
 }
 
+function initSoup() {
+    let httpSession = new Soup.Session();
+    httpSession.user_agent = 'User-Agent: Mozilla/5.0 (GNOME Shell/' + imports.misc.config.PACKAGE_VERSION + '; Linux; +https://github.com/neffo/earth-view-wallpaper-gnome-extension ) Google Earth Wallpaper Gnome Extension/' + Me.metadata.version;
+    return httpSession;
+}
+
 function fetch_change_log(version, label, httpSession) {
 	// create an http message
 	let url = gitreleaseurl + "v" + version;
