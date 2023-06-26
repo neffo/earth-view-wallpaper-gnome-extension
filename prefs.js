@@ -8,7 +8,7 @@
 // Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
 /*global imports, log*/
 
-const {Gtk, Gio, GLib, Soup, Gdk} = imports.gi;
+const {Gtk, Gio, GLib, Gdk} = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
