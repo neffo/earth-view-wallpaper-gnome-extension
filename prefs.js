@@ -8,8 +8,7 @@
 // Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
 /*global imports, log*/
 
-imports.gi.versions.Soup = '2.4';
-const {Gtk, Gio, GLib, Soup, Gdk} = imports.gi;
+const {Gtk, Gio, GLib, Gdk} = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 const Utils = Me.imports.utils;
@@ -80,8 +79,7 @@ function buildPrefsWidget() {
     let notifySwitch = buildable.get_object('notify');
     
     // enable change log access
-    httpSession = new Soup.SessionAsync();
-    Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
+    httpSession = Utils.initSoup();
 
     // Indicator
     settings.bind('hide', hideSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
