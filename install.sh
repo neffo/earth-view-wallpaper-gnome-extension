@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 EXTENSION_NAME=GoogleEarthWallpaper@neffo.github.com
-INSTALL_PATH=~/.local/share/gnome-shell/extensions
+INSTALL_PATH=${XDG_DATA_HOME:-$HOME/.local/share}/gnome-shell/extensions
 ZIP_NAME=$EXTENSION_NAME.zip
 
 ./buildzip.sh
