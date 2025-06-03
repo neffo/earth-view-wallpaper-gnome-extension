@@ -2,4 +2,4 @@
 *~
 *.zip
 translations.txt
-
+node_modules/

@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/neffo/earth-view-wallpaper-gnome-extension/issues"
   },
-  "homepage": "https://github.com/neffo/earth-view-wallpaper-gnome-extension#readme"
+  "homepage": "https://github.com/neffo/earth-view-wallpaper-gnome-extension#readme",
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.24.0",
+    "eslint": "^9.24.0",
+    "globals": "^16.0.0"
+  }
 }

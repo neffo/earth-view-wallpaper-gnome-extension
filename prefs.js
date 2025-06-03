@@ -6,203 +6,194 @@
 // (at your option) any later version.
 // See the GNU General Public License, version 3 or later for details.
 // Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
-/*global imports, log*/
+/*global log*/
 
-imports.gi.versions.Soup = '2.4';
-const {Gtk, Gio, GLib, Soup, Gdk} = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
-const Utils = Me.imports.utils;
+import Gtk from 'gi://Gtk';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import Gdk from 'gi://Gdk';
 
-const Convenience = Me.imports.convenience;
-const Gettext = imports.gettext.domain('GoogleEarthWallpaper');
-const _ = Gettext.gettext;
-const Images = Me.imports.images;
+import { PACKAGE_VERSION } from 'resource:///org/gnome/Shell/Extensions/js/misc/config.js'
+import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js';
 
-const intervals = [ 300, 600, 1800, 3600, 4800, 86400 ];
-const interval_names = [ _("5 m"), _("10 m"), _("30 m"), _("60 m"), _("90 m"), _("daily")];
+import * as Utils from './utils.js';
+
 
 const providerNames = ['Google Earth', 'Google Maps', 'Bing Maps', 'OpenStreetMap' , 'GNOME Maps'];
 
-var PREFS_DEFAULT_WIDTH = 800;
-var PREFS_DEFAULT_HEIGHT = 500;
+const PREFS_DEFAULT_WIDTH = 800;
+const PREFS_DEFAULT_HEIGHT = 500;
 
-function init() {
-    ExtensionUtils.initTranslations("GoogleEarthWallpaper");
-}
-
-function buildPrefsWidget() {
-    // formerly globals
-    let settings;
-    let desktop_settings;
-    let httpSession = null;
-    let provider = new Gtk.CssProvider();
-    // Prepare labels and controls
-    settings = ExtensionUtils.getSettings(Utils.schema);
-    desktop_settings = ExtensionUtils.getSettings(Utils.DESKTOP_SCHEMA);
-    let buildable = new Gtk.Builder();
-    if (Gtk.get_major_version() == 4) { // GTK4 removes some properties, and builder breaks when it sees them
-        buildable.add_from_file( Me.dir.get_path() + '/ui/Settings4.ui' );
-        provider.load_from_path(Me.dir.get_path() + '/ui/prefs.css'); 
-        Gtk.StyleContext.add_provider_for_display(
-        Gdk.Display.get_default(),
-        provider,
-        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+export default class GoogleEarthWallpaperPrefs extends ExtensionPreferences {
+    constructor(metadata) {
+        super(metadata);
+        this._name = metadata.name;
+        this._version = metadata.version;
+        if (!globalThis.GoogleEarthWallpaperState) globalThis.GoogleEarthWallpaperState = {
+                gettext : _,
+                PACKAGE_VERSION
+        };
     }
-    else {
-        buildable.add_from_file( Me.dir.get_path() + '/ui/Settings.ui' );
-    }
-    let box = buildable.get_object('prefs_widget');
 
-    if (Convenience.currentVersionGreaterEqual('40')) {
+    getPreferencesWidget() {
+        // formerly globals
+        let settings;
+        let desktop_settings;
+        let httpSession = null;
+        let provider = new Gtk.CssProvider();
+        // Prepare labels and controls
+        settings = this.getSettings(Utils.schema);
+        desktop_settings = this.getSettings(Utils.DESKTOP_SCHEMA);
+        let buildable = new Gtk.Builder();
+        if (Gtk.get_major_version() == 4) { // GTK4 removes some properties, and builder breaks when it sees them
+            buildable.add_from_file(this.dir.get_path() + '/ui/Settings4.ui');
+            provider.load_from_path(this.dir.get_path() + '/ui/prefs.css'); 
+            Gtk.StyleContext.add_provider_for_display(
+            Gdk.Display.get_default(),
+            provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+        }
+        else {
+            buildable.add_from_file(this.dir.get_path() + '/ui/Settings.ui');
+        }
+        let box = buildable.get_object('prefs_widget');
+
         box.connect('realize', () => {
             let window = box.get_root();
             window.default_width = PREFS_DEFAULT_WIDTH;
             window.default_height = PREFS_DEFAULT_HEIGHT;
         });
-    }
 
-    buildable.get_object('extension_version').set_text(' v'+Me.metadata.version.toString());
-    buildable.get_object('extension_name').set_text(Me.metadata.name.toString());
+        buildable.get_object('extension_version').set_text(' v'+this._version.toString());
+        buildable.get_object('extension_name').set_text(this._name.toString());
 
-    let hideSwitch = buildable.get_object('hide');
-    let iconEntry = buildable.get_object('icon');
-    let bgSwitch = buildable.get_object('background');
-    let styleEntry = buildable.get_object('background_style');
-    let fileChooser = buildable.get_object('download_folder');
-    let fileChooserBtn = buildable.get_object('download_folder_btn');
-    let deleteSwitch = buildable.get_object('delete_previous');
-    let refreshSpin = buildable.get_object('refresh_combo');
-    let providerSpin = buildable.get_object('map_provider_combo');
-    let folderButton = buildable.get_object('button_open_download_folder');
-    let icon_image = buildable.get_object('icon_image');
-    let change_log = buildable.get_object('change_log');
-    let notifySwitch = buildable.get_object('notify');
-    
-    // enable change log access
-    httpSession = new Soup.SessionAsync();
-    Soup.Session.prototype.add_feature.call(httpSession, new Soup.ProxyResolverDefault());
-
-    // Indicator
-    settings.bind('hide', hideSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-    settings.bind('notify', notifySwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-    settings.bind('set-background', bgSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-    
-    // adjustable indicator icons
-    Utils.icon_list.forEach(function (iconname, index) { // add icons to dropdown list (aka a GtkComboText)
-        iconEntry.append(iconname, iconname);
-    });
-    settings.bind('icon', iconEntry, 'active_id', Gio.SettingsBindFlags.DEFAULT);
-    settings.connect('changed::icon', function() {
-        Utils.validate_icon(settings, icon_image);
-    });
-    iconEntry.set_active_id(settings.get_string('icon'));
-    Utils.validate_icon(settings, icon_image);
-    //download folder
-    
-    if (Gtk.get_major_version() == 4) {
-        fileChooserBtn.set_label(settings.get_string('download-folder'));
+        let hideSwitch = buildable.get_object('hide');
+        let iconEntry = buildable.get_object('icon');
+        let bgSwitch = buildable.get_object('background');
+        let styleEntry = buildable.get_object('background_style');
+        let fileChooser = buildable.get_object('download_folder');
+        let fileChooserBtn = buildable.get_object('download_folder_btn');
+        let deleteSwitch = buildable.get_object('delete_previous');
+        let refreshSpin = buildable.get_object('refresh_combo');
+        let providerSpin = buildable.get_object('map_provider_combo');
+        let folderButton = buildable.get_object('button_open_download_folder');
+        let icon_image = buildable.get_object('icon_image');
+        let change_log = buildable.get_object('change_log');
+        let notifySwitch = buildable.get_object('notify');
         
-        fileChooserBtn.connect('clicked', function(widget) {
-            let parent = widget.get_root();
-            fileChooser.set_transient_for(parent);
-            fileChooser.set_current_folder(Gio.File.new_for_path(settings.get_string('download-folder')).get_parent());
-            fileChooser.set_action(Gtk.FileChooserAction.SELECT_FOLDER);
-            fileChooser.set_transient_for(parent);
-            fileChooser.set_accept_label(_('Select folder'));
-            fileChooser.show();
-        });
+        // enable change log access
+        httpSession = Utils.initSoup(this._version);
 
-        fileChooser.connect('response', function(widget, response) {
-            if (response !== Gtk.ResponseType.ACCEPT) {
-                return;
-            }
-            let fileURI = widget.get_file().get_uri().replace('file://', '');
-            log("fileChooser returned: "+fileURI);
-            fileChooserBtn.set_label(fileURI);
-            let oldPath = settings.get_string('download-folder');
-            Utils.moveImagesToNewFolder(settings, oldPath, fileURI);
-            settings.set_string('download-folder', fileURI);
-        });
+        // Indicator
+        settings.bind('hide', hideSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+        settings.bind('notify', notifySwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+        settings.bind('set-background', bgSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
         
-        folderButton.connect('clicked', function() { 
-            ge_tryspawn(["xdg-open", settings.get_string('download-folder')]);
-            log('open_background_folder '+settings.get_string('download-folder'));
+        // adjustable indicator icons
+        Utils.icon_list.forEach(iconname => { // add icons to dropdown list (aka a GtkComboText)
+            iconEntry.append(iconname, iconname); // ID(string), TEXT
         });
-    }
-    else {
-        fileChooser.set_filename(settings.get_string('download-folder'));
-        fileChooser.add_shortcut_folder_uri("file://" + GLib.get_user_cache_dir() + "/GoogleEarthWallpaper");
-
-        fileChooser.connect('file-set', function(widget) {
-            settings.set_string('download-folder', widget.get_filename());
+        settings.bind('icon', iconEntry, 'active_id', Gio.SettingsBindFlags.DEFAULT);
+        settings.connect('changed::icon', () => {
+            Utils.validate_icon(settings, this.dir, icon_image);
         });
+        iconEntry.set_active_id(settings.get_string('icon'));
+        Utils.validate_icon(settings, this.dir, icon_image);
+        //download folder
         
-        folderButton.connect('button-press-event', function() { 
-            ge_tryspawn(["xdg-open", settings.get_string('download-folder')]);
-            log('open_background_folder '+settings.get_string('download-folder'));
-        }); 
+        if (Gtk.get_major_version() == 4) {
+            fileChooserBtn.set_label(settings.get_string('download-folder'));
+            
+            fileChooserBtn.connect('clicked', widget => {
+                let parent = widget.get_root();
+                fileChooser.set_transient_for(parent);
+                fileChooser.set_current_folder(Gio.File.new_for_path(settings.get_string('download-folder')).get_parent());
+                fileChooser.set_action(Gtk.FileChooserAction.SELECT_FOLDER);
+                fileChooser.set_transient_for(parent);
+                fileChooser.set_accept_label(_('Select folder'));
+                fileChooser.show();
+            });
+
+            fileChooser.connect('response', (widget, response) => {
+                if (response !== Gtk.ResponseType.ACCEPT) {
+                    return;
+                }
+                let fileURI = widget.get_file().get_uri().replace('file://', '');
+                log("fileChooser returned: " + fileURI);
+                fileChooserBtn.set_label(fileURI);
+                let oldPath = settings.get_string('download-folder');
+                Utils.moveImagesToNewFolder(settings, oldPath, fileURI);
+                settings.set_string('download-folder', fileURI);
+            });
+            
+            folderButton.connect('clicked', () => {
+                ge_tryspawn(["xdg-open", settings.get_string('download-folder')]);
+                log('open_background_folder ' + settings.get_string('download-folder'));
+            });
+        } else { // GTK != 4
+            fileChooser.set_filename(settings.get_string('download-folder'));
+            fileChooser.add_shortcut_folder_uri("file://" + GLib.get_user_cache_dir() + "/GoogleEarthWallpaper");
+
+            fileChooser.connect('file-set', widget => {
+                settings.set_string('download-folder', widget.get_filename());
+            });
+            
+            folderButton.connect('button-press-event', () => {
+                ge_tryspawn(["xdg-open", settings.get_string('download-folder')]);
+                log('open_background_folder ' + settings.get_string('download-folder'));
+            }); 
+        }
+
+        settings.bind('delete-previous', deleteSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+
+        const intervals = [ 300, 600, 1800, 3600, 4800, 86400 ];
+        const interval_names = [_("5 m"), _("10 m"), _("30 m"), _("60 m"), _("90 m"), _("daily")];
+
+        intervals.forEach((interval, index) => { // add intervals to dropdown list (aka a GtkComboText)
+            refreshSpin.append(interval.toString(), interval_names[index]);
+        });
+
+        refreshSpin.set_active_id(settings.get_int('refresh-interval').toString()); // set to current
+        refreshSpin.connect('changed', () => {
+            settings.set_int('refresh-interval', parseInt(refreshSpin.get_active_id(), 10));
+            log('Refresh interval currently set to ' + refreshSpin['active_id']);
+        });
+
+        settings.connect('changed::refresh-interval', () => {
+            refreshSpin.set_active_id(settings.get_int('refresh-interval').toString());
+            log('Refresh interval set to ' + refreshSpin['active_id']);
+        });
+
+        providerNames.forEach((provider, index) => { // add map providers to dropdown list (aka a GtkComboText)
+            providerSpin.append(index.toString(), provider);
+        });
+
+        providerSpin.set_active_id(settings.get_enum('map-link-provider').toString()); // set to current
+        providerSpin.connect('changed', () => {
+            settings.set_enum('map-link-provider', parseInt(providerSpin.get_active_id(), 10));
+        });
+
+        settings.connect('changed::map-link-provider', () => {
+            providerSpin.set_active_id(settings.get_enum('map-link-provider').toString());
+        });
+
+        // background styles (e.g. zoom or span)
+        Utils.backgroundStyle.forEach(style => {
+            styleEntry.append(style, style);
+        });
+        desktop_settings.bind('picture-options', styleEntry, 'active_id', Gio.SettingsBindFlags.DEFAULT);
+
+        // not required in GTK4 as widgets are displayed by default
+        if (Gtk.get_major_version() < 4)
+            box.show_all();
+
+        // fetch
+        Utils.fetch_change_log(this._version.toString(), change_log, httpSession);
+
+        return box;
     }
-
-    settings.bind('delete-previous', deleteSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
-    intervals.forEach(function (interval, index) { // add intervals to dropdown list (aka a GtkComboText)
-        refreshSpin.append(interval.toString(), interval_names[index]);
-    });
-
-    //settings.bind('refresh-interval', refreshSpin, 'active_id', Gio.SettingsBindFlags.DEFAULT);
-    refreshSpin.set_active_id(settings.get_int('refresh-interval').toString()); // set to current
-    refreshSpin.connect('changed', function() {
-        settings.set_int('refresh-interval',parseInt(refreshSpin.get_active_id(),10));
-        log('Refresh interval currently set to '+refreshSpin['active_id']);
-    });
-
-    //log('Refresh interval currently set to '+refreshSpin['active_id']);
-    settings.connect('changed::refresh-interval', function() {
-        refreshSpin.set_active_id(settings.get_int('refresh-interval').toString());
-        log('Refresh interval set to '+refreshSpin['active_id']);
-    });
-
-    providerNames.forEach(function (provider, index) { // add map providers to dropdown list (aka a GtkComboText)
-        providerSpin.append(index.toString(), provider);
-    });
-
-    providerSpin.set_active_id(settings.get_enum('map-link-provider').toString()); // set to current
-    providerSpin.connect('changed', function() {
-        settings.set_enum('map-link-provider',parseInt(providerSpin.get_active_id(),10));
-    });
-
-    settings.connect('changed::map-link-provider', function() {
-        providerSpin.set_active_id(settings.get_enum('map-link-provider').toString());
-    });
-
-    if (Convenience.currentVersionGreaterEqual("40.0")) {
-        // GNOME 40+ specific code
-    }
-    else if (Convenience.currentVersionGreaterEqual("3.36")) {
-        // GNOME 3.36 - 3.38 specific code
-    }
-
-    // background styles (e.g. zoom or span)
-    Utils.backgroundStyle.forEach((style) => {
-        styleEntry.append(style, style);
-    });
-    desktop_settings.bind('picture-options', styleEntry, 'active_id', Gio.SettingsBindFlags.DEFAULT);
-
-    // not required in GTK4 as widgets are displayed by default
-    if (Gtk.get_major_version() < 4)
-        box.show_all();
-
-    // fetch
-    Utils.fetch_change_log(Me.metadata.version.toString(), change_log, httpSession);
-
-    return box;
 }
 
-function validate_interval(settings) {
-    let interval = settings.get_string('refresh-interval');
-    if (interval == "" || interval.indexOf(intervals) == -1) // if not a valid interval
-        settings.reset('refresh-interval');
-}
 
 function ge_tryspawn(argv) {
     try {

@@ -6,24 +6,26 @@
 // (at your option) any later version.
 // See the GNU General Public License, version 3 or later for details.
 // Based on GNOME shell extension NASA APOD by Elia Argentieri https://github.com/Elinvention/gnome-shell-extension-nasa-apod
-/*global imports, log*/
+/*global log*/
 
-const {Gio, GLib, GdkPixbuf, Soup} = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = imports.misc.extensionUtils.getCurrentExtension();
-const Gettext = imports.gettext.domain('BingWallpaper');
-const _ = Gettext.gettext;
-const ByteArray = imports.byteArray;
+import GLib from 'gi://GLib';
+import GdkPixbuf from 'gi://GdkPixbuf';
+import Gio from 'gi://Gio';
+import Soup from 'gi://Soup';
 
-var icon_list = ['pin', 'globe','official'];
-var icon_list_filename = ['pin-symbolic', 'globe-symbolic', 'official'];
-var backgroundStyle = ['none', 'wallpaper', 'centered', 'scaled', 'stretched', 'zoom', 'spanned'];
+const gitreleaseurl = 'https://api.github.com/repos/neffo/earth-view-wallpaper-gnome-extension/releases/tags/';
 
-var gitreleaseurl = 'https://api.github.com/repos/neffo/earth-view-wallpaper-gnome-extension/releases/tags/';
-var schema = 'org.gnome.shell.extensions.googleearthwallpaper';
-var DESKTOP_SCHEMA = 'org.gnome.desktop.background';
+export const icon_list = ['pin', 'globe','official'];
+export const icon_list_filename = ['pin-symbolic', 'globe-symbolic', 'official'];
+export const backgroundStyle = ['none', 'wallpaper', 'centered', 'scaled', 'stretched', 'zoom', 'spanned'];
 
-function friendly_time_diff(time, short = true) {
+export const DESKTOP_SCHEMA = 'org.gnome.desktop.background';
+export const schema = 'org.gnome.shell.extensions.googleearthwallpaper';
+
+export const Bytes = new TextDecoder()
+
+export function friendly_time_diff(time, short = true) {
+    const _ = globalThis.GoogleEarthWallpaperState.gettext;
     // short we want to keep ~4-5 characters
     let timezone = GLib.TimeZone.new_local();
     let now = GLib.DateTime.new_now(timezone).to_unix();
@@ -46,73 +48,56 @@ function friendly_time_diff(time, short = true) {
     }
 }
 
-function friendly_coordinates(lat, lon) {
+export function friendly_coordinates(lat, lon) {
   return Math.abs(lat).toFixed(4)+(lat>0 ? 'N': 'S')+', '+Math.abs(lon).toFixed(4)+(lon>0 ? 'E':'W');
 }
 
-function clamp_value(value, min, max) {
-	return Math.min(Math.max(value, min), max);
+export function initSoup(version) {
+    const PACKAGE_VERSION = globalThis.GoogleEarthWallpaperState.PACKAGE_VERSION;
+    let httpSession = new Soup.Session();
+    httpSession.user_agent = 'User-Agent: Mozilla/5.0 (GNOME Shell/' + PACKAGE_VERSION + '; Linux; +https://github.com/neffo/earth-view-wallpaper-gnome-extension ) Google Earth Wallpaper Gnome Extension/' + version;
+    return httpSession;
 }
 
-function fetch_change_log(version, label, httpSession) {
-	// create an http message
-	let url = gitreleaseurl + "v" + version;
-	let request = Soup.Message.new('GET', url);
-	httpSession.user_agent = 'User-Agent: Mozilla/5.0 (X11; GNOME Shell/' + imports.misc.config.PACKAGE_VERSION + '; Linux x86_64; +https://github.com/neffo/earth-view-wallpaper-gnome-extension ) Google Earth Wallpaper Gnome Extension/' + Me.metadata.version;
-	
+export function fetch_change_log(version, label, httpSession) {
+    // create an http message
+    let url = gitreleaseurl + "v" + version;
+    let request = Soup.Message.new('GET', url);
+
     // queue the http request
     log("Fetching "+url);
-    try {
-        if (Soup.MAJOR_VERSION >= 3) {
-            httpSession.send_and_read_async(request, GLib.PRIORITY_DEFAULT, null, (httpSession, message) => {
-                let data = ByteArray.toString(httpSession.send_and_read_finish(message).get_data());
-                let text = JSON.parse(data).body;
-                label.set_label(text);
-            });
+
+    // a try block doesn't catch async exceptions from outside the callback
+    httpSession.send_and_read_async(request, GLib.PRIORITY_DEFAULT, null, (httpSession, message) => {
+        try {
+            let data = Bytes.decode(httpSession.send_and_read_finish(message).get_data());
+            let text = JSON.parse(data).body;
+            label.set_label(text);
         }
-        else {
-            httpSession.queue_message(request, (httpSession, message) => {
-                let data = message.response_body.data;
-                let text = JSON.parse(data).body;
-                label.set_label(text);
-            });
+        catch (error) {
+            log("Error fetching change log: " + error);
+            const _ = globalThis.GoogleEarthWallpaperState.gettext;
+            label.set_label(_("Error fetching change log: "+error));
         }
-    } 
-    catch (error) {
-        log("Error fetching change log: " + error);
-        label.set_label(_("Error fetching change log: "+error));
+    });
+}
+
+export function validate_icon(settings, dir, icon_image = null) {
+    log('validate_icon()');
+    let icon_name = settings.get_string('icon');
+    if (icon_name == "" || icon_list.indexOf(icon_name) == -1) {
+        settings.reset('icon');
+        icon_name = settings.get_string('icon');
+    }
+    // if called from prefs
+    if (icon_image) {
+        log('set icon to: ' + dir.get_path() + '/icons/' + icon_name + '-symbolic.svg');
+        let pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(dir.get_path() + '/icons/' + icon_list_filename[icon_list.indexOf(icon_name)] + '.svg', 32, 32);
+        icon_image.set_from_pixbuf(pixbuf);
     }
 }
 
-function validate_icon(settings, icon_image = null) {
-	log('validate_icon()');
-	let icon_name = settings.get_string('icon');
-	if (icon_name == "" || icon_list.indexOf(icon_name) == -1) {
-		settings.reset('icon');
-		icon_name = settings.get_string('icon');
-	}
-	// if called from prefs
-	if (icon_image) { 
-		log('set icon to: ' + Me.dir.get_path() + '/icons/' + icon_name + '-symbolic.svg');
-		let pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_size(Me.dir.get_path() + '/icons/' + icon_list_filename[icon_list.indexOf(icon_name)] + '.svg', 32, 32);
-		icon_image.set_from_pixbuf(pixbuf);
-	}
-}
-
-// Utility function
-function dump(object, level = 0) {
-    let output = '';
-    for (let property in object) {
-        output += "-".repeat(level)+property + ': ' + object[property]+'\n ';
-		if ( typeof property === 'object' )
-			output += dump(property, level+1);
-    }
-	if (level == 0)
-		log(output);
-    return(output);
-}
-
-function moveImagesToNewFolder(settings, oldPath, newPath) {
+export function moveImagesToNewFolder(settings, oldPath, newPath) {
     let dir = Gio.file_new_for_path(oldPath);
     let dirIter = dir.enumerate_children('', Gio.FileQueryInfoFlags.NONE, null );
     let newDir = Gio.file_new_for_path(newPath);
@@ -120,13 +105,13 @@ function moveImagesToNewFolder(settings, oldPath, newPath) {
         newDir.make_directory_with_parents(null);
     }
     let file = null;
-    while (file = dirIter.next_file(null)) {
+    while ((file = dirIter.next_file(null))) {
         let filename = file.get_name(); // we only want to move files that we think we own
         if (filename.match(/.+\.jpg/i)) {
             log('file: ' + slash(oldPath) + filename + ' -> ' + slash(newPath) + filename);
             let cur = Gio.file_new_for_path(slash(oldPath) + filename);
             let dest = Gio.file_new_for_path(slash(newPath) + filename);
-            cur.move(dest, Gio.FileCopyFlags.OVERWRITE, null, () => { 
+            cur.move(dest, Gio.FileCopyFlags.OVERWRITE, null, () => {
                 log ('...moved');
             });
         }
@@ -136,9 +121,6 @@ function moveImagesToNewFolder(settings, oldPath, newPath) {
         moveBackground(oldPath, newPath, DESKTOP_SCHEMA);
 }
 
-function dirname(path) {
-    return path.match(/.*\//);
-}
 
 function slash(path) {
     if (!path.endsWith('/'))
@@ -149,16 +131,16 @@ function slash(path) {
 function moveBackground(oldPath, newPath, schema) {
     let gsettings = new Gio.Settings({schema: schema});
     let uri;
-	let dark_uri;
-	uri = gsettings.get_string('picture-uri');
+    let dark_uri;
+    uri = gsettings.get_string('picture-uri');
     gsettings.set_string('picture-uri', uri.replace(oldPath, newPath));
-	try {
-		dark_uri = gsettings.get_string('picture-uri-dark');
-		gsettings.set_string('picture-uri-dark', dark_uri.replace(oldPath, newPath));
-	}
-	catch (e) {
-		log('no dark background gsettings key found ('+e+')');
-	}
+    try {
+        dark_uri = gsettings.get_string('picture-uri-dark');
+        gsettings.set_string('picture-uri-dark', dark_uri.replace(oldPath, newPath));
+    }
+    catch (e) {
+        log('no dark background gsettings key found ('+e+')');
+    }
 
     Gio.Settings.sync();
     gsettings.apply();
